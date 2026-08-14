@@ -1,5 +1,5 @@
 ﻿/* أذكار — Service Worker (hors-ligne) */
-const VERSION = "adhkar-v2.0.1";
+const VERSION = "adhkar-v2.1.0";
 const APP_SHELL = [
   "./",
   "./index.html",
