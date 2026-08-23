@@ -1,5 +1,5 @@
-﻿/* أذكار — Service Worker (hors-ligne) */
-const VERSION = "adhkar-v2.4.5";
+/* ????? ? Service Worker (hors-ligne) */
+const VERSION = "adhkar-v2.5.0";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
@@ -30,7 +30,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-/* navigation + assets : cache-first, puis réseau */
+/* navigation + assets : cache-first, puis r?seau */
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
@@ -53,7 +53,7 @@ self.addEventListener("fetch", (event) => {
 
   if (event.request.method !== "GET") return;
 
-  /* pages du mushaf (archive.org) : cache-first -> lecture hors-ligne une fois la page vue/téléchargée */
+  /* pages du mushaf (archive.org) : cache-first -> lecture hors-ligne une fois la page vue/t?l?charg?e */
   if (url.hostname === "archive.org" && url.pathname.includes("/yusufmazouz1986_gmail/page/n")) {
     event.respondWith(
       caches.open(MUSHAF_CACHE).then(async (cache) => {
@@ -90,7 +90,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  /* autres assets : cache-first, puis réseau */
+  /* autres assets : cache-first, puis r?seau */
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)

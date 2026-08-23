@@ -971,8 +971,8 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         </div>
         <div class="mu-size-row">
           <button class="mu-size-btn" data-s="1">عادي</button>
-          <button class="mu-size-btn active" data-s="1.8">كبير</button>
-          <button class="mu-size-btn" data-s="2.6">كبير جداً</button>
+          <button class="mu-size-btn active" data-s="1.25">كبير</button>
+          <button class="mu-size-btn" data-s="1.55">كبير جداً</button>
         </div>
       </div>
     </div>
@@ -1147,7 +1147,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.4.5</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.5.0</p>
   </section>
 
 </div>
@@ -2619,12 +2619,25 @@ function muClampPan(){
   muTx = Math.min(L.x,Math.max(-L.x,muTx));
   muTy = Math.min(L.y,Math.max(-L.y,muTy));
 }
-/* mode « remplir la largeur de l'écran » (plein écran immersif) */
-let muFitW = localStorage.getItem("mushaf_fitw") !== "0";
+/* mode « remplir tout l'écran » : la page couvre 100 % des pixels (texte + garniture aux bords) */
+let muFill = localStorage.getItem("mushaf_fill") !== "0";
+let muMult = parseFloat(localStorage.getItem("mushaf_size_mult")) || 1.25;
 function muApplyFit(){
-  $("muViewport").classList.toggle("fitw", !!muFitW);
-  $("muFitBtn").classList.toggle("active", !!muFitW);
+  $("muViewport").classList.toggle("fitw", !!muFill && document.body.classList.contains("mu-fullscreen"));
+  $("muFitBtn").classList.toggle("active", !!muFill);
 }
+function muCoverBase(){
+  const r = $("muViewport").getBoundingClientRect();
+  const img = $("muPage");
+  const iw = img.clientWidth || r.width;
+  const ih = img.clientHeight || r.width*1.45;
+  return Math.max(r.width/iw, r.height/ih);
+}
+function muApplyScale(s){
+  muScale = Math.min(6, Math.max(1, s));
+  muClampPan(); muApplyTransform();
+}
+function muFsTargetScale(){ return muCoverBase() * muMult; }
 /* masquage auto des barres en plein écran */
 let muIdleT = null;
 function muWake(){
@@ -2639,9 +2652,11 @@ function muApplyTransform(){
   $("muZoomVal").textContent = muScale === 1 ? "1×" : muScale.toFixed(1).replace(/\.0$/,"") + "×";
 }
 function muSetZoom(s){
-  muScale = Math.min(4,Math.max(1,s));
+  muScale = Math.min(6,Math.max(1,s));
   muClampPan(); muApplyTransform();
-  localStorage.setItem("mushaf_zoom_level", String(muScale));
+  if(!(document.body.classList.contains("mu-fullscreen") && muFill)){
+    localStorage.setItem("mushaf_zoom_level", String(muScale));
+  }
 }
 function muRender(anim){
   const img = $("muPage"), loader = $("muLoader");
@@ -2652,8 +2667,12 @@ function muRender(anim){
   img.onload = () => loader.classList.remove("show");
   img.onerror = () => { loader.classList.remove("show"); toast("تعذر تحميل الصفحة — تحقق من اتصالك بالإنترنت"); };
   img.src = url;
-  const savedZ = parseFloat(localStorage.getItem("mushaf_zoom_level"));
-  muScale = (savedZ && savedZ >= 1) ? savedZ : muDefZoom;
+  if(document.body.classList.contains("mu-fullscreen") && muFill){
+    muScale = muFsTargetScale();
+  } else {
+    const savedZ = parseFloat(localStorage.getItem("mushaf_zoom_level"));
+    muScale = (savedZ && savedZ >= 1) ? savedZ : muDefZoom;
+  }
   muTx = 0; muTy = 0;
   muApplyTransform();
   const j = muJuzOf(muPage);
@@ -2687,7 +2706,10 @@ function muEnterFS(){
   document.body.classList.add("mu-fullscreen");
   if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
   muApplyFit(); muWake();
-  setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 90);
+  setTimeout(()=>{
+    if(muFill) muApplyScale(muFsTargetScale());
+    else { muClampPan(); muApplyTransform(); }
+  }, 120);
 }
 function muExitFS(){
   document.body.classList.remove("mu-fullscreen");
@@ -2800,9 +2822,14 @@ function renderMuGrid(){
       if(!moved){
         const now = Date.now();
         if(now - muLastTap < 320){
-          /* double-tap : basculer entre taille normale et taille de lecture */
+          /* double-tap : basculer entre taille de lecture et page ajustée */
           clearTimeout(muZoneT); muZoneT = null; muLastTap = 0;
-          muSetZoom(muScale > 1.05 ? 1 : (muDefZoom > 1.05 ? muDefZoom : 2.5));
+          if(document.body.classList.contains("mu-fullscreen") && muFill){
+            const t = muFsTargetScale();
+            muApplyScale(Math.abs(muScale - t) > t*0.12 ? t : muCoverBase());
+          } else {
+            muSetZoom(muScale > 1.05 ? 1 : (muDefZoom > 1.05 ? muDefZoom : 2.5));
+          }
         } else {
           /* simple tap : zones latérales = tourner la page (même zoomé), centre = révéler les barres */
           const rect = vp.getBoundingClientRect();
@@ -3131,9 +3158,13 @@ $("muGridClose").addEventListener("click", ()=>$("muGridOverlay").classList.remo
 $("muFsBtn").addEventListener("click", muEnterFS);
 $("muFsExit").addEventListener("click", muExitFS);
 $("muFitBtn").addEventListener("click", ()=>{
-  muFitW = !muFitW;
-  localStorage.setItem("mushaf_fitw", muFitW ? "1" : "0");
-  muApplyFit(); muClampPan(); muApplyTransform();
+  muFill = !muFill;
+  localStorage.setItem("mushaf_fill", muFill ? "1" : "0");
+  muApplyFit();
+  if(document.body.classList.contains("mu-fullscreen")){
+    if(muFill) muApplyScale(muFsTargetScale());
+    else { muScale = 1; muTx = 0; muTy = 0; muApplyTransform(); }
+  }
 });
 $("muDlJuz").addEventListener("click", muDownloadJuz);
 /* les boutons superposés au viewport ne doivent pas déclencher les gestes de la page */
@@ -3145,15 +3176,17 @@ $("muArrowPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
 /* sélecteur de taille de lecture */
 function muInitSizeBtns(){
   document.querySelectorAll(".mu-size-btn").forEach(b=>{
-    b.classList.toggle("active", Math.abs(parseFloat(b.dataset.s) - muDefZoom) < 0.01);
+    b.classList.toggle("active", Math.abs(parseFloat(b.dataset.s) - muMult) < 0.01);
   });
 }
 document.querySelectorAll(".mu-size-btn").forEach(b=>{
   b.addEventListener("click", ()=>{
-    muDefZoom = parseFloat(b.dataset.s) || 1.8;
-    localStorage.setItem("mushaf_def_zoom", String(muDefZoom));
+    muMult = parseFloat(b.dataset.s) || 1.25;
+    localStorage.setItem("mushaf_size_mult", String(muMult));
+    const legacy = ({"1":1,"1.25":1.8,"1.55":2.6})[b.dataset.s] || 1.8;
+    muDefZoom = legacy; localStorage.setItem("mushaf_def_zoom", String(legacy));
     muInitSizeBtns();
-    muSetZoom(muDefZoom);
+    if(document.body.classList.contains("mu-fullscreen") && muFill) muApplyScale(muFsTargetScale());
     toast("حجم المصحف: " + b.textContent.trim());
   });
 });
