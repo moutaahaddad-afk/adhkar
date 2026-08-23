@@ -671,6 +671,15 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 .tv-surah-title{text-align:center;font-size:.72em;letter-spacing:.5px;color:#7a5b13;background:linear-gradient(90deg,transparent,rgba(212,175,55,.18),transparent);padding:10px 0;margin:-6px 0 14px;border-radius:10px}
 .tv-basmala{text-align:center;color:#0d1f16;font-weight:700;font-size:.82em;margin-bottom:14px}
 .tv-n{color:#b58a1f;font-size:.6em;white-space:nowrap}
+.tv-jmark{display:block;text-align:center;color:#0d1f16;background:rgba(212,175,55,.16);border-radius:10px;font-size:.55em;padding:6px;margin:14px 0;font-family:Tajawal,system-ui,sans-serif;font-weight:700}
+.tv-jbadge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:12px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:auto}
+.tv-sheet{display:none;position:absolute;inset:0;z-index:5;background:rgba(6,20,14,.55);align-items:flex-end}
+.tv-sheet.open{display:flex}
+.tv-sheet-card{width:100%;max-height:72%;overflow-y:auto;background:#fdfbf5;border-radius:18px 18px 0 0;padding:16px}
+.tv-sheet-card h4{margin:0 0 10px;text-align:center;color:#7a5b13}
+.tv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tv-grid button{padding:12px 4px;border-radius:12px;border:1px solid var(--line);background:#ffffff;font-weight:700;color:#1c1c1c;font-family:inherit;font-size:13px;cursor:pointer}
+.tv-close{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1px solid var(--line);background:#122a1e;color:var(--gold-light);font-family:inherit;font-weight:700;cursor:pointer}
 body.mu-fullscreen .tv-bar{position:absolute;top:0;left:0;right:0;z-index:2;opacity:0;transition:opacity .35s}
 body.mu-fullscreen:not(.idle) .tv-bar{opacity:1}
 body.mu-fullscreen #tvBody{padding-top:54px}
@@ -1040,6 +1049,14 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
           </div>
         </div>
         <div id="tvBody"></div>
+        <div class="tv-jbadge" id="tvJuzBadge">الجزء</div>
+        <div class="tv-sheet" id="tvSheet">
+          <div class="tv-sheet-card">
+            <h4>الانتقال إلى جزء</h4>
+            <div class="tv-grid" id="tvGrid"></div>
+            <button class="tv-close" id="tvClose">إغلاق</button>
+          </div>
+        </div>
       </div>
       <div class="mu-botbar">
         <button class="mu-btn" id="muPrev">السابقة →</button>
@@ -1193,7 +1210,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.3</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.4</p>
   </section>
 
 </div>
@@ -3255,7 +3272,7 @@ function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); 
 function tvAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function tvEnsureData(){
   if(muQuran) return true;
-  try{ const r=await fetch("quran-data.json?v=273"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
+  try{ const r=await fetch("quran-data.json?v=274"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
 }
 function tvRender(){
   const i=parseInt($("tvSurah").value||"1",10)-1;
@@ -3264,10 +3281,32 @@ function tvRender(){
   const s=muQuran[i];
   let h='<div class="tv-surah-title">سُورَةُ '+s.n+'</div>';
   if(i!==0&&i!==8) h+='<div class="tv-basmala">'+MU_BASMALA+'</div>';
-  h+=s.a.map((t,k)=>'<span>'+t+' <span class="tv-n">﴿'+tvAr(k+1)+'﴾</span> </span>').join('');
+  h+=s.a.map((t,k)=>{
+    const jz=TV_JUZ_KEY[(i+1)+":"+(k+1)];
+    const mark=jz?'<span class="tv-jmark" data-j="'+jz+'" id="tv-j'+jz+'">الجزء '+tvAr(jz)+'</span>':'';
+    return mark+'<span>'+t+' <span class="tv-n">﴿'+tvAr(k+1)+'﴾</span> </span>';
+  }).join('');
   $("tvBody").innerHTML=h;
   $("tvBody").scrollTop=0;
   localStorage.setItem("mushaf_tv_cur",String(tvCur));
+}
+/* suivi et navigation par juz */
+const TV_JUZ_STARTS=[[1,1],[2,142],[2,226],[3,93],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],[9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],[29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
+const TV_JUZ_KEY={}; TV_JUZ_STARTS.forEach((p,i)=>TV_JUZ_KEY[p[0]+":"+p[1]]=i+1);
+function tvUpdateBadge(){
+  const body=$("tvBody"); let cur=1;
+  body.querySelectorAll(".tv-jmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) cur=parseInt(m.dataset.j); });
+  $("tvJuzBadge").textContent="الجزء "+tvAr(cur);
+}
+function tvGoJuz(k){
+  const st=TV_JUZ_STARTS[k-1];
+  if(st[0]!==parseInt($("tvSurah").value,10)){ $("tvSurah").value=String(st[0]); tvRender(); }
+  requestAnimationFrame(()=>{
+    const el=document.getElementById("tv-j"+k);
+    if(el) $("tvBody").scrollTop=Math.max(0,el.offsetTop-8);
+    tvUpdateBadge();
+  });
+  $("tvSheet").classList.remove("open");
 }
 async function openTextMode(){
   const ok=await tvEnsureData();
@@ -3279,9 +3318,26 @@ async function openTextMode(){
   tvRender(); tvApplySize();
 }
 let tvSaveT=null;
-$("tvBody").addEventListener("scroll",()=>{ clearTimeout(tvSaveT); tvSaveT=setTimeout(()=>{
+$("tvBody").addEventListener("scroll",()=>{
+  tvUpdateBadge();
+  clearTimeout(tvSaveT); tvSaveT=setTimeout(()=>{
   localStorage.setItem("mushaf_tv_pos",JSON.stringify({s:tvCur,y:$("tvBody").scrollTop}));
 },400); });
+/* sélecteur de juz */
+$("tvJuzBadge").addEventListener("click",()=>{
+  const g=$("tvGrid");
+  if(!g.children.length){
+    for(let k=1;k<=30;k++){
+      const b=document.createElement("button");
+      b.textContent=tvAr(k)+" · "+(window.MU_JUZ_NAMES?MU_JUZ_NAMES[k]:"");
+      b.addEventListener("click",()=>tvGoJuz(k));
+      g.appendChild(b);
+    }
+  }
+  $("tvSheet").classList.add("open");
+});
+$("tvClose").addEventListener("click",()=>$("tvSheet").classList.remove("open"));
+$("tvSheet").addEventListener("click",e=>{ if(e.target===$("tvSheet")) $("tvSheet").classList.remove("open"); });
 $("tvSurah").addEventListener("change",()=>{ tvRender(); });
 function tvGo(delta){
   const cur=parseInt($("tvSurah").value||"1",10);
