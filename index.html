@@ -1160,7 +1160,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.6.1</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.6.2</p>
   </section>
 
 </div>
@@ -2632,26 +2632,17 @@ function muClampPan(){
   muTx = Math.min(L.x,Math.max(-L.x,muTx));
   muTy = Math.min(L.y,Math.max(-L.y,muTy));
 }
-/* plein écran = TOUJOURS remplir la totalité de l'écran (texte + garniture aux bords), sans exception */
-const MU_MULT_STEPS = [1, 1.25, 1.55];
-const MU_MULT_LABELS = ["عادي","كبير","كبير جداً"];
-let muMultIdx = parseInt(localStorage.getItem("mushaf_size_idx")||"1",10); if(!(muMultIdx>=0 && muMultIdx<MU_MULT_STEPS.length)) muMultIdx=1;
-let muMult = MU_MULT_STEPS[muMultIdx];
+/* plein écran : la page entière (avec ses marges) s'affiche ajustée ;
+   ensuite le zoom choisi reste FIGÉ d'une page à l'autre */
+const MU_SIZES = [{s:1.6,l:"عادي"},{s:2.1,l:"كبير"},{s:2.7,l:"كبير جداً"}];
+let muSizeIdx = parseInt(localStorage.getItem("mushaf_size_idx")||"1",10); if(!(muSizeIdx>=0 && muSizeIdx<MU_SIZES.length)) muSizeIdx=1;
 function muApplyFit(){
   $("muViewport").classList.toggle("fitw", document.body.classList.contains("mu-fullscreen"));
-}
-function muCoverBase(){
-  const r = $("muViewport").getBoundingClientRect();
-  const img = $("muPage");
-  const iw = img.clientWidth || r.width;
-  const ih = img.clientHeight || r.width*1.45;
-  return Math.max(r.width/iw, r.height/ih) * 1.03;
 }
 function muApplyScale(s){
   muScale = Math.min(6, Math.max(1, s));
   muClampPan(); muApplyTransform();
 }
-function muFsTargetScale(){ return muCoverBase() * muMult; }
 /* masquage auto des barres en plein écran */
 let muIdleT = null;
 function muWake(){
@@ -2680,14 +2671,11 @@ function muRender(anim){
   if(anim && muScale <= 1.05){ void img.offsetWidth; img.classList.add(anim); }
   img.onload = () => {
     loader.classList.remove("show");
-    /* recalcul après dimensions réelles : garantit le remplissage total sans bandes */
-    if(document.body.classList.contains("mu-fullscreen")) muApplyScale(muFsTargetScale());
   };
   img.onerror = () => { loader.classList.remove("show"); toast("تعذر تحميل الصفحة — تحقق من اتصالك بالإنترنت"); };
   img.src = url;
-  if(document.body.classList.contains("mu-fullscreen")){
-    muScale = muFsTargetScale();
-  } else {
+  /* plein écran : conserver EXACTEMENT la disposition de la page précédente (zoom figé) */
+  if(!document.body.classList.contains("mu-fullscreen")){
     const savedZ = parseFloat(localStorage.getItem("mushaf_zoom_level"));
     muScale = (savedZ && savedZ >= 1) ? savedZ : muDefZoom;
   }
@@ -2728,7 +2716,8 @@ function muEnterFS(){
   document.body.classList.add("mu-fullscreen");
   if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
   muApplyFit(); muWake();
-  setTimeout(()=>{ muApplyScale(muFsTargetScale()); }, 120);
+  /* entrée en plein écran : page ENTIÈRE avec ses marges, bien ajustée */
+  setTimeout(()=>{ muApplyScale(1); }, 120);
 }
 function muExitFS(){
   document.body.classList.remove("mu-fullscreen");
@@ -2747,8 +2736,7 @@ window.addEventListener("fullscreenchange", ()=>{
 });
 window.addEventListener("resize", ()=>{
   if($("scr-mushaf") && $("scr-mushaf").classList.contains("active")){
-    if(document.body.classList.contains("mu-fullscreen")) muApplyScale(muFsTargetScale());
-    else { muClampPan(); muApplyTransform(); }
+    muClampPan(); muApplyTransform();
   }
 });
 /* téléchargement du juz courant pour lecture hors-ligne (remplit le cache du SW) */
@@ -2847,8 +2835,7 @@ function renderMuGrid(){
           /* double-tap : basculer entre taille de lecture et page ajustée */
           clearTimeout(muZoneT); muZoneT = null; muLastTap = 0;
           if(document.body.classList.contains("mu-fullscreen")){
-            const t = muFsTargetScale();
-            muApplyScale(Math.abs(muScale - t) > t*0.12 ? t : muCoverBase()/1.03);
+            muApplyScale(muScale > 1.06 ? 1 : 2.1);
           } else {
             muSetZoom(muScale > 1.05 ? 1 : (muDefZoom > 1.05 ? muDefZoom : 2.5));
           }
@@ -3180,7 +3167,7 @@ $("muGridClose").addEventListener("click", ()=>$("muGridOverlay").classList.remo
 $("muFsBtn").addEventListener("click", muEnterFS);
 $("muFsExit").addEventListener("click", muExitFS);
 $("muFitBtn").addEventListener("click", ()=>{
-  muSetSize((muMultIdx+1) % MU_MULT_STEPS.length);
+  muSetSize((muSizeIdx+1) % MU_SIZES.length);
 });
 $("muDlJuz").addEventListener("click", muDownloadJuz);
 /* les boutons superposés au viewport ne doivent pas déclencher les gestes de la page */
@@ -3212,24 +3199,21 @@ if(muMode === "flash") $("muFrame").src = MU_FLASH_URL;
 muApplyMode();
 /* sélecteur de taille de lecture */
 function muSetSize(idx){
-  if(!(idx>=0 && idx<MU_MULT_STEPS.length)) idx=1;
-  muMultIdx = idx; muMult = MU_MULT_STEPS[idx];
+  if(!(idx>=0 && idx<MU_SIZES.length)) idx=1;
+  muSizeIdx = idx;
   localStorage.setItem("mushaf_size_idx", String(idx));
-  const legacy = {"0":"1","1":"1.8","2":"2.6"}[String(idx)] || "1.8";
-  muDefZoom = parseFloat(legacy); localStorage.setItem("mushaf_def_zoom", legacy);
+  const s = MU_SIZES[idx].s;
+  localStorage.setItem("mushaf_zoom_level", String(s));
+  muDefZoom = s;
   muInitSizeBtns();
-  if(document.body.classList.contains("mu-fullscreen")) muApplyScale(muFsTargetScale());
-  else {
-    localStorage.setItem("mushaf_zoom_level", String(muMult*1.8));
-    const savedZ = parseFloat(localStorage.getItem("mushaf_zoom_level"));
-    muScale = (savedZ && savedZ >= 1) ? savedZ : muDefZoom;
-    muClampPan(); muApplyTransform();
-  }
-  toast("حجم المصحف: " + MU_MULT_LABELS[idx]);
+  muScale = Math.min(6,Math.max(1,s));
+  muTx = 0; muTy = 0;
+  muClampPan(); muApplyTransform();
+  toast("حجم المصحف: " + MU_SIZES[idx].l);
 }
 function muInitSizeBtns(){
   document.querySelectorAll(".mu-size-btn").forEach((b,idx)=>{
-    b.classList.toggle("active", idx === muMultIdx);
+    b.classList.toggle("active", idx === muSizeIdx);
   });
 }
 document.querySelectorAll(".mu-size-btn").forEach((b,idx)=>{
