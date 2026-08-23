@@ -634,6 +634,18 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
 .mu-num{font-family:'Amiri',serif;font-size:21px;font-weight:700;color:var(--gold-light);line-height:1.25}
 .mu-name{font-size:11px;color:var(--muted);margin-top:2px}
 .mu-pg{font-size:10.5px;color:var(--emerald-soft);margin-top:4px;font-weight:700}
+/* plein écran mushaf */
+#muFsBtn{font-size:14px}
+body.mu-fullscreen header,body.mu-fullscreen nav,body.mu-fullscreen #scr-mushaf .mu-head{display:none!important}
+body.mu-fullscreen #scr-mushaf{padding:0}
+body.mu-fullscreen .mu-stage{height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column}
+body.mu-fullscreen .mu-viewport{flex:1;height:auto;min-height:0;max-height:none}
+#muFsExit{position:absolute;top:10px;left:10px;z-index:6;width:38px;height:38px;border-radius:12px;background:rgba(5,10,7,.55);border:1px solid rgba(212,175,55,.4);color:var(--gold-light);font-size:17px;cursor:pointer;display:none;backdrop-filter:blur(4px)}
+body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:center}
+/* téléchargement hors-ligne d'un juz */
+.mu-dlrow{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-soft)}
+.mu-dlrow .btn{width:100%}
+.mu-dl-status{font-size:12.5px;color:var(--emerald-soft);margin-top:8px;text-align:center;font-weight:600;min-height:18px}
 
 /* ---------- Export PDF cheikh (impression) ---------- */
 #printView{display:none}
@@ -943,6 +955,7 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
       <div class="mu-topbar">
         <span class="mu-juz" id="muJuzLabel"></span>
         <div class="mu-zctl">
+          <button id="muFsBtn" aria-label="ملء الشاشة">⛶</button>
           <button id="muZOut" aria-label="تصغير">−</button>
           <span class="mu-zoomval" id="muZoomVal"></span>
           <button id="muZIn" aria-label="تكبير">+</button>
@@ -952,6 +965,7 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
         <img id="muPage" alt="صفحة من المصحف الشريف" draggable="false">
         <div class="mu-loader" id="muLoader"><span></span></div>
         <div class="mu-hint" id="muHint">اسحب لتقليب الصفحات · اضغط مرتين للتكبير</div>
+        <button id="muFsExit" aria-label="خروج من ملء الشاشة">✕</button>
       </div>
       <div class="mu-botbar">
         <button class="mu-btn" id="muPrev">السابقة →</button>
@@ -960,6 +974,23 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
       </div>
     </div>
   </section>
+
+  <div id="muGridOverlay">
+    <div class="mu-sheet">
+      <div class="mu-grid-head">
+        <div>
+          <div class="t">الجزء الثلاثون</div>
+          <div class="idx">اختر جزءاً للانتقال إلى بدايته</div>
+        </div>
+        <button class="sheet-close" id="muGridClose">✕</button>
+      </div>
+      <div class="mu-grid" id="muGrid"></div>
+      <div class="mu-dlrow">
+        <button class="btn btn-emerald" id="muDlJuz">⤓ تحميل الجزء الحالي للقراءة دون اتصال</button>
+        <div class="mu-dl-status" id="muDlStatus"></div>
+      </div>
+    </div>
+  </div>
 
   <section class="screen" id="scr-settings">
     <div class="card">
@@ -2598,6 +2629,46 @@ function openMushaf(){
   clearTimeout(hint._t);
   hint._t = setTimeout(()=>hint.classList.add("hide"), 3500);
 }
+/* plein écran */
+function muEnterFS(){
+  document.body.classList.add("mu-fullscreen");
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 90);
+}
+function muExitFS(){
+  document.body.classList.remove("mu-fullscreen");
+  if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+  setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 90);
+}
+window.addEventListener("fullscreenchange", ()=>{
+  if(!document.fullscreenElement){
+    document.body.classList.remove("mu-fullscreen");
+    setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 60);
+  }
+});
+window.addEventListener("resize", ()=>{
+  if($("scr-mushaf") && $("scr-mushaf").classList.contains("active")){ muClampPan(); muApplyTransform(); }
+});
+/* téléchargement du juz courant pour lecture hors-ligne (remplit le cache du SW) */
+let muDlBusy = false;
+async function muDownloadJuz(){
+  if(muDlBusy) return;
+  const i = muJuzOf(muPage);
+  const start = MU_JUZ_STARTS[i];
+  const end = (i < MU_JUZ_STARTS.length-1) ? MU_JUZ_STARTS[i+1]-1 : MU_TOTAL;
+  const btn = $("muDlJuz"), st = $("muDlStatus");
+  muDlBusy = true; btn.disabled = true;
+  const total = end-start+1;
+  let ok = 0;
+  for(let p=start;p<=end;p++){
+    try{ await fetch(muUrl(p), {mode:"no-cors", cache:"no-store"}); ok++; }catch(e){}
+    st.textContent = "جارٍ التحميل… " + ok + " / " + total;
+  }
+  st.textContent = ok === total
+    ? "✓ الجزء " + MU_JUZ_NAMES[i] + " متوفر الآن دون اتصال"
+    : "تم تحميل " + ok + " من " + total + " صفحة — أعد المحاولة للباقي";
+  muDlBusy = false; btn.disabled = false;
+}
 function renderMuGrid(){
   const cur = muJuzOf(muPage);
   const g = $("muGrid");
@@ -2967,6 +3038,10 @@ $("muZIn").addEventListener("click", ()=>muSetZoom(muScale+0.5));
 $("muZOut").addEventListener("click", ()=>muSetZoom(muScale-0.5));
 $("muGridBtn").addEventListener("click", ()=>{ renderMuGrid(); $("muGridOverlay").classList.add("show"); });
 $("muGridOverlay").addEventListener("click", e=>{ if(e.target.id==="muGridOverlay") e.target.classList.remove("show"); });
+$("muGridClose").addEventListener("click", ()=>$("muGridOverlay").classList.remove("show"));
+$("muFsBtn").addEventListener("click", muEnterFS);
+$("muFsExit").addEventListener("click", muExitFS);
+$("muDlJuz").addEventListener("click", muDownloadJuz);
 
 $("btnApplyCount").addEventListener("click", ()=>{
   const i = parseInt($("setName").value, 10);

@@ -1,5 +1,6 @@
 ﻿/* أذكار — Service Worker (hors-ligne) */
-const VERSION = "adhkar-v2.3.0";
+const VERSION = "adhkar-v2.4.0";
+const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -24,7 +25,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => k !== VERSION && !k.startsWith("mushaf-pages-")).map((k) => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
@@ -51,6 +52,26 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (event.request.method !== "GET") return;
+
+  /* pages du mushaf (archive.org) : cache-first -> lecture hors-ligne une fois la page vue/téléchargée */
+  if (url.hostname === "archive.org" && url.pathname.includes("/yusufmazouz1986_gmail/page/n")) {
+    event.respondWith(
+      caches.open(MUSHAF_CACHE).then(async (cache) => {
+        const cached = await cache.match(event.request);
+        if (cached) return cached;
+        try {
+          const res = await fetch(event.request);
+          if (res && (res.status === 200 || res.type === "opaque")) {
+            cache.put(event.request, res.clone()).catch(() => {});
+          }
+          return res;
+        } catch (e) {
+          return cached || Response.error();
+        }
+      })
+    );
+    return;
+  }
 
   /* navigations (pages) : network-first -> HTML toujours frais si en ligne,
      fallback cache si hors-ligne. */
