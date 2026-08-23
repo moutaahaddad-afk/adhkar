@@ -2724,12 +2724,12 @@ function renderMuGrid(){
 (function(){
   const vp = $("muViewport");
   const pts = new Map();
-  let startDist = 0, startScale = 1, sx = 0, sy = 0, moved = false;
+  let startDist = 0, startScale = 1, sx = 0, sy = 0, gx = 0, gy = 0, moved = false;
   vp.addEventListener("pointerdown", e=>{
     muWake();
     vp.setPointerCapture(e.pointerId);
     pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-    if(pts.size===1){ sx=e.clientX; sy=e.clientY; moved=false; }
+    if(pts.size===1){ sx=e.clientX; sy=e.clientY; gx=e.clientX; gy=e.clientY; moved=false; }
     else if(pts.size===2){
       const a=[...pts.values()];
       startDist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1;
@@ -2762,15 +2762,19 @@ function renderMuGrid(){
     pts.delete(e.pointerId);
     muWake();
     if(pts.size===0){
-      const dx = e.clientX - sx;
+      /* déplacement net du geste depuis son point de départ */
+      const netDx = e.clientX - gx, netDy = e.clientY - gy;
       const L = muLimits();
-      if(moved && muScale <= 1.05 && L.x <= 0.5){
-        if(dx < -45) muGo(muPage+1, "slide-next");
-        else if(dx > 45) muGo(muPage-1, "slide-prev");
-      } else if(!moved){
+      const atLeftEdge = muTx >= L.x - 12;    /* bord gauche du contenu atteint */
+      const atRightEdge = muTx <= -L.x + 12;  /* bord droit atteint */
+      if(!moved){
         const now = Date.now();
         if(now - muLastTap < 320){ muSetZoom(muScale > 1.05 ? 1 : 2.5); muLastTap = 0; }
         else muLastTap = now;
+      } else if(Math.abs(netDx) > Math.abs(netDy)*1.15 && Math.abs(netDx) > 55){
+        /* feuilletage possible même zoomé, une fois le bord atteint ; le zoom est conservé */
+        if(netDx < 0 && atLeftEdge) muGo(muPage+1, "slide-next");
+        else if(netDx > 0 && atRightEdge) muGo(muPage-1, "slide-prev");
       }
     }
   };
