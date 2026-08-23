@@ -654,7 +654,25 @@ body.mu-fullscreen.idle .mu-topbar,body.mu-fullscreen.idle .mu-botbar,body.mu-fu
 .mu-size-btn{flex:1;padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .mu-size-btn.active{border-color:var(--gold);background:rgba(212,175,55,.14);color:var(--gold-light)}
 .mu-modes{display:flex;gap:7px;margin-bottom:12px}
-/* lecteur quranflash intégré — agrandi 25% pour éliminer leurs marges/barres internes */
+/* texte numérique : lecture continue */
+#muText{display:none;flex-direction:column;width:100%;background:#fdfbf5;position:relative}
+#scr-mushaf.mode-text #muText{display:flex;height:calc(100vh - 380px);height:calc(100dvh - 380px);min-height:360px;max-height:760px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0;max-height:none;border-radius:0;border:none}
+#scr-mushaf.mode-text .mu-viewport,#scr-mushaf.mode-text #muFrame{display:none!important}
+#scr-mushaf.mode-text .mu-arrow{display:none!important}
+#scr-mushaf.mode-text #muZIn,#scr-mushaf.mode-text #muZOut,#scr-mushaf.mode-text #muZoomVal,#scr-mushaf.mode-text #muFitBtn,#scr-mushaf.mode-text #muGridBtn,#scr-mushaf.mode-text .mu-size-row{display:none!important}
+.tv-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0d1f16;color:var(--gold-light);border-bottom:1px solid rgba(212,175,55,.25)}
+#tvSurah{flex:1;min-width:0;padding:9px 10px;border-radius:10px;border:1px solid rgba(212,175,55,.35);background:#122a1e;color:#f3ead0;font-family:inherit;font-size:14px}
+.tv-size{display:flex;align-items:center;gap:6px}
+.tv-size button{width:34px;height:34px;border-radius:10px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.12);color:var(--gold-light);font-size:17px;font-weight:700;cursor:pointer}
+#tvVal{min-width:28px;text-align:center;font-size:13px;font-weight:700;color:#f3ead0}
+#tvBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;text-align:justify;font-family:"Amiri","Traditional Arabic",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--tv-size,30px);line-height:2.15}
+.tv-surah-title{text-align:center;font-size:.72em;letter-spacing:.5px;color:#7a5b13;background:linear-gradient(90deg,transparent,rgba(212,175,55,.18),transparent);padding:10px 0;margin:-6px 0 14px;border-radius:10px}
+.tv-basmala{text-align:center;color:#0d1f16;font-weight:700;font-size:.82em;margin-bottom:14px}
+.tv-n{color:#b58a1f;font-size:.6em;white-space:nowrap}
+body.mu-fullscreen .tv-bar{position:absolute;top:0;left:0;right:0;z-index:2;opacity:0;transition:opacity .35s}
+body.mu-fullscreen:not(.idle) .tv-bar{opacity:1}
+body.mu-fullscreen #tvBody{padding-top:54px}
 #muFrame{display:none;border:0;background:#ffffff;width:100%;transform-origin:center center}
 #scr-mushaf.mode-flash #muFrame{display:block;height:calc(100vh - 380px);height:calc(100dvh - 380px);min-height:360px;max-height:760px;border-radius:14px;transform:scale(1.25)}
 body.mu-fullscreen #scr-mushaf.mode-flash #muFrame{flex:1;height:auto;min-height:0;max-height:none;border-radius:0}
@@ -971,7 +989,8 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
     <div class="card mu-head">
       <div style="width:100%">
         <div class="mu-modes">
-          <button class="mu-size-btn active" id="muModeFlash">قارئ فلاش (مصحف مكتوب)</button>
+          <button class="mu-size-btn" id="muModeText">قراءة نصية</button>
+          <button class="mu-size-btn active" id="muModeFlash">قارئ فلاش</button>
           <button class="mu-size-btn" id="muModeScan">المصحف الممسوح</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
@@ -1008,6 +1027,17 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         <button class="mu-arrow" id="muArrowNext" aria-label="الصفحة التالية">‹</button>
       </div>
       <iframe id="muFrame" title="مصحف قارئ فلاش — قرآن فلاش" allowfullscreen></iframe>
+      <div id="muText">
+        <div class="tv-bar">
+          <select id="tvSurah"></select>
+          <div class="tv-size">
+            <button id="tvPlus" aria-label="تكبير">+</button>
+            <span id="tvVal">30</span>
+            <button id="tvMinus" aria-label="تصغير">−</button>
+          </div>
+        </div>
+        <div id="tvBody"></div>
+      </div>
       <div class="mu-botbar">
         <button class="mu-btn" id="muPrev">السابقة →</button>
         <span class="mu-pageno" id="muPageNo"></span>
@@ -1160,7 +1190,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.6.3</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.0</p>
   </section>
 
 </div>
@@ -2716,8 +2746,9 @@ function muGo(np, anim){
 }
 function openMushaf(){
   if(muMode === "flash" && navigator.onLine === false){
-    muMode = "scan"; muApplyMode();
-    toast("غير متصل بالإنترنت — عرض المصحف الممسوح");
+    muMode = "text"; muApplyMode();
+    toast("غير متصل — عرض القراءة النصية");
+    openTextMode();
   }
   $("muTotalPages").textContent = String(MU_TOTAL+1);
   muRender();
@@ -3195,27 +3226,62 @@ $("muDlJuz").addEventListener("click", muDownloadJuz);
 });
 $("muArrowNext").addEventListener("click", ()=>muGo(muPage+1,"slide-next"));
 $("muArrowPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
-/* mode d'affichage : quranflash (en ligne, texte net) ou pages scannées (hors-ligne) */
+/* mode d'affichage : texte numérique | quranflash | pages scannées */
 const MU_FLASH_URL = "https://app.quranflash.com/book/Qaloon?en";
-let muMode = localStorage.getItem("mushaf_mode") || "flash";
+let muMode = localStorage.getItem("mushaf_mode") || "text";
 function muApplyMode(){
-  $("scr-mushaf").classList.toggle("mode-flash", muMode === "flash");
+  const sec = $("scr-mushaf");
+  sec.classList.toggle("mode-flash", muMode === "flash");
+  sec.classList.toggle("mode-text", muMode === "text");
   $("muModeFlash").classList.toggle("active", muMode === "flash");
-  $("muModeScan").classList.toggle("active", muMode !== "flash");
+  $("muModeScan").classList.toggle("active", muMode === "scan");
+  $("muModeText").classList.toggle("active", muMode === "text");
 }
-$("muModeFlash").addEventListener("click", ()=>{
-  muMode = "flash";
-  localStorage.setItem("mushaf_mode", "flash");
-  if(!$("muFrame").getAttribute("src")) $("muFrame").src = MU_FLASH_URL;
-  muApplyMode();
-});
-$("muModeScan").addEventListener("click", ()=>{
-  muMode = "scan";
-  localStorage.setItem("mushaf_mode", "scan");
-  muApplyMode();
-});
-if(muMode === "flash") $("muFrame").src = MU_FLASH_URL;
+$("muModeText").addEventListener("click", ()=>{ muMode="text"; localStorage.setItem("mushaf_mode","text"); muApplyMode(); openTextMode(); });
+$("muModeFlash").addEventListener("click", ()=>{ muMode="flash"; localStorage.setItem("mushaf_mode","flash"); if(!$("muFrame").getAttribute("src")) $("muFrame").src=MU_FLASH_URL; muApplyMode(); });
+$("muModeScan").addEventListener("click", ()=>{ muMode="scan"; localStorage.setItem("mushaf_mode","scan"); muApplyMode(); });
+if(muMode==="flash") $("muFrame").src = MU_FLASH_URL;
 muApplyMode();
+if(muMode==="text") openTextMode();
+/* ===== texte numérique : lecture continue, taille géante, zéro marge ===== */
+let muQuran=null;
+const MU_BASMALA="بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+let tvSize=parseFloat(localStorage.getItem("mushaf_tv_size"))||30; if(!(tvSize>=14&&tvSize<=64))tvSize=30;
+let tvCur=parseInt(localStorage.getItem("mushaf_tv_cur")||"1",10)||1;
+function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); $("tvVal").textContent=Math.round(tvSize); }
+function tvAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
+async function tvEnsureData(){
+  if(muQuran) return true;
+  try{ const r=await fetch("quran-data.json"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
+}
+function tvRender(){
+  const i=parseInt($("tvSurah").value||"1",10)-1;
+  if(!muQuran||!muQuran[i]) return;
+  tvCur=i+1;
+  const s=muQuran[i];
+  let h='<div class="tv-surah-title">سُورَةُ '+s.n+'</div>';
+  if(i!==0&&i!==8) h+='<div class="tv-basmala">'+MU_BASMALA+'</div>';
+  h+=s.a.map((t,k)=>'<span>'+t+' <span class="tv-n">﴿'+tvAr(k+1)+'﴾</span> </span>').join('');
+  $("tvBody").innerHTML=h;
+  $("tvBody").scrollTop=0;
+  localStorage.setItem("mushaf_tv_cur",String(tvCur));
+}
+async function openTextMode(){
+  const ok=await tvEnsureData();
+  if(!ok){ toast("تعذّر تحميل النص"); return; }
+  if(!$("tvSurah").options.length){
+    muQuran.forEach((s,i)=>{ const o=document.createElement("option"); o.value=i+1; o.textContent=(i+1)+' — '+s.n; $("tvSurah").appendChild(o); });
+  }
+  $("tvSurah").value=String(tvCur);
+  tvRender(); tvApplySize();
+}
+let tvSaveT=null;
+$("tvBody").addEventListener("scroll",()=>{ clearTimeout(tvSaveT); tvSaveT=setTimeout(()=>{
+  localStorage.setItem("mushaf_tv_pos",JSON.stringify({s:tvCur,y:$("tvBody").scrollTop}));
+},400); });
+$("tvSurah").addEventListener("change",()=>{ tvRender(); });
+$("tvPlus").addEventListener("click",()=>{ tvSize=Math.min(64,tvSize+2); localStorage.setItem("mushaf_tv_size",String(tvSize)); tvApplySize(); });
+$("tvMinus").addEventListener("click",()=>{ tvSize=Math.max(14,tvSize-2); localStorage.setItem("mushaf_tv_size",String(tvSize)); tvApplySize(); });
 /* sélecteur de taille de lecture */
 function muSetSize(idx){
   if(!(idx>=0 && idx<MU_SIZES.length)) idx=1;
