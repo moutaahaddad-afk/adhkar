@@ -3252,7 +3252,7 @@ function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); 
 function tvAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function tvEnsureData(){
   if(muQuran) return true;
-  try{ const r=await fetch("quran-data.json"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
+  try{ const r=await fetch("quran-data.json?v=272"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
 }
 function tvRender(){
   const i=parseInt($("tvSurah").value||"1",10)-1;
