@@ -19,6 +19,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <title>أذكار الأسماء الحسنى</title>
 <style>
+@font-face{font-family:'Amiri';src:url('amiri-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Amiri';src:url('amiri-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 :root{
   --bg0:#03140d; --bg1:#062a1e; --bg2:#0a3d2c; --bg3:#0e6b4a;
   --emerald:#10b981; --emerald-soft:#34d399;
@@ -658,7 +660,7 @@ body.mu-fullscreen.idle .mu-topbar,body.mu-fullscreen.idle .mu-botbar,body.mu-fu
 #muText{display:none;flex-direction:column;width:100%;background:#fdfbf5;position:relative}
 #scr-mushaf.mode-text #muText{display:flex;height:calc(100vh - 380px);height:calc(100dvh - 380px);min-height:360px;max-height:760px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
 body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0;max-height:none;border-radius:0;border:none}
-#scr-mushaf.mode-text .mu-viewport,#scr-mushaf.mode-text #muFrame{display:none!important}
+#scr-mushaf.mode-text .mu-viewport{display:none!important}
 #scr-mushaf.mode-text .mu-arrow{display:none!important}
 #scr-mushaf.mode-text #muZIn,#scr-mushaf.mode-text #muZOut,#scr-mushaf.mode-text #muZoomVal,#scr-mushaf.mode-text #muFitBtn,#scr-mushaf.mode-text #muGridBtn,#scr-mushaf.mode-text .mu-size-row{display:none!important}
 .tv-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0d1f16;color:var(--gold-light);border-bottom:1px solid rgba(212,175,55,.25)}
@@ -999,8 +1001,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
     <div class="card mu-head">
       <div style="width:100%">
         <div class="mu-modes">
-          <button class="mu-size-btn" id="muModeText">قراءة نصية</button>
-          <button class="mu-size-btn active" id="muModeFlash">قارئ فلاش</button>
+          <button class="mu-size-btn active" id="muModeText">قراءة نصية</button>
           <button class="mu-size-btn" id="muModeScan">المصحف الممسوح</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
@@ -1036,7 +1037,6 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         <button class="mu-arrow" id="muArrowPrev" aria-label="الصفحة السابقة">›</button>
         <button class="mu-arrow" id="muArrowNext" aria-label="الصفحة التالية">‹</button>
       </div>
-      <iframe id="muFrame" title="مصحف قارئ فلاش — قرآن فلاش" allowfullscreen></iframe>
       <div id="muText">
         <div class="tv-bar">
           <button class="tv-nav" id="tvPrev" title="السورة السابقة">›</button>
@@ -3246,21 +3246,16 @@ $("muDlJuz").addEventListener("click", muDownloadJuz);
 });
 $("muArrowNext").addEventListener("click", ()=>muGo(muPage+1,"slide-next"));
 $("muArrowPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
-/* mode d'affichage : texte numérique | quranflash | pages scannées */
-const MU_FLASH_URL = "https://app.quranflash.com/book/Qaloon?en";
+/* mode d'affichage : texte numérique | pages scannées */
 let muMode = localStorage.getItem("mushaf_mode") || "text";
 function muApplyMode(){
   const sec = $("scr-mushaf");
-  sec.classList.toggle("mode-flash", muMode === "flash");
   sec.classList.toggle("mode-text", muMode === "text");
-  $("muModeFlash").classList.toggle("active", muMode === "flash");
-  $("muModeScan").classList.toggle("active", muMode === "scan");
   $("muModeText").classList.toggle("active", muMode === "text");
+  $("muModeScan").classList.toggle("active", muMode === "scan");
 }
 $("muModeText").addEventListener("click", ()=>{ muMode="text"; localStorage.setItem("mushaf_mode","text"); muApplyMode(); openTextMode(); });
-$("muModeFlash").addEventListener("click", ()=>{ muMode="flash"; localStorage.setItem("mushaf_mode","flash"); if(!$("muFrame").getAttribute("src")) $("muFrame").src=MU_FLASH_URL; muApplyMode(); });
 $("muModeScan").addEventListener("click", ()=>{ muMode="scan"; localStorage.setItem("mushaf_mode","scan"); muApplyMode(); });
-if(muMode==="flash") $("muFrame").src = MU_FLASH_URL;
 muApplyMode();
 if(muMode==="text") openTextMode();
 /* ===== texte numérique : lecture continue, taille géante, zéro marge ===== */
