@@ -1160,7 +1160,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.6.2</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.6.3</p>
   </section>
 
 </div>
@@ -2624,13 +2624,26 @@ function muLimits(){
   const iw = img.clientWidth * muScale, ih = img.clientHeight * muScale;
   return {
     x: Math.max(0, (iw - r.width)/2),
-    y: Math.max(0, (ih - r.height)/2)
+    y: Math.max(0, (ih - r.height)/2),
+    ih, vw: r.width, vh: r.height
   };
+}
+/* ancrage HAUT : la page colle au bord supérieur (zéro marge en haut/côtés), le blanc continue en bas */
+function muAnchorTop(){
+  const L = muLimits();
+  muTx = 0;
+  if(L.ih < L.vh) muTy = -(L.vh - L.ih)/2;
+  else muTy = 0;
 }
 function muClampPan(){
   const L = muLimits();
   muTx = Math.min(L.x,Math.max(-L.x,muTx));
-  muTy = Math.min(L.y,Math.max(-L.y,muTy));
+  if(L.ih < L.vh){
+    /* contenu plus court que l'écran : autoriser le glissement vers l'ancrage haut uniquement */
+    muTy = Math.min(0, Math.max(-(L.vh - L.ih)/2, muTy));
+  } else {
+    muTy = Math.min(L.y,Math.max(-L.y,muTy));
+  }
 }
 /* plein écran : la page entière (avec ses marges) s'affiche ajustée ;
    ensuite le zoom choisi reste FIGÉ d'une page à l'autre */
@@ -2671,6 +2684,8 @@ function muRender(anim){
   if(anim && muScale <= 1.05){ void img.offsetWidth; img.classList.add(anim); }
   img.onload = () => {
     loader.classList.remove("show");
+    /* correction de l'ancrage haut une fois les dimensions réelles connues */
+    if(document.body.classList.contains("mu-fullscreen")){ muAnchorTop(); muApplyTransform(); }
   };
   img.onerror = () => { loader.classList.remove("show"); toast("تعذر تحميل الصفحة — تحقق من اتصالك بالإنترنت"); };
   img.src = url;
@@ -2679,7 +2694,7 @@ function muRender(anim){
     const savedZ = parseFloat(localStorage.getItem("mushaf_zoom_level"));
     muScale = (savedZ && savedZ >= 1) ? savedZ : muDefZoom;
   }
-  muTx = 0; muTy = 0;
+  muAnchorTop();
   muApplyTransform();
   const j = muJuzOf(muPage);
   $("muJuzLabel").textContent = "الجزء " + MU_JUZ_NAMES[j];
@@ -2716,8 +2731,12 @@ function muEnterFS(){
   document.body.classList.add("mu-fullscreen");
   if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
   muApplyFit(); muWake();
-  /* entrée en plein écran : page ENTIÈRE avec ses marges, bien ajustée */
-  setTimeout(()=>{ muApplyScale(1); }, 120);
+  /* entrée en plein écran : page ENTIÈRE ancrée en haut, marges blanches qui coulent vers le bas */
+  setTimeout(()=>{
+    muScale = 1;
+    muAnchorTop();
+    muApplyTransform();
+  }, 120);
 }
 function muExitFS(){
   document.body.classList.remove("mu-fullscreen");
@@ -3207,7 +3226,7 @@ function muSetSize(idx){
   muDefZoom = s;
   muInitSizeBtns();
   muScale = Math.min(6,Math.max(1,s));
-  muTx = 0; muTy = 0;
+  muAnchorTop();
   muClampPan(); muApplyTransform();
   toast("حجم المصحف: " + MU_SIZES[idx].l);
 }
