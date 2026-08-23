@@ -636,10 +636,14 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
 .mu-pg{font-size:10.5px;color:var(--emerald-soft);margin-top:4px;font-weight:700}
 /* plein écran mushaf */
 #muFsBtn{font-size:14px}
+#muFitBtn.active{background:rgba(212,175,55,.3);box-shadow:inset 0 0 0 1px rgba(212,175,55,.5)}
+.mu-viewport.fitw #muPage{max-width:none;max-height:none;width:100%;height:auto}
 body.mu-fullscreen header,body.mu-fullscreen nav,body.mu-fullscreen #scr-mushaf .mu-head{display:none!important}
 body.mu-fullscreen #scr-mushaf{padding:0}
 body.mu-fullscreen .mu-stage{height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column}
 body.mu-fullscreen .mu-viewport{flex:1;height:auto;min-height:0;max-height:none}
+body.mu-fullscreen .mu-topbar,body.mu-fullscreen .mu-botbar,body.mu-fullscreen #muFsExit{transition:opacity .35s ease}
+body.mu-fullscreen.idle .mu-topbar,body.mu-fullscreen.idle .mu-botbar,body.mu-fullscreen.idle #muFsExit{opacity:0!important;pointer-events:none}
 #muFsExit{position:absolute;top:10px;left:10px;z-index:6;width:38px;height:38px;border-radius:12px;background:rgba(5,10,7,.55);border:1px solid rgba(212,175,55,.4);color:var(--gold-light);font-size:17px;cursor:pointer;display:none;backdrop-filter:blur(4px)}
 body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:center}
 /* téléchargement hors-ligne d'un juz */
@@ -956,6 +960,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         <span class="mu-juz" id="muJuzLabel"></span>
         <div class="mu-zctl">
           <button id="muFsBtn" aria-label="ملء الشاشة">⛶</button>
+          <button id="muFitBtn" aria-label="ملء عرض الشاشة" class="active">⤢</button>
           <button id="muZOut" aria-label="تصغير">−</button>
           <span class="mu-zoomval" id="muZoomVal"></span>
           <button id="muZIn" aria-label="تكبير">+</button>
@@ -2575,11 +2580,34 @@ function muJuzOf(p){
 }
 function muUrl(p){ return MU_BASE + (p+1) + ".jpg"; }
 
-function muClampPan(){
+function muLimits(){
   const r = $("muViewport").getBoundingClientRect();
-  const mx = (muScale-1)*r.width/2, my = (muScale-1)*r.height/2;
-  muTx = Math.min(mx,Math.max(-mx,muTx));
-  muTy = Math.min(my,Math.max(-my,muTy));
+  const img = $("muPage");
+  const iw = img.clientWidth * muScale, ih = img.clientHeight * muScale;
+  return {
+    x: Math.max(0, (iw - r.width)/2),
+    y: Math.max(0, (ih - r.height)/2)
+  };
+}
+function muClampPan(){
+  const L = muLimits();
+  muTx = Math.min(L.x,Math.max(-L.x,muTx));
+  muTy = Math.min(L.y,Math.max(-L.y,muTy));
+}
+/* mode « remplir la largeur de l'écran » (plein écran immersif) */
+let muFitW = localStorage.getItem("mushaf_fitw") !== "0";
+function muApplyFit(){
+  $("muViewport").classList.toggle("fitw", !!muFitW);
+  $("muFitBtn").classList.toggle("active", !!muFitW);
+}
+/* masquage auto des barres en plein écran */
+let muIdleT = null;
+function muWake(){
+  document.body.classList.remove("idle");
+  clearTimeout(muIdleT);
+  muIdleT = setTimeout(()=>{
+    if(document.body.classList.contains("mu-fullscreen")) document.body.classList.add("idle");
+  }, 3000);
 }
 function muApplyTransform(){
   $("muPage").style.transform = "translate(" + muTx + "px," + muTy + "px) scale(" + muScale + ")";
@@ -2633,16 +2661,21 @@ function openMushaf(){
 function muEnterFS(){
   document.body.classList.add("mu-fullscreen");
   if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  muApplyFit(); muWake();
   setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 90);
 }
 function muExitFS(){
   document.body.classList.remove("mu-fullscreen");
+  document.body.classList.remove("idle");
+  clearTimeout(muIdleT);
   if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
   setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 90);
 }
 window.addEventListener("fullscreenchange", ()=>{
   if(!document.fullscreenElement){
     document.body.classList.remove("mu-fullscreen");
+    document.body.classList.remove("idle");
+    clearTimeout(muIdleT);
     setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 60);
   }
 });
@@ -2693,6 +2726,7 @@ function renderMuGrid(){
   const pts = new Map();
   let startDist = 0, startScale = 1, sx = 0, sy = 0, moved = false;
   vp.addEventListener("pointerdown", e=>{
+    muWake();
     vp.setPointerCapture(e.pointerId);
     pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(pts.size===1){ sx=e.clientX; sy=e.clientY; moved=false; }
@@ -2710,20 +2744,27 @@ function renderMuGrid(){
       const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1;
       moved=true;
       muSetZoom(startScale * d/startDist);
-    } else if(pts.size===1 && muScale > 1.05){
-      muTx += e.clientX - sx; muTy += e.clientY - sy;
-      sx = e.clientX; sy = e.clientY;
-      moved=true; muClampPan(); muApplyTransform();
     } else if(pts.size===1){
-      if(Math.abs(e.clientX-sx)>8 || Math.abs(e.clientY-sy)>8) moved=true;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      const L = muLimits();
+      if(Math.abs(dx) > Math.abs(dy) && L.x <= 0.5){
+        /* geste horizontal alors que la page remplit déjà la largeur -> candidat à la rotation de page */
+        if(Math.abs(dx) > 8) moved = true;
+      } else {
+        muTx += dx; muTy += dy;
+        sx = e.clientX; sy = e.clientY;
+        moved = true; muClampPan(); muApplyTransform();
+      }
     }
   });
   const end = e=>{
     if(!pts.has(e.pointerId)) return;
     pts.delete(e.pointerId);
+    muWake();
     if(pts.size===0){
       const dx = e.clientX - sx;
-      if(moved && muScale <= 1.05){
+      const L = muLimits();
+      if(moved && muScale <= 1.05 && L.x <= 0.5){
         if(dx < -45) muGo(muPage+1, "slide-next");
         else if(dx > 45) muGo(muPage-1, "slide-prev");
       } else if(!moved){
@@ -3041,7 +3082,13 @@ $("muGridOverlay").addEventListener("click", e=>{ if(e.target.id==="muGridOverla
 $("muGridClose").addEventListener("click", ()=>$("muGridOverlay").classList.remove("show"));
 $("muFsBtn").addEventListener("click", muEnterFS);
 $("muFsExit").addEventListener("click", muExitFS);
+$("muFitBtn").addEventListener("click", ()=>{
+  muFitW = !muFitW;
+  localStorage.setItem("mushaf_fitw", muFitW ? "1" : "0");
+  muApplyFit(); muClampPan(); muApplyTransform();
+});
 $("muDlJuz").addEventListener("click", muDownloadJuz);
+muApplyFit();
 
 $("btnApplyCount").addEventListener("click", ()=>{
   const i = parseInt($("setName").value, 10);
