@@ -459,6 +459,10 @@ nav button{
 nav button svg{width:26px;height:26px}
 nav button.active{color:var(--gold-light)}
 nav button.active svg{filter:drop-shadow(0 0 8px rgba(212,175,55,.5))}
+@media (max-width:430px){
+  nav button{font-size:11px;gap:2px}
+  nav button svg{width:22px;height:22px}
+}
 
 /* Compaction pour petits écrans en hauteur (ex: téléphones 360x740) */
 @media (max-height:760px){
@@ -588,6 +592,48 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
 .proj-item{background:var(--card2);border:1px solid var(--line-soft);border-radius:14px;padding:12px 8px;text-align:center}
 .proj-item .pv{font-family:'Amiri',serif;font-size:17px;font-weight:700;color:var(--gold-light);line-height:1.4}
 .proj-item .pl{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
+
+/* ---------- Mushaf al-Charif ---------- */
+#scr-mushaf{padding-bottom:8px}
+.mu-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.mu-head h2{margin-bottom:2px}
+.mu-stage{background:#0b120e;border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.mu-topbar{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:linear-gradient(180deg,#111c15,#0b120e);border-bottom:1px solid rgba(212,175,55,.18)}
+.mu-juz{font-family:'Amiri',serif;font-size:15px;font-weight:700;color:var(--gold-light)}
+.mu-zctl{display:flex;gap:6px;align-items:center}
+.mu-zctl button{width:32px;height:32px;border-radius:9px;border:1px solid rgba(212,175,55,.3);background:rgba(212,175,55,.08);color:var(--gold-light);font-size:17px;font-weight:700;cursor:pointer;line-height:1;transition:transform .15s}
+.mu-zctl button:active{transform:scale(.92)}
+.mu-zoomval{font-size:11.5px;color:var(--gold);min-width:34px;text-align:center;font-weight:700}
+.mu-viewport{position:relative;height:calc(100vh - 330px);height:calc(100dvh - 330px);min-height:380px;max-height:740px;overflow:hidden;touch-action:none;background:#050806;display:flex;align-items:center;justify-content:center;cursor:grab}
+#muPage{max-width:100%;max-height:100%;user-select:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform;box-shadow:0 6px 30px rgba(0,0,0,.6)}
+#muPage.slide-next{animation:muNext .34s cubic-bezier(.22,1,.36,1)}
+#muPage.slide-prev{animation:muPrev .34s cubic-bezier(.22,1,.36,1)}
+@keyframes muNext{from{opacity:.15;transform:translateX(-30px)}to{opacity:1;transform:none}}
+@keyframes muPrev{from{opacity:.15;transform:translateX(30px)}to{opacity:1;transform:none}}
+.mu-loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .2s;z-index:3}
+.mu-loader.show{opacity:1}
+.mu-loader span{width:38px;height:38px;border-radius:50%;border:3px solid rgba(212,175,55,.25);border-top-color:var(--gold);animation:spin .9s linear infinite;display:block}
+.mu-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:11.5px;color:rgba(255,255,255,.55);background:rgba(0,0,0,.4);padding:5px 14px;border-radius:20px;pointer-events:none;white-space:nowrap;z-index:2;transition:opacity .6s}
+.mu-hint.hide{opacity:0}
+.mu-botbar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#0b120e;border-top:1px solid rgba(212,175,55,.18)}
+.mu-btn{padding:9px 18px;border-radius:11px;border:1px solid rgba(212,175,55,.3);background:rgba(212,175,55,.07);color:var(--gold-light);font-size:13.5px;font-weight:600;cursor:pointer;transition:transform .15s}
+.mu-btn:active{transform:scale(.94)}
+.mu-btn:disabled{opacity:.3;cursor:default}
+.mu-pageno{font-family:'Amiri',serif;font-size:15px;color:#cfe8db;font-weight:700}
+#muGridOverlay{position:fixed;inset:0;z-index:85;background:rgba(3,10,7,.78);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+#muGridOverlay.show{display:flex}
+.mu-sheet{width:min(560px,100%);max-height:82vh;max-height:82dvh;overflow:auto;background:var(--card);border-radius:26px 26px 0 0;border:1px solid var(--line-soft);padding:20px 18px 26px;animation:sheetup .35s cubic-bezier(.22,1,.36,1)}
+@keyframes sheetup{from{transform:translateY(44px);opacity:.35}to{transform:none;opacity:1}}
+.mu-grid-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.mu-grid-head .t{font-family:'Amiri',serif;font-size:23px;color:var(--gold-light);font-weight:700;line-height:1.3}
+.mu-grid-head .idx{font-size:12.5px;color:var(--muted);margin-top:2px}
+.mu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mu-cell{position:relative;text-align:center;padding:13px 6px 11px;border-radius:14px;border:1px solid var(--line-soft);background:var(--card2);cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.mu-cell:active{transform:scale(.94)}
+.mu-cell.cur{border-color:var(--emerald);box-shadow:0 0 0 2px rgba(16,185,129,.25)}
+.mu-num{font-family:'Amiri',serif;font-size:21px;font-weight:700;color:var(--gold-light);line-height:1.25}
+.mu-name{font-size:11px;color:var(--muted);margin-top:2px}
+.mu-pg{font-size:10.5px;color:var(--emerald-soft);margin-top:4px;font-weight:700}
 
 /* ---------- Export PDF cheikh (impression) ---------- */
 #printView{display:none}
@@ -885,6 +931,36 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
   </section>
 
   <!-- ============ SCREEN 4 : الإعدادات ============ -->
+  <section class="screen" id="scr-mushaf">
+    <div class="card mu-head">
+      <div>
+        <h2>المصحف الشريف</h2>
+        <div class="sub">مصحف قالون — الطبعة التونسية · <span id="muTotalPages"></span> صفحة</div>
+      </div>
+      <button class="btn btn-gold" id="muGridBtn">الجزء الحالي</button>
+    </div>
+    <div class="mu-stage">
+      <div class="mu-topbar">
+        <span class="mu-juz" id="muJuzLabel"></span>
+        <div class="mu-zctl">
+          <button id="muZOut" aria-label="تصغير">−</button>
+          <span class="mu-zoomval" id="muZoomVal"></span>
+          <button id="muZIn" aria-label="تكبير">+</button>
+        </div>
+      </div>
+      <div class="mu-viewport" id="muViewport">
+        <img id="muPage" alt="صفحة من المصحف الشريف" draggable="false">
+        <div class="mu-loader" id="muLoader"><span></span></div>
+        <div class="mu-hint" id="muHint">اسحب لتقليب الصفحات · اضغط مرتين للتكبير</div>
+      </div>
+      <div class="mu-botbar">
+        <button class="mu-btn" id="muPrev">السابقة →</button>
+        <span class="mu-pageno" id="muPageNo"></span>
+        <button class="mu-btn" id="muNext">← التالية</button>
+      </div>
+    </div>
+  </section>
+
   <section class="screen" id="scr-settings">
     <div class="card">
       <h2>الإعدادات</h2>
@@ -954,6 +1030,17 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
         <div style="display:flex;align-items:center;gap:8px">
           <div class="switch on" id="swWirdE"></div>
           <input type="time" id="setWirdE" value="17:30" style="width:104px">
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2>تذكير الورد القرآني</h2>
+      <div class="set-row">
+        <div><div class="lbl">تذكير قراءة المصحف</div><div class="sub">تنبيه لقراءة جزئك اليومي من كتاب الله</div></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="switch on" id="swMushaf"></div>
+          <input type="time" id="setMushafTime" value="21:00" style="width:104px">
         </div>
       </div>
     </div>
@@ -1053,6 +1140,10 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
   <button data-tab="scr-prayer">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 1 5 5c0 3-1 4-1 5h-8c0-1-1-2-1-5a5 5 0 0 1 5-5z"/><path d="M9 17h6M10 21h4"/></svg>
     الصلاة
+  </button>
+  <button data-tab="scr-mushaf">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/></svg>
+    المصحف
   </button>
   <button data-tab="scr-sbha">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="2" r="1.5" fill="currentColor"/><circle cx="12" cy="22" r="1.5" fill="currentColor"/><circle cx="2" cy="12" r="1.5" fill="currentColor"/><circle cx="22" cy="12" r="1.5" fill="currentColor"/></svg>
@@ -1344,7 +1435,7 @@ function defaultState(){
     todayCount: 0,
     nights: {},             // {date: count}
     sheikhAck: {},          // {index: true}
-    s: { hour:20, minute:0, vibrate:true, sound:true, wake:true, light:false, textSize:"md", wirdM:true, wirdE:true, wirdMTime:"05:30", wirdETime:"17:30", morningReminder:true, eveningReminder:true, morningReminderTime:"04:30", eveningReminderTime:"23:00" },
+    s: { hour:20, minute:0, vibrate:true, sound:true, wake:true, light:false, textSize:"md", wirdM:true, wirdE:true, wirdMTime:"05:30", wirdETime:"17:30", morningReminder:true, eveningReminder:true, morningReminderTime:"04:30", eveningReminderTime:"23:00", mushafReminder:true, mushafTime:"21:00" },
     completedNotified:{},   // {index:true} notifications 95k/100k déjà envoyées
     allDoneNotified:false,
     orad: { m: [], e: [] }, // m: morning, e: evening (cases cochées)
@@ -1653,6 +1744,12 @@ function checkWirdReminder(){
     state.completedNotified["evening_"+today] = true;
     save(state);
     fireNotification("تذكير المساء", "بقي " + fmtAr(DAILY - state.todayCount) + " من اسم «" + curName() + "» — حاول الإتمام قبل النوم.", "adhkar-evening");
+  }
+  if(state.s.mushafReminder !== false && hm >= parseHM(state.s.mushafTime || "21:00") && localStorage.getItem("mushaf_last_read") !== today && !state.completedNotified["mushaf_"+today]){
+    state.completedNotified["mushaf_"+today] = true;
+    save(state);
+    const jp = parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1;
+    fireNotification("حان وقت الوَرْد القرآني", "واصِل قراءة الجزء " + MU_JUZ_NAMES[muJuzOf(jp)] + " — صفحة " + (jp+1) + " من المصحف الشريف.", "adhkar-mushaf");
   }
 }
 
@@ -2267,6 +2364,8 @@ function renderSettings(){
   $("swEveningReminder").classList.toggle("on", state.s.eveningReminder !== false);
   $("setMorningReminderTime").value = state.s.morningReminderTime || "04:30";
   $("setEveningReminderTime").value = state.s.eveningReminderTime || "23:00";
+  $("swMushaf").classList.toggle("on", state.s.mushafReminder !== false);
+  $("setMushafTime").value = state.s.mushafTime || "21:00";
   const sel = $("setName");
   if(sel.options.length !== NAMES.length){
     sel.innerHTML = "";
@@ -2428,6 +2527,145 @@ function importData(file){
   reader.readAsText(file);
 }
 
+/* ===================== MUSHAF AL-CHARIF ===================== */
+/* Lecteur image : pages scannées (مصحف قالون، archive.org). Aucun texte coranique manipulé. */
+const MU_BASE = "https://archive.org/download/yusufmazouz1986_gmail/page/n";
+const MU_TOTAL = 603;
+const MU_JUZ_STARTS = [1,22,42,62,82,102,122,142,162,182,201,221,241,261,281,301,321,341,361,381,401,421,441,461,482,502,522,542,562,582];
+const MU_JUZ_NAMES = ["الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع","الثامن","التاسع","العاشر","الحادي عشر","الثاني عشر","الثالث عشر","الرابع عشر","الخامس عشر","السادس عشر","السابع عشر","الثامن عشر","التاسع عشر","العشرون","الحادي والعشرون","الثاني والعشرون","الثالث والعشرون","الرابع والعشرون","الخامس والعشرون","السادس والعشرون","السابع والعشرون","الثامن والعشرون","التاسع والعشرون","الثلاثون"];
+let muPage = Math.min(Math.max(parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1,1),MU_TOTAL);
+let muScale = 1, muTx = 0, muTy = 0;
+let muPreloaded = {}, muLastTap = 0;
+
+function muJuzOf(p){
+  let j = 0;
+  for(let i=0;i<MU_JUZ_STARTS.length;i++){ if(p >= MU_JUZ_STARTS[i]) j = i; else break; }
+  return j;
+}
+function muUrl(p){ return MU_BASE + (p+1) + ".jpg"; }
+
+function muClampPan(){
+  const r = $("muViewport").getBoundingClientRect();
+  const mx = (muScale-1)*r.width/2, my = (muScale-1)*r.height/2;
+  muTx = Math.min(mx,Math.max(-mx,muTx));
+  muTy = Math.min(my,Math.max(-my,muTy));
+}
+function muApplyTransform(){
+  $("muPage").style.transform = "translate(" + muTx + "px," + muTy + "px) scale(" + muScale + ")";
+  $("muZoomVal").textContent = muScale === 1 ? "1×" : muScale.toFixed(1).replace(/\.0$/,"") + "×";
+}
+function muSetZoom(s){
+  muScale = Math.min(4,Math.max(1,s));
+  muClampPan(); muApplyTransform();
+  localStorage.setItem("mushaf_zoom_level", String(muScale));
+}
+function muRender(anim){
+  const img = $("muPage"), loader = $("muLoader");
+  const url = muUrl(muPage);
+  loader.classList.add("show");
+  img.classList.remove("slide-next","slide-prev");
+  if(anim && muScale <= 1.05){ void img.offsetWidth; img.classList.add(anim); }
+  img.onload = () => loader.classList.remove("show");
+  img.onerror = () => { loader.classList.remove("show"); toast("تعذر تحميل الصفحة — تحقق من اتصالك بالإنترنت"); };
+  img.src = url;
+  muScale = parseFloat(localStorage.getItem("mushaf_zoom_level")||"1") || 1;
+  if(isNaN(muScale)) muScale = 1;
+  muTx = 0; muTy = 0;
+  muApplyTransform();
+  const j = muJuzOf(muPage);
+  $("muJuzLabel").textContent = "الجزء " + MU_JUZ_NAMES[j];
+  $("muPageNo").textContent = "صفحة " + (muPage+1);
+  $("muPrev").disabled = muPage <= 1;
+  $("muNext").disabled = muPage >= MU_TOTAL;
+  localStorage.setItem("mushaf_current_page", String(muPage));
+  localStorage.setItem("mushaf_current_juz", String(j+1));
+  localStorage.setItem("mushaf_last_read", todayStr());
+  [muPage-1, muPage+1, muPage+2].forEach(pp=>{
+    if(pp>=1 && pp<=MU_TOTAL && !muPreloaded[pp]){ muPreloaded[pp]=true; new Image().src = muUrl(pp); }
+  });
+}
+function muGo(np, anim){
+  np = Math.min(Math.max(np,1),MU_TOTAL);
+  if(np === muPage) return;
+  muPage = np;
+  muRender(anim);
+}
+function openMushaf(){
+  $("muTotalPages").textContent = String(MU_TOTAL+1);
+  muRender();
+  const hint = $("muHint");
+  hint.classList.remove("hide");
+  clearTimeout(hint._t);
+  hint._t = setTimeout(()=>hint.classList.add("hide"), 3500);
+}
+function renderMuGrid(){
+  const cur = muJuzOf(muPage);
+  const g = $("muGrid");
+  g.innerHTML = "";
+  MU_JUZ_STARTS.forEach((st,i)=>{
+    const c = document.createElement("div");
+    c.className = "mu-cell" + (i===cur ? " cur" : "");
+    c.innerHTML = '<div class="mu-num">الجزء ' + MU_JUZ_NAMES[i] + '</div>' +
+                  '<div class="mu-pg">يبدأ من صفحة ' + (st+1) + '</div>';
+    c.addEventListener("click", ()=>{
+      $("muGridOverlay").classList.remove("show");
+      localStorage.setItem("mushaf_current_juz", String(i+1));
+      muGo(st, "slide-next");
+    });
+    g.appendChild(c);
+  });
+}
+
+/* gestes : pinch-zoom, pan, swipe, double-tap */
+(function(){
+  const vp = $("muViewport");
+  const pts = new Map();
+  let startDist = 0, startScale = 1, sx = 0, sy = 0, moved = false;
+  vp.addEventListener("pointerdown", e=>{
+    vp.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===1){ sx=e.clientX; sy=e.clientY; moved=false; }
+    else if(pts.size===2){
+      const a=[...pts.values()];
+      startDist=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1;
+      startScale=muScale;
+    }
+  });
+  vp.addEventListener("pointermove", e=>{
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===2){
+      const a=[...pts.values()];
+      const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1;
+      moved=true;
+      muSetZoom(startScale * d/startDist);
+    } else if(pts.size===1 && muScale > 1.05){
+      muTx += e.clientX - sx; muTy += e.clientY - sy;
+      sx = e.clientX; sy = e.clientY;
+      moved=true; muClampPan(); muApplyTransform();
+    } else if(pts.size===1){
+      if(Math.abs(e.clientX-sx)>8 || Math.abs(e.clientY-sy)>8) moved=true;
+    }
+  });
+  const end = e=>{
+    if(!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId);
+    if(pts.size===0){
+      const dx = e.clientX - sx;
+      if(moved && muScale <= 1.05){
+        if(dx < -45) muGo(muPage+1, "slide-next");
+        else if(dx > 45) muGo(muPage-1, "slide-prev");
+      } else if(!moved){
+        const now = Date.now();
+        if(now - muLastTap < 320){ muSetZoom(muScale > 1.05 ? 1 : 2.5); muLastTap = 0; }
+        else muLastTap = now;
+      }
+    }
+  };
+  vp.addEventListener("pointerup", end);
+  vp.addEventListener("pointercancel", end);
+})();
+
 /* ===================== ÉVÉNEMENTS ===================== */
 document.querySelectorAll("nav button").forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -2438,6 +2676,7 @@ document.querySelectorAll("nav button").forEach(btn=>{
     if(btn.dataset.tab==="scr-names") renderNames();
     if(btn.dataset.tab==="scr-orad") renderOrad();
     if(btn.dataset.tab==="scr-prayer") startPrayerTimer();
+    if(btn.dataset.tab==="scr-mushaf") openMushaf();
     if(btn.dataset.tab==="scr-sbha") renderSbha();
     if(btn.dataset.tab==="scr-journal") renderJournal();
   });
@@ -2697,6 +2936,7 @@ toggleSwitch("swWirdM","wirdM", on=>checkWirdReminder());
 toggleSwitch("swWirdE","wirdE", on=>checkWirdReminder());
 toggleSwitch("swMorningReminder","morningReminder", on=>checkWirdReminder());
 toggleSwitch("swEveningReminder","eveningReminder", on=>checkWirdReminder());
+toggleSwitch("swMushaf","mushafReminder", on=>checkWirdReminder());
 
 $("swTheme").addEventListener("click", ()=>{
   const on = !$("swTheme").classList.contains("on");
@@ -2718,6 +2958,15 @@ $("setWirdM").addEventListener("change", e=>{ state.s.wirdMTime = e.target.value
 $("setWirdE").addEventListener("change", e=>{ state.s.wirdETime = e.target.value || "17:30"; save(state); checkWirdReminder(); toast("تذكير أوراد المساء: " + e.target.value); });
 $("setMorningReminderTime").addEventListener("change", e=>{ state.s.morningReminderTime = e.target.value || "04:30"; save(state); checkWirdReminder(); toast("تذكير الصباح: " + e.target.value); });
 $("setEveningReminderTime").addEventListener("change", e=>{ state.s.eveningReminderTime = e.target.value || "23:00"; save(state); checkWirdReminder(); toast("تذكير المساء: " + e.target.value); });
+$("setMushafTime").addEventListener("change", e=>{ state.s.mushafTime = e.target.value || "21:00"; save(state); checkWirdReminder(); toast("تذكير الورد القرآني: " + e.target.value); });
+
+/* Mushaf : boutons du lecteur */
+$("muPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
+$("muNext").addEventListener("click", ()=>muGo(muPage+1,"slide-next"));
+$("muZIn").addEventListener("click", ()=>muSetZoom(muScale+0.5));
+$("muZOut").addEventListener("click", ()=>muSetZoom(muScale-0.5));
+$("muGridBtn").addEventListener("click", ()=>{ renderMuGrid(); $("muGridOverlay").classList.add("show"); });
+$("muGridOverlay").addEventListener("click", e=>{ if(e.target.id==="muGridOverlay") e.target.classList.remove("show"); });
 
 $("btnApplyCount").addEventListener("click", ()=>{
   const i = parseInt($("setName").value, 10);
