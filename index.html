@@ -645,6 +645,12 @@ body.mu-fullscreen .mu-viewport{flex:1;height:auto;min-height:0;max-height:none}
 body.mu-fullscreen .mu-topbar,body.mu-fullscreen .mu-botbar,body.mu-fullscreen #muFsExit{transition:opacity .35s ease}
 body.mu-fullscreen.idle .mu-topbar,body.mu-fullscreen.idle .mu-botbar,body.mu-fullscreen.idle #muFsExit{opacity:0!important;pointer-events:none}
 #muFsExit{position:absolute;top:10px;left:10px;z-index:6;width:38px;height:38px;border-radius:12px;background:rgba(5,10,7,.55);border:1px solid rgba(212,175,55,.4);color:var(--gold-light);font-size:17px;cursor:pointer;display:none;backdrop-filter:blur(4px)}
+/* flèches de feuilletage — fonctionnent même page zoomée */
+.mu-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:46px;height:72px;border-radius:16px;background:rgba(5,10,7,.45);border:1px solid rgba(212,175,55,.38);color:var(--gold-light);font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(3px);transition:opacity .35s ease,transform .15s ease}
+.mu-arrow:active{transform:translateY(-50%) scale(.9)}
+#muArrowPrev{right:8px}
+#muArrowNext{left:8px}
+body.mu-fullscreen.idle .mu-arrow{opacity:0;pointer-events:none}
 body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:center}
 /* téléchargement hors-ligne d'un juz */
 .mu-dlrow{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-soft)}
@@ -971,6 +977,8 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         <div class="mu-loader" id="muLoader"><span></span></div>
         <div class="mu-hint" id="muHint">اسحب لتقليب الصفحات · اضغط مرتين للتكبير</div>
         <button id="muFsExit" aria-label="خروج من ملء الشاشة">✕</button>
+        <button class="mu-arrow" id="muArrowPrev" aria-label="الصفحة السابقة">›</button>
+        <button class="mu-arrow" id="muArrowNext" aria-label="الصفحة التالية">‹</button>
       </div>
       <div class="mu-botbar">
         <button class="mu-btn" id="muPrev">السابقة →</button>
@@ -1124,7 +1132,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.4.3</p>
   </section>
 
 </div>
@@ -2761,17 +2769,22 @@ function renderMuGrid(){
     if(!pts.has(e.pointerId)) return;
     pts.delete(e.pointerId);
     muWake();
+    /* si un pincement se termine avec un doigt resté posé, réinitialiser la référence du geste */
+    if(pts.size===1){
+      const rem = [...pts.values()][0];
+      sx = rem.x; sy = rem.y; gx = rem.x; gy = rem.y; moved = true;
+    }
     if(pts.size===0){
       /* déplacement net du geste depuis son point de départ */
       const netDx = e.clientX - gx, netDy = e.clientY - gy;
       const L = muLimits();
-      const atLeftEdge = muTx >= L.x - 12;    /* bord gauche du contenu atteint */
-      const atRightEdge = muTx <= -L.x + 12;  /* bord droit atteint */
+      const atLeftEdge = muTx >= L.x - 14;    /* bord gauche du contenu atteint */
+      const atRightEdge = muTx <= -L.x + 14;  /* bord droit atteint */
       if(!moved){
         const now = Date.now();
         if(now - muLastTap < 320){ muSetZoom(muScale > 1.05 ? 1 : 2.5); muLastTap = 0; }
         else muLastTap = now;
-      } else if(Math.abs(netDx) > Math.abs(netDy)*1.15 && Math.abs(netDx) > 55){
+      } else if(Math.abs(netDx) > Math.abs(netDy)*1.1 && Math.abs(netDx) > 45){
         /* feuilletage possible même zoomé, une fois le bord atteint ; le zoom est conservé */
         if(netDx < 0 && atLeftEdge) muGo(muPage+1, "slide-next");
         else if(netDx > 0 && atRightEdge) muGo(muPage-1, "slide-prev");
@@ -3092,6 +3105,12 @@ $("muFitBtn").addEventListener("click", ()=>{
   muApplyFit(); muClampPan(); muApplyTransform();
 });
 $("muDlJuz").addEventListener("click", muDownloadJuz);
+/* les boutons superposés au viewport ne doivent pas déclencher les gestes de la page */
+["muArrowNext","muArrowPrev","muFsExit"].forEach(id=>{
+  $(id).addEventListener("pointerdown", e=>e.stopPropagation());
+});
+$("muArrowNext").addEventListener("click", ()=>muGo(muPage+1,"slide-next"));
+$("muArrowPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
 muApplyFit();
 
 $("btnApplyCount").addEventListener("click", ()=>{
