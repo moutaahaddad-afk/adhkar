@@ -675,6 +675,11 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 .tv-n{color:#b58a1f;font-size:.6em;white-space:nowrap}
 .tv-jmark{display:block;text-align:center;color:#0d1f16;background:rgba(212,175,55,.16);border-radius:10px;font-size:.55em;padding:6px;margin:14px 0;font-family:Tajawal,system-ui,sans-serif;font-weight:700}
 .tv-hmark{display:inline-block;vertical-align:middle;margin:0 2px;color:#d4af37;font-size:.8em;font-weight:700;cursor:help}
+.tv-hizb-boundary{color:#e74c3c;font-size:1em;background:rgba(231,76,60,.15);padding:0 4px;border-radius:6px;animation:tv-pulse 1.5s infinite}
+.tv-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:12px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:auto;transition:all .3s}
+.tv-badge.tv-hizb-alert{background:#e74c3c;color:#fff;border-color:#e74c3c;animation:tv-shake .5s ease-in-out 3}
+@keyframes tv-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes tv-shake{0%,100%{transform:translateX(-50%)}25%{transform:translateX(calc(-50% + 6px))}75%{transform:translateX(calc(-50% - 6px))}}
 .tv-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:12px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:auto}
 .tv-sheet{display:none;position:absolute;inset:0;z-index:5;background:rgba(6,20,14,.55);align-items:flex-end}
 .tv-sheet.open{display:flex}
@@ -1211,7 +1216,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.8</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.9</p>
   </section>
 
 </div>
@@ -3268,7 +3273,7 @@ function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); 
 function tvAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function tvEnsureData(){
   if(muQuran) return true;
-  try{ const r=await fetch("quran-data.json?v=278"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
+  try{ const r=await fetch("quran-data.json?v=279"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
 }
 function tvRender(){
   const i=parseInt($("tvSurah").value||"1",10)-1;
@@ -3281,8 +3286,17 @@ function tvRender(){
     const surah=i+1, ayah=k+1;
     const jz=tvJuzOf(surah,ayah);
     const hq=tvHqOf(surah,ayah);
+    const hz=tvHizbOf(hq);
+    const isBoundary=tvIsHizbBoundary(hq);
     const jmark=jz?'<span class="tv-jmark" data-j="'+jz+'" id="tv-j'+jz+'">الجزء '+tvAr(jz)+'</span>':'';
-    const hmark=hq?'<span class="tv-hmark" title="ربع '+tvAr(hq)+'" data-hq="'+hq+'" id="tv-hq'+hq+'">۞ '+tvAr(hq)+'</span>':'';
+    let hmark="";
+    if(hq){
+      if(isBoundary){
+        hmark='<span class="tv-hmark tv-hizb-boundary" title="نهاية الحزب '+tvAr(hz)+'" data-hq="'+hq+'" data-hz="'+hz+'" id="tv-hq'+hq+'">۞۞ '+tvAr(hz)+' ح</span>';
+      }else{
+        hmark='<span class="tv-hmark" title="ربع '+tvAr(hq)+'" data-hq="'+hq+'" id="tv-hq'+hq+'">۞ '+tvAr(hq)+'</span>';
+      }
+    }
     return jmark+hmark+'<span>'+t+' <span class="tv-n">﴿'+tvAr(ayah)+'﴾</span> </span>';
   }).join('');
   $("tvBody").innerHTML=h;
@@ -3297,13 +3311,29 @@ const TV_HIZB_QUARTERS=[[1,1],[2,26],[2,44],[2,60],[2,75],[2,92],[2,106],[2,124]
 const TV_HQ_KEY={}; TV_HIZB_QUARTERS.forEach((p,i)=>TV_HQ_KEY[p[0]+":"+p[1]]=i+1);
 function tvHqOf(surah,ayah){ return TV_HQ_KEY[surah+":"+ayah]||0; }
 function tvJuzOf(surah,ayah){ return TV_JUZ_KEY[surah+":"+ayah]||0; }
+/* Hizb = 2 quarts. Frontières Hizb = quarts pairs (2,4,6...240) */
+function tvHizbOf(q){ return q>0 ? Math.ceil(q/2) : 0; }
+function tvIsHizbBoundary(q){ return q>0 && q%2===0; }
 function tvUpdateBadge(){
   const body=$("tvBody");
   let curJ=1, curHQ=0;
   body.querySelectorAll(".tv-jmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) curJ=parseInt(m.dataset.j); });
   body.querySelectorAll(".tv-hmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) curHQ=parseInt(m.dataset.hq); });
-  const hPart=curHQ?(' · ح '+tvAr(Math.ceil(curHQ/4))+' ر '+tvAr(((curHQ-1)%4)+1)):'';
-  $("tvBadge").textContent="الجزء "+tvAr(curJ)+hPart;
+  const hz=tvHizbOf(curHQ);
+  const isBoundary=tvIsHizbBoundary(curHQ);
+  const hPart=curHQ?(' · ح '+tvAr(hz)+' ر '+tvAr(((curHQ-1)%2)+1)):'';
+  const badge=$("tvBadge");
+  badge.textContent="الجزء "+tvAr(curJ)+hPart;
+  // Visuel frontière Hizb
+  if(isBoundary && curHQ>0){
+    badge.classList.add("tv-hizb-alert");
+    if(!badge.dataset.alerted || badge.dataset.alerted!=curHQ){
+      badge.dataset.alerted=curHQ;
+      toast("⚡ نهاية الحزب "+tvAr(hz)+" — توقف هنا", 3000);
+    }
+  }else{
+    badge.classList.remove("tv-hizb-alert");
+  }
 }
 function tvGoJuz(k){
   const st=TV_JUZ_STARTS[k-1];
