@@ -1147,7 +1147,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.5.0</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.5.1</p>
   </section>
 
 </div>
@@ -2631,7 +2631,7 @@ function muCoverBase(){
   const img = $("muPage");
   const iw = img.clientWidth || r.width;
   const ih = img.clientHeight || r.width*1.45;
-  return Math.max(r.width/iw, r.height/ih);
+  return Math.max(r.width/iw, r.height/ih) * 1.03;
 }
 function muApplyScale(s){
   muScale = Math.min(6, Math.max(1, s));
@@ -2664,7 +2664,11 @@ function muRender(anim){
   loader.classList.add("show");
   img.classList.remove("slide-next","slide-prev");
   if(anim && muScale <= 1.05){ void img.offsetWidth; img.classList.add(anim); }
-  img.onload = () => loader.classList.remove("show");
+  img.onload = () => {
+    loader.classList.remove("show");
+    /* recalcul après dimensions réelles : garantit le remplissage total sans bandes */
+    if(document.body.classList.contains("mu-fullscreen") && muFill) muApplyScale(muFsTargetScale());
+  };
   img.onerror = () => { loader.classList.remove("show"); toast("تعذر تحميل الصفحة — تحقق من اتصالك بالإنترنت"); };
   img.src = url;
   if(document.body.classList.contains("mu-fullscreen") && muFill){
@@ -2727,7 +2731,10 @@ window.addEventListener("fullscreenchange", ()=>{
   }
 });
 window.addEventListener("resize", ()=>{
-  if($("scr-mushaf") && $("scr-mushaf").classList.contains("active")){ muClampPan(); muApplyTransform(); }
+  if($("scr-mushaf") && $("scr-mushaf").classList.contains("active")){
+    if(document.body.classList.contains("mu-fullscreen") && muFill) muApplyScale(muFsTargetScale());
+    else { muClampPan(); muApplyTransform(); }
+  }
 });
 /* téléchargement du juz courant pour lecture hors-ligne (remplit le cache du SW) */
 let muDlBusy = false;
@@ -3165,6 +3172,7 @@ $("muFitBtn").addEventListener("click", ()=>{
     if(muFill) muApplyScale(muFsTargetScale());
     else { muScale = 1; muTx = 0; muTy = 0; muApplyTransform(); }
   }
+  toast(muFill ? "الملء الكامل: مفعّل" : "الملء الكامل: متوقف — صفحة كاملة");
 });
 $("muDlJuz").addEventListener("click", muDownloadJuz);
 /* les boutons superposés au viewport ne doivent pas déclencher les gestes de la page */
