@@ -664,7 +664,8 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 .tv-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0d1f16;color:var(--gold-light);border-bottom:1px solid rgba(212,175,55,.25)}
 #tvSurah{flex:1;min-width:0;padding:9px 10px;border-radius:10px;border:1px solid rgba(212,175,55,.35);background:#122a1e;color:#f3ead0;font-family:inherit;font-size:14px}
 .tv-size{display:flex;align-items:center;gap:6px}
-.tv-size button{width:34px;height:34px;border-radius:10px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.12);color:var(--gold-light);font-size:17px;font-weight:700;cursor:pointer}
+.tv-nav,.tv-size button{width:34px;height:34px;border-radius:10px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.12);color:var(--gold-light);font-size:17px;font-weight:700;cursor:pointer;flex-shrink:0}
+#tvSurah{flex-shrink:1}
 #tvVal{min-width:28px;text-align:center;font-size:13px;font-weight:700;color:#f3ead0}
 #tvBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;text-align:justify;font-family:"Amiri","Traditional Arabic",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--tv-size,30px);line-height:2.15}
 .tv-surah-title{text-align:center;font-size:.72em;letter-spacing:.5px;color:#7a5b13;background:linear-gradient(90deg,transparent,rgba(212,175,55,.18),transparent);padding:10px 0;margin:-6px 0 14px;border-radius:10px}
@@ -1029,7 +1030,9 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <iframe id="muFrame" title="مصحف قارئ فلاش — قرآن فلاش" allowfullscreen></iframe>
       <div id="muText">
         <div class="tv-bar">
+          <button class="tv-nav" id="tvPrev" title="السورة السابقة">›</button>
           <select id="tvSurah"></select>
+          <button class="tv-nav" id="tvNext" title="السورة التالية">‹</button>
           <div class="tv-size">
             <button id="tvPlus" aria-label="تكبير">+</button>
             <span id="tvVal">30</span>
@@ -1190,7 +1193,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.1</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.7.3</p>
   </section>
 
 </div>
@@ -3252,7 +3255,7 @@ function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); 
 function tvAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function tvEnsureData(){
   if(muQuran) return true;
-  try{ const r=await fetch("quran-data.json?v=272"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
+  try{ const r=await fetch("quran-data.json?v=273"); muQuran=await r.json(); return Array.isArray(muQuran)&&muQuran.length===114; }catch(e){ return false; }
 }
 function tvRender(){
   const i=parseInt($("tvSurah").value||"1",10)-1;
@@ -3280,6 +3283,22 @@ $("tvBody").addEventListener("scroll",()=>{ clearTimeout(tvSaveT); tvSaveT=setTi
   localStorage.setItem("mushaf_tv_pos",JSON.stringify({s:tvCur,y:$("tvBody").scrollTop}));
 },400); });
 $("tvSurah").addEventListener("change",()=>{ tvRender(); });
+function tvGo(delta){
+  const cur=parseInt($("tvSurah").value||"1",10);
+  const nxt=Math.min(114,Math.max(1,cur+delta));
+  if(nxt!==cur){ $("tvSurah").value=String(nxt); tvRender(); }
+}
+$("tvNext").addEventListener("click",()=>tvGo(1));
+$("tvPrev").addEventListener("click",()=>tvGo(-1));
+/* balayage horizontal = changer de sourate */
+let tvTx0=null,tvTy0=null;
+$("tvBody").addEventListener("touchstart",e=>{ if(e.touches.length===1){ tvTx0=e.touches[0].clientX; tvTy0=e.touches[0].clientY; } },{passive:true});
+$("tvBody").addEventListener("touchend",e=>{
+  if(tvTx0===null) return;
+  const dx=e.changedTouches[0].clientX-tvTx0, dy=e.changedTouches[0].clientY-tvTy0;
+  tvTx0=null;
+  if(Math.abs(dx)>60 && Math.abs(dy)<40){ /* RTL : gauche = suivante */ tvGo(dx<0?1:-1); }
+},{passive:true});
 $("tvPlus").addEventListener("click",()=>{ tvSize=Math.min(64,tvSize+2); localStorage.setItem("mushaf_tv_size",String(tvSize)); tvApplySize(); });
 $("tvMinus").addEventListener("click",()=>{ tvSize=Math.max(14,tvSize-2); localStorage.setItem("mushaf_tv_size",String(tvSize)); tvApplySize(); });
 /* sélecteur de taille de lecture */
