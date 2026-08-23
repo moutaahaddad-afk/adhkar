@@ -653,6 +653,14 @@ body.mu-fullscreen.idle .mu-topbar,body.mu-fullscreen.idle .mu-botbar,body.mu-fu
 .mu-size-row{display:flex;gap:7px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line-soft)}
 .mu-size-btn{flex:1;padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .mu-size-btn.active{border-color:var(--gold);background:rgba(212,175,55,.14);color:var(--gold-light)}
+.mu-modes{display:flex;gap:7px;margin-bottom:12px}
+/* lecteur quranflash intégré */
+#muFrame{display:none;border:0;background:#ffffff;width:100%}
+#scr-mushaf.mode-flash #muFrame{display:block;height:calc(100vh - 380px);height:calc(100dvh - 380px);min-height:360px;max-height:740px;border-radius:14px}
+body.mu-fullscreen #scr-mushaf.mode-flash #muFrame{flex:1;height:auto;min-height:0;max-height:none;border-radius:0}
+#scr-mushaf.mode-flash .mu-viewport{display:none}
+#scr-mushaf.mode-flash #muZIn,#scr-mushaf.mode-flash #muZOut,#scr-mushaf.mode-flash #muZoomVal,#scr-mushaf.mode-flash #muFitBtn,#scr-mushaf.mode-flash #muGridBtn,#scr-mushaf.mode-flash .mu-size-row{display:none!important}
+#scr-mushaf.mode-flash .mu-arrow{display:none!important}
 .mu-arrow:active{transform:translateY(-50%) scale(.9)}
 #muArrowPrev{right:8px}
 #muArrowNext{left:8px}
@@ -962,6 +970,10 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
   <section class="screen" id="scr-mushaf">
     <div class="card mu-head">
       <div style="width:100%">
+        <div class="mu-modes">
+          <button class="mu-size-btn active" id="muModeFlash">قارئ فلاش (مصحف مكتوب)</button>
+          <button class="mu-size-btn" id="muModeScan">المصحف الممسوح</button>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
           <div>
             <h2>المصحف الشريف</h2>
@@ -995,6 +1007,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         <button class="mu-arrow" id="muArrowPrev" aria-label="الصفحة السابقة">›</button>
         <button class="mu-arrow" id="muArrowNext" aria-label="الصفحة التالية">‹</button>
       </div>
+      <iframe id="muFrame" title="مصحف قارئ فلاش — قرآن فلاش" allowfullscreen></iframe>
       <div class="mu-botbar">
         <button class="mu-btn" id="muPrev">السابقة →</button>
         <span class="mu-pageno" id="muPageNo"></span>
@@ -1147,7 +1160,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.5.1</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.6.0</p>
   </section>
 
 </div>
@@ -2698,6 +2711,10 @@ function muGo(np, anim){
   muRender(anim);
 }
 function openMushaf(){
+  if(muMode === "flash" && navigator.onLine === false){
+    muMode = "scan"; muApplyMode();
+    toast("غير متصل بالإنترنت — عرض المصحف الممسوح");
+  }
   $("muTotalPages").textContent = String(MU_TOTAL+1);
   muRender();
   const hint = $("muHint");
@@ -3181,6 +3198,27 @@ $("muDlJuz").addEventListener("click", muDownloadJuz);
 });
 $("muArrowNext").addEventListener("click", ()=>muGo(muPage+1,"slide-next"));
 $("muArrowPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
+/* mode d'affichage : quranflash (en ligne, texte net) ou pages scannées (hors-ligne) */
+const MU_FLASH_URL = "https://app.quranflash.com/book/Qaloon?en";
+let muMode = localStorage.getItem("mushaf_mode") || "flash";
+function muApplyMode(){
+  $("scr-mushaf").classList.toggle("mode-flash", muMode === "flash");
+  $("muModeFlash").classList.toggle("active", muMode === "flash");
+  $("muModeScan").classList.toggle("active", muMode !== "flash");
+}
+$("muModeFlash").addEventListener("click", ()=>{
+  muMode = "flash";
+  localStorage.setItem("mushaf_mode", "flash");
+  if(!$("muFrame").getAttribute("src")) $("muFrame").src = MU_FLASH_URL;
+  muApplyMode();
+});
+$("muModeScan").addEventListener("click", ()=>{
+  muMode = "scan";
+  localStorage.setItem("mushaf_mode", "scan");
+  muApplyMode();
+});
+if(muMode === "flash") $("muFrame").src = MU_FLASH_URL;
+muApplyMode();
 /* sélecteur de taille de lecture */
 function muInitSizeBtns(){
   document.querySelectorAll(".mu-size-btn").forEach(b=>{
