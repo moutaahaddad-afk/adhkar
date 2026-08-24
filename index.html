@@ -676,6 +676,22 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 .tv-basmala{text-align:center;color:#0d1f16;font-weight:700;font-size:.82em;margin-bottom:14px}
 .tv-n{color:#b58a1f;font-size:.6em;white-space:nowrap}
 .tv-jmark{display:block;text-align:center;color:#0d1f16;background:rgba(212,175,55,.16);border-radius:10px;font-size:.55em;padding:6px;margin:14px 0;font-family:Tajawal,system-ui,sans-serif;font-weight:700}
+/* ===== Mode sombre Mushaf (texte + scan) ===== */
+#scr-mushaf.mu-dark #muText{background:#0d1a12}
+#scr-mushaf.mu-dark #tvBody{background:#0d1a12;color:#ece5cd}
+#scr-mushaf.mu-dark .tv-surah-title{color:var(--gold-light);background:linear-gradient(90deg,transparent,rgba(212,175,55,.25),transparent)}
+#scr-mushaf.mu-dark .tv-basmala{color:#f0d279}
+#scr-mushaf.mu-dark .tv-n{color:#d4af37}
+#scr-mushaf.mu-dark .tv-jmark{color:#f0d279;background:rgba(212,175,55,.14)}
+#scr-mushaf.mu-dark .tv-sheet-card{background:#132419}
+#scr-mushaf.mu-dark .tv-sheet-card h4{color:var(--gold-light)}
+#scr-mushaf.mu-dark .tv-grid button{background:rgba(255,255,255,.06);color:#ece5cd;border-color:rgba(255,255,255,.12)}
+#scr-mushaf.mu-dark .tv-badge{background:#132419;color:var(--gold-light);border-color:rgba(212,175,55,.45)}
+#scr-mushaf.mu-dark .tv-badge.tv-hizb-alert{background:#e74c3c;color:#fff;border-color:#e74c3c}
+/* Pages scannées : inversion douce (papier sombre, encre claire) */
+#scr-mushaf.mu-dark .mu-viewport{background:#000000}
+#scr-mushaf.mu-dark .mu-viewport #muPage{filter:invert(90%) hue-rotate(180deg) contrast(88%) brightness(.96)}
+body.mu-fullscreen #scr-mushaf.mu-dark .mu-viewport{background:#000000}
 .tv-hmark{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin:0 3px;font-size:.85em;font-weight:800;cursor:help;padding:3px 8px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .tv-hizb-boundary{color:#fff;background:#e74c3c;font-size:1em;padding:4px 10px;animation:tv-pulse 1.5s infinite;box-shadow:0 2px 8px rgba(231,76,60,.5)}
 .tv-hizb-num{font-weight:900}
@@ -1031,6 +1047,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
         <div class="mu-modes">
           <button class="mu-size-btn active" id="muModeText">قراءة نصية</button>
           <button class="mu-size-btn" id="muModeScan">المصحف الممسوح</button>
+          <button class="mu-size-btn" id="muDarkBtn" title="الوضع الليلي">🌙 ليلي</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
           <div>
@@ -1238,7 +1255,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.4</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.5</p>
   </section>
 
 </div>
@@ -3287,6 +3304,19 @@ function muApplyMode(){
 $("muModeText").addEventListener("click", ()=>{ muMode="text"; localStorage.setItem("mushaf_mode","text"); muApplyMode(); openTextMode(); });
 $("muModeScan").addEventListener("click", ()=>{ muMode="scan"; localStorage.setItem("mushaf_mode","scan"); muApplyMode(); });
 muApplyMode();
+/* ===== Mode sombre Mushaf (texte + scan) ===== */
+let muDark = localStorage.getItem("mushaf_dark")==="1";
+function muApplyDark(){
+  $("scr-mushaf").classList.toggle("mu-dark", muDark);
+  $("muDarkBtn").textContent = muDark ? "☀️ نهاري" : "🌙 ليلي";
+  $("muDarkBtn").classList.toggle("active", muDark);
+}
+$("muDarkBtn").addEventListener("click", ()=>{
+  muDark = !muDark;
+  localStorage.setItem("mushaf_dark", muDark ? "1" : "0");
+  muApplyDark();
+});
+muApplyDark();
 if(muMode==="text") openTextMode();
 /* ===== texte numérique : lecture continue, taille géante, zéro marge ===== */
 let muQuran=null;
