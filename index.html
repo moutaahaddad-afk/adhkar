@@ -1238,7 +1238,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.3</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.4</p>
   </section>
 
 </div>
@@ -2793,6 +2793,8 @@ function muGo(np, anim){
   muRender(anim);
 }
 function openMushaf(){
+  /* Mode texte actif : rendre le texte immédiatement (sinon aperçu vide) */
+  if(muMode === "text"){ openTextMode(); return; }
   if(muMode === "flash" && navigator.onLine === false){
     muMode = "text"; muApplyMode();
     toast("غير متصل — عرض القراءة النصية");
@@ -3390,8 +3392,15 @@ async function openTextMode(){
   if(!$("tvSurah").options.length){
     muQuran.forEach((s,i)=>{ const o=document.createElement("option"); o.value=i+1; o.textContent=(i+1)+' — '+s.n; $("tvSurah").appendChild(o); });
   }
+  /* Restaurer la position sauvegardée (même sourate uniquement) */
+  let savedY=-1;
+  try{
+    const pos=JSON.parse(localStorage.getItem("mushaf_tv_pos")||"null");
+    if(pos && pos.s===tvCur) savedY=pos.y||0;
+  }catch(e){}
   $("tvSurah").value=String(tvCur);
   tvRender(); tvApplySize();
+  if(savedY>0){ $("tvBody").scrollTop=savedY; requestAnimationFrame(tvUpdateBadge); }
 }
 let tvSaveT=null;
 $("tvBody").addEventListener("scroll",()=>{
