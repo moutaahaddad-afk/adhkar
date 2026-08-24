@@ -906,11 +906,11 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <div class="prayer-method">
         <label>مذهب الحساب</label>
         <select id="prayMethod">
-          <option value="MWL" selected>رابطة العالم الإسلامي</option>
+          <option value="MWL">رابطة العالم الإسلامي</option>
           <option value="UQ">أم القرى</option>
           <option value="EGY">الهيئة المصرية العامة</option>
           <option value="KAR">كراتشي</option>
-          <option value="TUN">تونس (الرسمية)</option>
+          <option value="TUN" selected>تونس (الرسمية)</option>
           <option value="ISNA">الجمعية الإسلامية لأمريكا الشمالية</option>
           <option value="JAK">جاكرتا (إندونيسيا)</option>
           <option value="TEH">طهران (إيران)</option>
@@ -1264,7 +1264,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.7</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.8</p>
   </section>
 
 </div>
@@ -1611,7 +1611,7 @@ function defaultState(){
     todayCount: 0,
     nights: {},             // {date: count}
     sheikhAck: {},          // {index: true}
-    s: { hour:20, minute:0, vibrate:true, sound:true, wake:true, light:false, textSize:"md", wirdM:true, wirdE:true, wirdMTime:"05:30", wirdETime:"17:30", morningReminder:true, eveningReminder:true, morningReminderTime:"04:30", eveningReminderTime:"23:00", mushafReminder:true, mushafTime:"21:00" },
+    s: { hour:20, minute:0, vibrate:true, sound:true, wake:true, light:false, textSize:"md", wirdM:true, wirdE:true, wirdMTime:"05:30", wirdETime:"17:30", morningReminder:true, eveningReminder:true, morningReminderTime:"04:30", eveningReminderTime:"23:00", mushafReminder:true, mushafTime:"21:00", prayMethod:"TUN", tunisiaTZ:true },
     completedNotified:{},   // {index:true} notifications 95k/100k déjà envoyées
     allDoneNotified:false,
     orad: { m: [], e: [] }, // m: morning, e: evening (cases cochées)
@@ -2257,7 +2257,10 @@ function renderPrayer(){
   const nextEl = $("nextPrayer");
   const locEl = $("prayLoc");
   if(!grid) return;
-  const method = $("prayMethod").value || "MWL";
+  /* Restaurer le méthode sauvegardée */
+  const savedMethod = state.s.prayMethod || "TUN";
+  $("prayMethod").value = savedMethod;
+  const method = savedMethod;
   const lat = parseFloat(localStorage.getItem("adhkar_lat") || "0");
   const lng = parseFloat(localStorage.getItem("adhkar_lng") || "0");
   if(!lat && !lng){
@@ -3218,7 +3221,11 @@ $("ovBtn").addEventListener("click", advanceName);
 
 $("btnNameInfo").addEventListener("click", ()=>openName(state.currentIndex));
 $("prayRelocate").addEventListener("click", locateAndRender);
-$("prayMethod").addEventListener("change", renderPrayer);
+$("prayMethod").addEventListener("change", ()=>{
+  state.s.prayMethod = $("prayMethod").value;
+  save(state);
+  renderPrayer();
+});
 $("qiblaCalib").addEventListener("click", async ()=>{
   if(!window.DeviceOrientationEvent){ toast("هذا الجهاز لا يدعم بوصلة الاتجاه"); renderQibla(); return; }
   if(window.DeviceOrientationEvent.requestPermission){
