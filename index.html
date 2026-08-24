@@ -681,14 +681,22 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 .tv-hizb-num{font-weight:900}
 .tv-hizb-label{font-size:.75em;opacity:.95}
 .tv-quarter{font-size:.9em;padding:4px 10px;box-shadow:0 2px 6px rgba(0,0,0,.25);border-width:2px}
+.tv-quarter-1{background:#27ae60;color:#fff;border-color:#27ae60}
+.tv-quarter-2{background:#2980b9;color:#fff;border-color:#2980b9}
+.tv-quarter-3{background:#8e44ad;color:#fff;border-color:#8e44ad}
+.tv-quarter-4{background:#d35400;color:#fff;border-color:#d35400}
 .tv-quarter[data-q="1"]{background:#27ae60;color:#fff;border-color:#27ae60}
 .tv-quarter[data-q="2"]{background:#2980b9;color:#fff;border-color:#2980b9}
 .tv-quarter-num{font-weight:900;font-size:1.1em}
+.tv-quarter-sep{opacity:.7;margin:0 1px}
+.tv-quarter-total{font-size:.85em;opacity:.85}
 .tv-quarter-label{font-size:.7em;opacity:.95;margin-left:2px}
 /* Surlignage du verset au quart */
 .tv-ayah{transition:background .3s}
 .tv-quarter-ayah{background:rgba(39,174,96,.08)}
 .tv-quarter-2-ayah{background:rgba(41,128,185,.08)}
+.tv-quarter-3-ayah{background:rgba(142,68,173,.08)}
+.tv-quarter-4-ayah{background:rgba(211,84,0,.08)}
 .tv-hizb-ayah{background:rgba(231,76,60,.12)}
 .tv-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:12px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:auto;transition:all .3s}
 .tv-badge.tv-hizb-alert{background:#e74c3c;color:#fff;border-color:#e74c3c;animation:tv-shake .5s ease-in-out 3}
@@ -1230,7 +1238,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.2</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.3</p>
   </section>
 
 </div>
@@ -3301,17 +3309,16 @@ function tvRender(){
     const jz=tvJuzOf(surah,ayah);
     const hq=tvHqOf(surah,ayah);
     const hz=tvHizbOf(hq);
-    const isBoundary=tvIsHizbBoundary(hq);
-    const quartInHizb=hq>0?(((hq-1)%2)+1):0; // 1 ou 2
+    const quartInHizb=tvQuartOf(hq); // 1..4
     const jmark=jz?'<span class="tv-jmark" data-j="'+jz+'" id="tv-j'+jz+'">الجزء '+tvAr(jz)+'</span>':'';
     let hmark="";
     let ayahClass="";
     if(hq){
-      if(isBoundary){
-        hmark='<span class="tv-hmark tv-hizb-boundary" title="نهاية الحزب '+tvAr(hz)+' — ربع '+tvAr(quartInHizb)+'" data-hq="'+hq+'" data-hz="'+hz+'" id="tv-hq'+hq+'">۞۞ <span class="tv-hizb-num">'+tvAr(hz)+'</span> <span class="tv-hizb-label">ح</span></span>';
+      if(tvIsHizbBoundary(hq)){
+        hmark='<span class="tv-hmark tv-hizb-boundary" title="بداية الحزب '+tvAr(hz)+' — نهاية الحزب '+tvAr(hz-1)+'" data-hq="'+hq+'" data-hz="'+hz+'" id="tv-hq'+hq+'">۞۞ <span class="tv-hizb-num">'+tvAr(hz)+'</span> <span class="tv-hizb-label">ح</span></span>';
         ayahClass=" tv-hizb-ayah";
       }else{
-        hmark='<span class="tv-hmark tv-quarter tv-quarter-'+quartInHizb+'" title="الحزب '+tvAr(hz)+' — الربع '+tvAr(quartInHizb)+'" data-hq="'+hq+'" data-hz="'+hz+'" data-q="'+quartInHizb+'" id="tv-hq'+hq+'">۞ <span class="tv-quarter-num">'+tvAr(quartInHizb)+'</span> <span class="tv-quarter-label">ر</span></span>';
+        hmark='<span class="tv-hmark tv-quarter tv-quarter-'+quartInHizb+'" title="الحزب '+tvAr(hz)+' — الربع '+tvAr(quartInHizb)+' من ٤" data-hq="'+hq+'" data-hz="'+hz+'" data-q="'+quartInHizb+'" id="tv-hq'+hq+'">۞ <span class="tv-quarter-num">'+tvAr(quartInHizb)+'</span><span class="tv-quarter-sep">/</span><span class="tv-quarter-total">٤</span> <span class="tv-quarter-label">ر</span></span>';
         ayahClass=" tv-quarter-ayah tv-quarter-"+quartInHizb+"-ayah";
       }
     }
@@ -3329,29 +3336,32 @@ const TV_HIZB_QUARTERS=[[1,1],[2,26],[2,44],[2,60],[2,75],[2,92],[2,106],[2,124]
 const TV_HQ_KEY={}; TV_HIZB_QUARTERS.forEach((p,i)=>TV_HQ_KEY[p[0]+":"+p[1]]=i+1);
 function tvHqOf(surah,ayah){ return TV_HQ_KEY[surah+":"+ayah]||0; }
 function tvJuzOf(surah,ayah){ return TV_JUZ_KEY[surah+":"+ayah]||0; }
-/* Hizb = 2 quarts. Frontières Hizb = quarts pairs (2,4,6...240) */
-function tvHizbOf(q){ return q>0 ? Math.ceil(q/2) : 0; }
-function tvIsHizbBoundary(q){ return q>0 && q%2===0; }
+/* Structure coranique : 1 Hizb = 4 quarts. 1 Juz = 2 Hizb = 8 quarts */
+function tvHizbOf(q){ return q>0 ? Math.ceil(q/4) : 0; }
+function tvQuartOf(q){ return q>0 ? (((q-1)%4)+1) : 0; }
+/* Frontière de Hizb = début d'un nouveau hizb (quart n°1 d'un hizb > 1) */
+function tvIsHizbBoundary(q){ return q>1 && (q%4===1); }
 function tvUpdateBadge(){
   const body=$("tvBody");
   let curJ=1, curHQ=0;
   body.querySelectorAll(".tv-jmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) curJ=parseInt(m.dataset.j); });
   body.querySelectorAll(".tv-hmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) curHQ=parseInt(m.dataset.hq); });
   const hz=tvHizbOf(curHQ);
+  const quartInHizb=tvQuartOf(curHQ); // 1..4
   const isBoundary=tvIsHizbBoundary(curHQ);
-  const quartInHizb=curHQ>0?(((curHQ-1)%2)+1):0; // 1 ou 2
   const hPart=curHQ?(' · ح '+tvAr(hz)+' · ر '+tvAr(quartInHizb)):'';
   const badge=$("tvBadge");
   badge.textContent="الجزء "+tvAr(curJ)+hPart;
-  // Visuel frontière Hizb
+  // Alerte à la frontière d'un hizb (début du nouveau hizb = fin du précédent)
   if(isBoundary && curHQ>0){
     badge.classList.add("tv-hizb-alert");
     if(!badge.dataset.alerted || badge.dataset.alerted!=curHQ){
       badge.dataset.alerted=curHQ;
-      toast("⚡ نهاية الحزب "+tvAr(hz)+" — توقف هنا", 3000);
+      toast("⚡ اكتمل الحزب "+tvAr(hz-1)+" — بداية الحزب "+tvAr(hz), 3000);
     }
   }else{
     badge.classList.remove("tv-hizb-alert");
+    if(badge.dataset.alerted && curHQ>0 && !isBoundary) delete badge.dataset.alerted;
   }
 }
 function tvGoJuz(k){
