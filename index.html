@@ -1225,6 +1225,15 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
     </div>
 
     <div class="card" style="margin-top:14px">
+      <h2>🕌 فuseau horaire des prières</h2>
+      <div class="set-row">
+        <div><div class="lbl">Utiliser l'heure de la Tunisie</div><div class="sub">UTC+1 (pas d'heure d'été) — pour calculs prières précis</div></div>
+        <div class="switch on" id="swTunisiaTZ"></div>
+      </div>
+      <div class="sub" style="direction:ltr;text-align:left;margin-top:6px;font-size:12px">Si désactivé : utilise le fuseau du navigateur. <b>Défaut : Tunisie activé.</b></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
       <h2>التنبيهات</h2>
       <div class="set-row">
         <div><div class="lbl">إشعار تجريبي</div><div class="sub">تأكد أن الإشعارات تعمل</div></div>
@@ -1255,7 +1264,7 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.6</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.7</p>
   </section>
 
 </div>
@@ -2192,7 +2201,9 @@ function computePrayerTimes(lat, lng, method, date){
   const jd = toJD(now);
   const sun = sunCalc(jd);
   const M = PRAY_METHODS[method];
-  const tz = -now.getTimezoneOffset()/60;
+  /* Fuseau horaire : Tunisie (UTC+1) si activé, sinon navigateur */
+  const useTunisia = localStorage.getItem("adhkar_tunisia_tz") !== "0"; // défaut = true
+  const tz = useTunisia ? 1 : -now.getTimezoneOffset()/60;
   const decl = sun.dec;
 
   /* Transit (Dhuhr) */
@@ -2533,6 +2544,7 @@ function renderSettings(){
   $("setEveningReminderTime").value = state.s.eveningReminderTime || "23:00";
   $("swMushaf").classList.toggle("on", state.s.mushafReminder !== false);
   $("setMushafTime").value = state.s.mushafTime || "21:00";
+  $("swTunisiaTZ").classList.toggle("on", state.s.tunisiaTZ !== false);
   const sel = $("setName");
   if(sel.options.length !== NAMES.length){
     sel.innerHTML = "";
@@ -3250,6 +3262,10 @@ toggleSwitch("swWirdE","wirdE", on=>checkWirdReminder());
 toggleSwitch("swMorningReminder","morningReminder", on=>checkWirdReminder());
 toggleSwitch("swEveningReminder","eveningReminder", on=>checkWirdReminder());
 toggleSwitch("swMushaf","mushafReminder", on=>checkWirdReminder());
+toggleSwitch("swTunisiaTZ","tunisiaTZ", on=>{
+  if(on) toast("✅ Fuseau Tunisie (UTC+1) activé pour les prières");
+  else toast("⚠️ Fuseau navigateur utilisé — prières peuvent décaler hors Tunisie");
+});
 
 $("swTheme").addEventListener("click", ()=>{
   const on = !$("swTheme").classList.contains("on");
