@@ -1,5 +1,5 @@
 /* ????? ? Service Worker (hors-ligne) */
-const VERSION = "adhkar-v2.9.3";
+const VERSION = "adhkar-v2.9.4";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
