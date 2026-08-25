@@ -1326,7 +1326,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.0</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.1</p>
   </section>
 
   <section class="screen" id="scr-burdah">
@@ -3730,68 +3730,79 @@ if(state.todayCount < DAILY && state.nights[todayStr()] !== state.todayCount){
 }
 
 /* ===================== BURDAH / HAMZIYYAH ===================== */
-let bdData=null, bdMode="burdah", bdPoem=null, bdCurrentChapter=1, bdSize=30;
-const BD_SIZE_KEY="burdah_size", BD_CH_KEY="burdah_chapter", BD_MODE_KEY="burdah_mode", BD_SCROLL_KEY="burdah_scroll";
+let bdData=null, bdMode="burdah", bdPoem=null, bdCurrentChapter=0, bdSize=30;
+const BD_SIZE_KEY="burdah_size", BD_CH_KEY="burdah_chapter", BD_MODE_KEY="burdah_mode", BD_POS_KEY="burdah_pos";
 
 async function bdLoadData(){
   if(bdData) return bdData;
-  const r=await fetch("burdah.json"); bdData=await r.json();
-  const h=await fetch("hamziyyah.json"); bdData.hamziyyah=h;
+  const [r,h]=await Promise.all([fetch("burdah.json"),fetch("hamziyyah.json")]);
+  bdData=await r.json(); bdData.hamziyyah=await h.json();
   return bdData;
 }
-function bdGetPoem(){
-  return bdMode==="burdah" ? bdData.chapters : bdData.hamziyyah.sections;
-}
+function bdGetPoem(){ return bdMode==="burdah" ? bdData.chapters : bdData.hamziyyah.sections; }
 function bdAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function bdEnsure(){
-  if(!bdData) await bdLoadData();
-  bdPoem=bdGetPoem();
-  if(!$("#bdChapter").options.length){
-    bdPoem.forEach((c,i)=>{
-      const o=document.createElement("option"); o.value=i; o.textContent=c.titleAr; $("#bdChapter").appendChild(o);
-    });
+  try{
+    if(!bdData) await bdLoadData();
+    const sm=localStorage.getItem(BD_MODE_KEY); if(sm==="hamziyyah"||sm==="burdah") bdMode=sm;
+    const ss=parseFloat(localStorage.getItem(BD_SIZE_KEY)); if(!isNaN(ss)) bdSize=Math.max(14,Math.min(64,ss));
+    const sc=parseInt(localStorage.getItem(BD_CH_KEY)); if(!isNaN(sc)) bdCurrentChapter=sc;
+    bdApplyMode(); bdApplySize();
+  }catch(e){
+    console.error("bdEnsure:",e);
+    $("bdBody").innerHTML='<div style="padding:24px;text-align:center;color:#b00020;font-family:Tajawal,sans-serif">تعذّر تحميل النصوص — تحقق من الاتصال</div>';
   }
-  const saved=localStorage.getItem(BD_CH_KEY); if(saved){ bdCurrentChapter=Math.max(0,Math.min(parseInt(saved),bdPoem.length-1)); }
-  const savedMode=localStorage.getItem(BD_MODE_KEY); if(savedMode){ bdMode=savedMode; }
-  const savedSize=localStorage.getItem(BD_SIZE_KEY); if(savedSize){ bdSize=Math.max(14,Math.min(64,parseFloat(savedSize))); bdApplySize(); }
-  $("#bdChapter").value=bdCurrentChapter;
-  bdApplyMode(); bdRender(); bdApplySize();
 }
 function bdApplyMode(){
   bdPoem=bdGetPoem();
-  bdMode==="burdah" ? ($("#bdModeBurdah").classList.add("active"),$("#bdModeHamziyyah").classList.remove("active")) : ($("#bdModeHamziyyah").classList.add("active"),$("#bdModeBurdah").classList.remove("active"));
-  bdCurrentChapter=Math.min(bdCurrentChapter,bdPoem.length-1);
-  $("#bdTitle").textContent=bdMode==="burdah"?"البردة":"الحمزية (أم القرى)";
-  $("#bdSub").textContent=bdMode==="burdah"?"الكواكب الدرية في مدح خير البرية":"أم القرى في مدح خير الورى";
+  $("bdModeBurdah").classList.toggle("active",bdMode==="burdah");
+  $("bdModeHamziyyah").classList.toggle("active",bdMode==="hamziyyah");
+  if(!(bdCurrentChapter>=0)||bdCurrentChapter>=bdPoem.length) bdCurrentChapter=0;
+  $("bdTitle").textContent=bdMode==="burdah"?"البردة":"الحمزية (أم القرى)";
+  $("bdSub").textContent=bdMode==="burdah"?"الكواكب الدرية في مدح خير البرية":"أم القرى في مدح خير الورى";
+  const sel=$("bdChapter"); sel.innerHTML="";
+  bdPoem.forEach((c,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=c.titleAr; sel.appendChild(o); });
+  sel.value=bdCurrentChapter;
+  $("bdGrid").innerHTML="";
   bdRender();
 }
-function bdApplySize(){ $("bdBody").style.setProperty("--bd-size",bdSize+"px"); $("#bdVal").textContent=Math.round(bdSize); }
+function bdApplySize(){
+  $("bdBody").style.setProperty("--bd-size",bdSize+"px");
+  $("bdVal").textContent=bdSize;
+  $("bdZoomVal").textContent=Math.round(bdSize/30*100)+"%";
+}
 function bdRender(){
-  const c=bdPoem[bdCurrentChapter];
+  const c=bdPoem&&bdPoem[bdCurrentChapter]; if(!c) return;
   let h='<div class="tv-surah-title">'+c.titleAr+'</div>';
-  h+=c.verses.map((v,i)=>'<span class="bd-verse">'+v+' <span class="bd-num">['+bdAr(i+1)+']</span></span>').join("");
-  $("#bdBody").innerHTML=h;
-  const scroll=localStorage.getItem(BD_SCROLL_KEY); if(scroll){ setTimeout(()=>{$("#bdBody").scrollTop=parseInt(scroll);},50); }
+  h+=(c.verses||[]).map((v,i)=>'<span class="bd-verse">'+v+' <span class="bd-num">['+bdAr(i+1)+']</span></span>').join("");
+  $("bdBody").innerHTML=h;
+  let p=null; try{ p=JSON.parse(localStorage.getItem(BD_POS_KEY)); }catch(e){}
+  if(p && p.m===bdMode && p.c===bdCurrentChapter && p.y>40){
+    setTimeout(()=>{ $("bdBody").scrollTop=p.y; bdUpdateBadge(); },60);
+  } else { $("bdBody").scrollTop=0; }
   bdUpdateBadge();
   localStorage.setItem(BD_CH_KEY,bdCurrentChapter);
 }
 function bdUpdateBadge(){
-  const c=bdPoem[bdCurrentChapter];
-  const total=c.verses.length;
-  const pos=Math.min($("#bdBody").scrollTop / ($("#bdBody").scrollHeight - $("#bdBody").clientHeight),1);
-  const verseIdx=Math.min(Math.floor(pos*c.verses.length),c.verses.length-1);
-  $("#bdBadge").textContent=c.titleAr+" · "+bdAr(verseIdx+1)+"/"+bdAr(total);
-  $("#bdPosLabel").textContent=c.titleAr;
+  const c=bdPoem&&bdPoem[bdCurrentChapter]; if(!c) return;
+  const el=$("bdBody"), total=c.verses.length;
+  const denom=el.scrollHeight-el.clientHeight;
+  const pos=denom>0 ? Math.min(el.scrollTop/denom,1) : 0;
+  const idx=Math.max(0,Math.min(Math.floor(pos*total),total-1));
+  $("bdBadge").textContent=c.titleAr.split(":")[0]+" · "+bdAr(idx+1)+"/"+bdAr(total);
+  $("bdPosLabel").textContent=(bdMode==="burdah"?"الفصل ":"القسم ")+bdAr(c.num);
 }
+function bdSaveScroll(){ localStorage.setItem(BD_POS_KEY,JSON.stringify({m:bdMode,c:bdCurrentChapter,y:$("bdBody").scrollTop})); }
 function bdGoChapter(i){
   if(i<0||i>=bdPoem.length) return;
-  bdCurrentChapter=i; $("#bdChapter").value=i; bdRender();
-  const scroll=localStorage.getItem(BD_SCROLL_KEY); if(scroll){ setTimeout(()=>{$("#bdBody").scrollTop=parseInt(scroll);},50); }
+  bdCurrentChapter=i; $("bdChapter").value=i;
+  $("bdSheet").classList.remove("open");
+  bdRender();
 }
 function bdNext(){ bdGoChapter(bdCurrentChapter+1); }
 function bdPrev(){ bdGoChapter(bdCurrentChapter-1); }
 function bdOpenSheet(){
-  const g=$("#bdGrid");
+  const g=$("bdGrid");
   if(!g.children.length){
     bdPoem.forEach((c,i)=>{
       const b=document.createElement("button");
@@ -3800,9 +3811,16 @@ function bdOpenSheet(){
       g.appendChild(b);
     });
   }
-  $("#bdSheet").classList.add("open");
+  $("bdSheet").classList.add("open");
 }
-function bdSaveScroll(){ localStorage.setItem(BD_SCROLL_KEY,$("#bdBody").scrollTop); }
+function bdSetSize(v){
+  bdSize=Math.max(14,Math.min(64,v));
+  bdApplySize();
+  localStorage.setItem(BD_SIZE_KEY,bdSize);
+  document.querySelectorAll("#scr-burdah .mu-size-row .mu-size-btn").forEach(b=>{
+    b.classList.toggle("active",Math.round(30*parseFloat(b.dataset.s))===bdSize);
+  });
+}
 function bdEnterFS(){
   document.body.classList.add("bd-fullscreen");
   if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
@@ -3812,31 +3830,27 @@ function bdExitFS(){
   if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
 }
 
-/* Init Burdah tab */
-$("#bdModeBurdah").addEventListener("click",()=>{ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); });
-$("#bdModeHamziyyah").addEventListener("click",()=>{ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); });
-$("#bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("#bdChapter").value,10)));
-$("#bdPrev").addEventListener("click",bdPrev);
-$("#bdNext").addEventListener("click",bdNext);
-$("#bdGridBtn").addEventListener("click",bdOpenSheet);
-$("#bdPlus").addEventListener("click",()=>{ bdSize=Math.min(64,bdSize+2); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
-$("#bdMinus").addEventListener("click",()=>{ bdSize=Math.max(14,bdSize-2); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
-$("#bdGridBtn").addEventListener("click",bdOpenSheet);
-$("#bdClose").addEventListener("click",()=>$("#bdSheet").classList.remove("open"));
-$("#bdSheet").addEventListener("click",e=>{ if(e.target===$("#bdSheet")) $("#bdSheet").classList.remove("open"); });
-$("#bdFsBtn").addEventListener("click",bdEnterFS);
-$("#bdFsExit").addEventListener("click",bdExitFS);
-$("#bdBody").addEventListener("scroll",()=>{ bdUpdateBadge(); bdSaveScroll(); });
-$("#bdZIn").addEventListener("click",()=>{ bdSize=Math.min(64,bdSize+4); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
-$("#bdZOut").addEventListener("click",()=>{ bdSize=Math.max(14,bdSize-4); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
-$("#bdFitBtn").addEventListener("click",()=>{ $("#bdFitBtn").classList.toggle("active"); });
-
-/* Tab click to init */
-const bdTab=document.querySelector('[data-tab="scr-burdah"]');
-if(bdTab) bdTab.addEventListener("click",bdEnsure);
-
-/* Close sheet on outside click */
-$("#bdSheet").addEventListener("click",e=>{ if(e.target===$("#bdSheet")) $("#bdSheet").classList.remove("open"); });
+/* Écouteurs Burdah */
+$("bdModeBurdah").addEventListener("click",()=>{ if(bdMode!=="burdah"){ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); } });
+$("bdModeHamziyyah").addEventListener("click",()=>{ if(bdMode!=="hamziyyah"){ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); } });
+$("bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("bdChapter").value,10)));
+$("bdPrev").addEventListener("click",bdPrev);
+$("bdNext").addEventListener("click",bdNext);
+$("bdArrowPrev").addEventListener("click",bdPrev);
+$("bdArrowNext").addEventListener("click",bdNext);
+$("bdGridBtn").addEventListener("click",bdOpenSheet);
+$("bdSheet").addEventListener("click",e=>{ if(e.target===$("bdSheet")) $("bdSheet").classList.remove("open"); });
+$("bdPlus").addEventListener("click",()=>bdSetSize(bdSize+2));
+$("bdMinus").addEventListener("click",()=>bdSetSize(bdSize-2));
+$("bdZIn").addEventListener("click",()=>bdSetSize(bdSize+4));
+$("bdZOut").addEventListener("click",()=>bdSetSize(bdSize-4));
+$("bdFitBtn").addEventListener("click",()=>bdSetSize(30));
+document.querySelectorAll("#scr-burdah .mu-size-row .mu-size-btn").forEach(b=>{
+  b.addEventListener("click",()=>bdSetSize(Math.round(30*parseFloat(b.dataset.s))));
+});
+$("bdFsBtn").addEventListener("click",bdEnterFS);
+$("bdFsExit").addEventListener("click",bdExitFS);
+$("bdBody").addEventListener("scroll",()=>{ bdUpdateBadge(); bdSaveScroll(); });
 </script>
 </body>
 </html>
