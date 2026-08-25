@@ -1326,7 +1326,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.1</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.2</p>
   </section>
 
   <section class="screen" id="scr-burdah">
@@ -3735,7 +3735,7 @@ const BD_SIZE_KEY="burdah_size", BD_CH_KEY="burdah_chapter", BD_MODE_KEY="burdah
 
 async function bdLoadData(){
   if(bdData) return bdData;
-  const [r,h]=await Promise.all([fetch("burdah.json"),fetch("hamziyyah.json")]);
+  const [r,h]=await Promise.all([fetch("burdah.json?v=292"),fetch("hamziyyah.json?v=292")]);
   bdData=await r.json(); bdData.hamziyyah=await h.json();
   return bdData;
 }
