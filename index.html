@@ -1326,7 +1326,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.2</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.3</p>
   </section>
 
   <section class="screen" id="scr-burdah">
@@ -3473,7 +3473,7 @@ $("muDarkBtn").addEventListener("click", ()=>{
   muApplyDark();
 });
 muApplyDark();
-if(muMode==="text") openTextMode();
+if(muMode==="text") setTimeout(openTextMode,0);
 /* ===== texte numérique : lecture continue, taille géante, zéro marge ===== */
 let muQuran=null;
 const MU_BASMALA="بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
