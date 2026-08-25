@@ -745,6 +745,68 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
 .mu-dlrow .btn{width:100%}
 .mu-dl-status{font-size:12.5px;color:var(--emerald-soft);margin-top:8px;text-align:center;font-weight:600;min-height:18px}
 
+/* ---------- BURDAH / HAMZIYYAH READER ---------- */
+#scr-burdah .mu-head{margin-bottom:8px}
+#scr-burdah .mu-modes{display:flex;gap:6px;margin-bottom:10px}
+#scr-burdah .mu-size-btn{flex:1;padding:8px 4px;font-size:14px;font-weight:700;color:#ece5cd;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+#scr-burdah .mu-size-btn.active{background:var(--gold);color:#0d1f16;border-color:var(--gold)}
+#scr-burdah .mu-size-row{display:flex;gap:6px;margin-top:10px}
+#scr-burdah .mu-size-row .mu-size-btn{flex:1}
+#bdTitle{font-family:"Scheherazade New",serif;font-size:22px;color:var(--gold-light);font-weight:700}
+#bdSub{font-size:13px;color:var(--muted2);margin-top:3px}
+#bdGridBtn{padding:6px 12px;font-size:13px}
+#bdText{display:none;flex-direction:column;width:100%}
+#scr-burdah.mode-text #bdText{display:flex;height:calc(100vh - 380px);height:calc(100dvh - 380px);min-height:360px;max-height:760px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+body.bd-fullscreen #scr-burdah.mode-text #bdText{flex:1;height:auto;min-height:0;max-height:none;border-radius:0;border:none}
+#scr-burdah.mode-text .mu-viewport{display:none!important}
+#bdBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;text-align:justify;font-family:"Scheherazade New","Traditional Arabic",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--bd-size,30px);line-height:2.15;position:relative}
+body.bd-fullscreen #bdBody{padding-top:54px}
+.bd-verse{display:block;margin-bottom:8px;padding:8px 0;border-bottom:1px solid rgba(212,175,55,.08)}
+.bd-verse:last-child{border-bottom:none}
+.bd-num{font-size:.65em;color:var(--gold);font-weight:700;margin-right:8px;vertical-align:super}
+.bd-num{font-family:Tajawal,system-ui,sans-serif}
+.bd-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:12px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:auto;transition:all .3s}
+#bdPosLabel{font-size:13px;color:var(--gold-light);font-weight:600}
+#bdBody::-webkit-scrollbar{width:6px}
+#bdBody::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+#bdBody::-webkit-scrollbar-track{background:transparent}
+#bdBadge{font-family:Tajawal,system-ui,sans-serif}
+.bd-verse:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+#scr-burdah .tv-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0d1f16;color:var(--gold-light);border-bottom:1px solid rgba(212,175,55,.25)}
+#scr-burdah .tv-nav{width:36px;height:36px;border-radius:8px;background:rgba(212,175,55,.15);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#scr-burdah .tv-nav:active{transform:scale(.95)}
+#scr-burdah .tv-size{display:flex;align-items:center;gap:6px;margin-left:auto}
+#scr-burdah .tv-size button{width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,.15);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:16px;cursor:pointer}
+#scr-burdah .tv-size span{min-width:36px;text-align:center;font-weight:700;color:var(--gold-light)}
+#scr-burdah .tv-sheet{display:none;position:absolute;inset:0;z-index:5;background:rgba(6,20,14,.55);align-items:flex-end}
+#scr-burdah .tv-sheet.open{display:flex}
+#scr-burdah .tv-sheet-card{width:100%;max-height:72%;overflow-y:auto;background:#fdfbf5;border-radius:18px 18px 0 0;padding:16px}
+#scr-burdah .tv-sheet-card h4{margin:0 0 10px;text-align:center;color:#7a5b13}
+#scr-burdah .tv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#scr-burdah .tv-grid button{padding:10px 2px;border-radius:10px;border:1px solid var(--line);background:#ffffff;font-weight:700;color:#1c1c1c;font-family:inherit;font-size:11px;cursor:pointer}
+#scr-burdah .tv-close{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1px solid var(--line);background:#122a1e;color:var(--gold-light);font-family:inherit;font-weight:700;cursor:pointer}
+#scr-burdah .mu-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(13,31,22,.9);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:4;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+#scr-burdah .mu-arrow:active{transform:translateY(-50%) scale(.9)}
+#scr-burdah #bdArrowPrev{right:8px}
+#scr-burdah #bdArrowNext{left:8px}
+body.bd-fullscreen.idle .mu-arrow{opacity:0;pointer-events:none}
+body.bd-fullscreen #bdFsExit{display:flex;align-items:center;justify-content:center}
+#bdFsExit{position:fixed;top:16px;right:16px;z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(13,31,22,.95);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+body.bd-fullscreen #bdFsExit{display:flex}
+body.bd-fullscreen .mu-stage{height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column}
+body.bd-fullscreen .mu-viewport{flex:1;height:auto;min-height:0;max-height:none;background:#ffffff}
+body.bd-fullscreen #scr-burdah.mu-dark #bdText{background:#0d1a12}
+body.bd-fullscreen #scr-burdah.mu-dark #bdBody{background:#0d1a12;color:#ece5cd}
+body.bd-fullscreen #bdText{padding-top:54px}
+#scr-burdah .tv-hint{text-align:center;padding:10px;color:var(--muted2);font-size:12.5px;background:rgba(6,20,14,.3);border-radius:8px;margin-top:8px}
+#scr-burdah.mu-dark #bdText{background:#0d1a12}
+#scr-burdah.mu-dark #bdBody{background:#0d1a12;color:#ece5cd}
+#scr-burdah.mu-dark .tv-surah-title{color:var(--gold-light);background:linear-gradient(90deg,transparent,rgba(212,175,55,.25),transparent)}
+#scr-burdah.mu-dark .bd-verse{color:#ece5cd}
+#scr-burdah.mu-dark .bd-num{color:#d4af37}
+#scr-burdah.mu-dark #bdBody::-webkit-scrollbar-thumb{background:var(--gold)}
+#scr-burdah.mu-dark #bdBody::-webkit-scrollbar-track{background:#132419}
+
 /* ---------- Export PDF cheikh (impression) ---------- */
 #printView{display:none}
 @media print{
@@ -1264,7 +1326,70 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.8</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.8.9</p>
+  </section>
+
+  <section class="screen" id="scr-burdah">
+    <div class="card">
+      <div class="mu-head">
+        <div style="width:100%">
+          <div class="mu-modes">
+            <button class="mu-size-btn active" id="bdModeBurdah">البردة</button>
+            <button class="mu-size-btn" id="bdModeHamziyyah">الحمزية</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px">
+            <div>
+              <h2 id="bdTitle">البردة</h2>
+              <div class="sub" id="bdSub">الكواكب الدرية في مدح خير البرية</div>
+            </div>
+            <button class="btn btn-gold" id="bdGridBtn">الفصل / القسم</button>
+          </div>
+          <div class="mu-size-row">
+            <button class="mu-size-btn" data-s="1">عادي</button>
+            <button class="mu-size-btn active" data-s="1.25">كبير</button>
+            <button class="mu-size-btn" data-s="1.55">كبير جداً</button>
+          </div>
+        </div>
+      </div>
+      <div class="mu-stage">
+        <div class="mu-topbar">
+          <span class="mu-juz" id="bdPosLabel"></span>
+          <div class="mu-zctl">
+            <button id="bdFsBtn" aria-label="ملء الشاشة">⛶</button>
+            <button id="bdFitBtn" aria-label="ملء عرض الشاشة" class="active">⤢</button>
+            <button id="bdZOut" aria-label="تصغير">−</button>
+            <span class="mu-zoomval" id="bdZoomVal"></span>
+            <button id="bdZIn" aria-label="تكبير">+</button>
+          </div>
+        </div>
+        <div class="mu-viewport" id="bdViewport">
+          <div id="bdText">
+            <div class="tv-bar">
+              <button class="tv-nav" id="bdPrev" title="السابق">›</button>
+              <select id="bdChapter"></select>
+              <button class="tv-nav" id="bdNext" title="التالي">‹</button>
+              <div class="tv-size">
+                <button id="bdPlus" aria-label="تكبير">+</button>
+                <span id="bdVal">30</span>
+                <button id="bdMinus" aria-label="تصغير">−</button>
+              </div>
+            </div>
+            <div id="bdBody"></div>
+            <div class="tv-badge" id="bdBadge">الفصل / البيت</div>
+            <div class="tv-sheet" id="bdSheet">
+              <div class="tv-sheet-card">
+                <h4>الانتقال إلى فصل / قسم</h4>
+                <div class="tv-grid" id="bdGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="bdFsExit" aria-label="خروج من ملء الشاشة">✕</button>
+        <button class="mu-arrow" id="bdArrowPrev" aria-label="السابق">›</button>
+        <button class="mu-arrow" id="bdArrowNext" aria-label="التالي">‹</button>
+      </div>
+    </div>
+    <div class="mu-hint" id="bdHint">اسحب لتقليب الفصول · اضغط مرتين للتكبير</div>
   </section>
 
 </div>
@@ -1329,8 +1454,12 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
     اليوميات
   </button>
+<button data-tab="scr-burdah">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    البردة
+  </button>
   <button data-tab="scr-settings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82-.33l-.06-.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     الإعدادات
   </button>
 </nav>
@@ -3595,6 +3724,115 @@ document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState=
 if(state.todayCount < DAILY && state.nights[todayStr()] !== state.todayCount){
   /* nothing special */
 }
+
+/* ===================== BURDAH / HAMZIYYAH ===================== */
+let bdData=null, bdMode="burdah", bdPoem=null, bdCurrentChapter=1, bdSize=30;
+const BD_SIZE_KEY="burdah_size", BD_CH_KEY="burdah_chapter", BD_MODE_KEY="burdah_mode", BD_SCROLL_KEY="burdah_scroll";
+
+async function bdLoadData(){
+  if(bdData) return bdData;
+  const r=await fetch("burdah.json"); bdData=await r.json();
+  const h=await fetch("hamziyyah.json"); bdData.hamziyyah=h;
+  return bdData;
+}
+function bdGetPoem(){
+  return bdMode==="burdah" ? bdData.chapters : bdData.hamziyyah.sections;
+}
+function bdAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
+async function bdEnsure(){
+  if(!bdData) await bdLoadData();
+  bdPoem=bdGetPoem();
+  if(!$("#bdChapter").options.length){
+    bdPoem.forEach((c,i)=>{
+      const o=document.createElement("option"); o.value=i; o.textContent=c.titleAr; $("#bdChapter").appendChild(o);
+    });
+  }
+  const saved=localStorage.getItem(BD_CH_KEY); if(saved){ bdCurrentChapter=Math.max(0,Math.min(parseInt(saved),bdPoem.length-1)); }
+  const savedMode=localStorage.getItem(BD_MODE_KEY); if(savedMode){ bdMode=savedMode; }
+  const savedSize=localStorage.getItem(BD_SIZE_KEY); if(savedSize){ bdSize=Math.max(14,Math.min(64,parseFloat(savedSize))); bdApplySize(); }
+  $("#bdChapter").value=bdCurrentChapter;
+  bdApplyMode(); bdRender(); bdApplySize();
+}
+function bdApplyMode(){
+  bdPoem=bdGetPoem();
+  bdMode==="burdah" ? ($("#bdModeBurdah").classList.add("active"),$("#bdModeHamziyyah").classList.remove("active")) : ($("#bdModeHamziyyah").classList.add("active"),$("#bdModeBurdah").classList.remove("active"));
+  bdCurrentChapter=Math.min(bdCurrentChapter,bdPoem.length-1);
+  $("#bdTitle").textContent=bdMode==="burdah"?"البردة":"الحمزية (أم القرى)";
+  $("#bdSub").textContent=bdMode==="burdah"?"الكواكب الدرية في مدح خير البرية":"أم القرى في مدح خير الورى";
+  bdRender();
+}
+function bdApplySize(){ $("bdBody").style.setProperty("--bd-size",bdSize+"px"); $("#bdVal").textContent=Math.round(bdSize); }
+function bdRender(){
+  const c=bdPoem[bdCurrentChapter];
+  let h='<div class="tv-surah-title">'+c.titleAr+'</div>';
+  h+=c.verses.map((v,i)=>'<span class="bd-verse">'+v+' <span class="bd-num">['+bdAr(i+1)+']</span></span>').join("");
+  $("#bdBody").innerHTML=h;
+  const scroll=localStorage.getItem(BD_SCROLL_KEY); if(scroll){ setTimeout(()=>{$("#bdBody").scrollTop=parseInt(scroll);},50); }
+  bdUpdateBadge();
+  localStorage.setItem(BD_CH_KEY,bdCurrentChapter);
+}
+function bdUpdateBadge(){
+  const c=bdPoem[bdCurrentChapter];
+  const total=c.verses.length;
+  const pos=Math.min($("#bdBody").scrollTop / ($("#bdBody").scrollHeight - $("#bdBody").clientHeight),1);
+  const verseIdx=Math.min(Math.floor(pos*c.verses.length),c.verses.length-1);
+  $("#bdBadge").textContent=c.titleAr+" · "+bdAr(verseIdx+1)+"/"+bdAr(total);
+  $("#bdPosLabel").textContent=c.titleAr;
+}
+function bdGoChapter(i){
+  if(i<0||i>=bdPoem.length) return;
+  bdCurrentChapter=i; $("#bdChapter").value=i; bdRender();
+  const scroll=localStorage.getItem(BD_SCROLL_KEY); if(scroll){ setTimeout(()=>{$("#bdBody").scrollTop=parseInt(scroll);},50); }
+}
+function bdNext(){ bdGoChapter(bdCurrentChapter+1); }
+function bdPrev(){ bdGoChapter(bdCurrentChapter-1); }
+function bdOpenSheet(){
+  const g=$("#bdGrid");
+  if(!g.children.length){
+    bdPoem.forEach((c,i)=>{
+      const b=document.createElement("button");
+      b.textContent=c.titleAr;
+      b.addEventListener("click",()=>bdGoChapter(i));
+      g.appendChild(b);
+    });
+  }
+  $("#bdSheet").classList.add("open");
+}
+function bdSaveScroll(){ localStorage.setItem(BD_SCROLL_KEY,$("#bdBody").scrollTop); }
+function bdEnterFS(){
+  document.body.classList.add("bd-fullscreen");
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+}
+function bdExitFS(){
+  document.body.classList.remove("bd-fullscreen");
+  if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+}
+
+/* Init Burdah tab */
+$("#bdModeBurdah").addEventListener("click",()=>{ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); });
+$("#bdModeHamziyyah").addEventListener("click",()=>{ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); });
+$("#bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("#bdChapter").value,10)));
+$("#bdPrev").addEventListener("click",bdPrev);
+$("#bdNext").addEventListener("click",bdNext);
+$("#bdGridBtn").addEventListener("click",bdOpenSheet);
+$("#bdPlus").addEventListener("click",()=>{ bdSize=Math.min(64,bdSize+2); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
+$("#bdMinus").addEventListener("click",()=>{ bdSize=Math.max(14,bdSize-2); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
+$("#bdGridBtn").addEventListener("click",bdOpenSheet);
+$("#bdClose").addEventListener("click",()=>$("#bdSheet").classList.remove("open"));
+$("#bdSheet").addEventListener("click",e=>{ if(e.target===$("#bdSheet")) $("#bdSheet").classList.remove("open"); });
+$("#bdFsBtn").addEventListener("click",bdEnterFS);
+$("#bdFsExit").addEventListener("click",bdExitFS);
+$("#bdBody").addEventListener("scroll",()=>{ bdUpdateBadge(); bdSaveScroll(); });
+$("#bdZIn").addEventListener("click",()=>{ bdSize=Math.min(64,bdSize+4); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
+$("#bdZOut").addEventListener("click",()=>{ bdSize=Math.max(14,bdSize-4); bdApplySize(); localStorage.setItem(BD_SIZE_KEY,bdSize); });
+$("#bdFitBtn").addEventListener("click",()=>{ $("#bdFitBtn").classList.toggle("active"); });
+
+/* Tab click to init */
+const bdTab=document.querySelector('[data-tab="scr-burdah"]');
+if(bdTab) bdTab.addEventListener("click",bdEnsure);
+
+/* Close sheet on outside click */
+$("#bdSheet").addEventListener("click",e=>{ if(e.target===$("#bdSheet")) $("#bdSheet").classList.remove("open"); });
 </script>
 </body>
 </html>
