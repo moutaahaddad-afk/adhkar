@@ -828,7 +828,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
 </style>
 </head>
 <body>
-<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v2.9.4</div>
+<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v2.9.5</div>
 <div id="app">
 
   <header>
@@ -1327,7 +1327,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.4</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.5</p>
   </section>
 
   <section class="screen" id="scr-burdah">
@@ -3745,14 +3745,18 @@ async function bdLoadData(){
 function bdGetPoem(){ return bdMode==="burdah" ? bdData.chapters : bdData.hamziyyah.sections; }
 function bdAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function bdEnsure(){
+  const say=t=>{ try{ $("bdHint").textContent=t; }catch(e){} };
   try{
     if(!bdData) await bdLoadData();
     const sm=localStorage.getItem(BD_MODE_KEY); if(sm==="hamziyyah"||sm==="burdah") bdMode=sm;
     const ss=parseFloat(localStorage.getItem(BD_SIZE_KEY)); if(!isNaN(ss)) bdSize=Math.max(14,Math.min(64,ss));
     const sc=parseInt(localStorage.getItem(BD_CH_KEY)); if(!isNaN(sc)) bdCurrentChapter=sc;
     bdApplyMode(); bdApplySize();
+    const totalV=bdPoem.reduce((a,c)=>a+(c.verses||[]).length,0);
+    say("✓ "+totalV+" بيت · "+bdPoem.length+" أقسام — جاهز للقراءة");
   }catch(e){
     console.error("bdEnsure:",e);
+    say("✗ خطأ التحميل: "+((e&&e.message)||e));
     $("bdBody").innerHTML='<div style="padding:24px;text-align:center;color:#b00020;font-family:Tajawal,sans-serif">تعذّر تحميل النصوص — تحقق من الاتصال</div>';
   }
 }
@@ -3834,6 +3838,7 @@ function bdExitFS(){
 }
 
 /* Écouteurs Burdah */
+try{
 $("bdModeBurdah").addEventListener("click",()=>{ if(bdMode!=="burdah"){ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); } });
 $("bdModeHamziyyah").addEventListener("click",()=>{ if(bdMode!=="hamziyyah"){ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); } });
 $("bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("bdChapter").value,10)));
@@ -3854,6 +3859,8 @@ document.querySelectorAll("#scr-burdah .mu-size-row .mu-size-btn").forEach(b=>{
 $("bdFsBtn").addEventListener("click",bdEnterFS);
 $("bdFsExit").addEventListener("click",bdExitFS);
 $("bdBody").addEventListener("scroll",()=>{ bdUpdateBadge(); bdSaveScroll(); });
+}catch(e){ try{ $("bdHint").textContent="✗ listeners: "+((e&&e.message)||e); }catch(_){ } }
+setTimeout(()=>{ bdEnsure(); },300);
 </script>
 </body>
 </html>
