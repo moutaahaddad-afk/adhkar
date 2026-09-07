@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="adhkarBg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#0f5238"/>
+      <stop offset="45%" stop-color="#072b1d"/>
+      <stop offset="85%" stop-color="#03150e"/>
+      <stop offset="100%" stop-color="#010a06"/>
+    </radialGradient>
+
+    <linearGradient id="goldLinear" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF8D6"/>
+      <stop offset="25%" stop-color="#F2D06B"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="75%" stop-color="#A47B19"/>
+      <stop offset="100%" stop-color="#E8C862"/>
+    </linearGradient>
+
+    <linearGradient id="goldLight" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="50%" stop-color="#FFF6D8"/>
+      <stop offset="100%" stop-color="#F0D065"/>
+    </linearGradient>
+
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#047857" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#047857" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="haloGold" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF2B2" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="#D4AF37" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000000" flood-opacity="0.6"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#D4AF37" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Base Squircle -->
+  <rect width="512" height="512" rx="116" fill="url(#adhkarBg)"/>
+
+  <!-- Outer Gilded Rims -->
+  <rect x="12" y="12" width="488" height="488" rx="106" fill="none" stroke="url(#goldLinear)" stroke-width="3" opacity="0.55"/>
+  <rect x="22" y="22" width="468" height="468" rx="96" fill="none" stroke="url(#goldLight)" stroke-width="1.2" opacity="0.3"/>
+
+  <!-- Central Glow -->
+  <circle cx="256" cy="256" r="200" fill="url(#centerGlow)"/>
+  <circle cx="256" cy="256" r="150" fill="url(#haloGold)"/>
+
+  <!-- 8-Pointed Star (Rub el Hizb) Outer Geometry -->
+  <g transform="translate(256, 256)" filter="url(#goldGlow)">
+    <!-- Primary Octagram -->
+    <rect x="-165" y="-165" width="330" height="330" rx="30" fill="none" stroke="url(#goldLinear)" stroke-width="5" opacity="0.85"/>
+    <rect x="-165" y="-165" width="330" height="330" rx="30" fill="none" stroke="url(#goldLinear)" stroke-width="5" opacity="0.85" transform="rotate(45)"/>
+
+    <!-- Secondary Inset Star -->
+    <rect x="-138" y="-138" width="276" height="276" rx="20" fill="#042217" fill-opacity="0.75" stroke="url(#goldLight)" stroke-width="2.5" opacity="0.95"/>
+    <rect x="-138" y="-138" width="276" height="276" rx="20" fill="#042217" fill-opacity="0.75" stroke="url(#goldLight)" stroke-width="2.5" opacity="0.95" transform="rotate(45)"/>
+
+    <!-- 8 Vertices Golden Spheres -->
+    <circle cx="0" cy="-182" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="0" cy="182" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="-182" cy="0" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="182" cy="0" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="-128" cy="-128" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="128" cy="-128" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="-128" cy="128" r="6.5" fill="url(#goldLinear)"/>
+    <circle cx="128" cy="128" r="6.5" fill="url(#goldLinear)"/>
+
+    <!-- Concentric Medallion Rings -->
+    <circle r="120" fill="none" stroke="url(#goldLinear)" stroke-width="2.5" stroke-dasharray="8 5" opacity="0.85"/>
+    <circle r="106" fill="#062e1f" stroke="url(#goldLight)" stroke-width="3.5"/>
+
+    <!-- Sacred Crescent Moon Accent -->
+    <path d="M -30 -68 C -72 -38 -72 38 -30 68 C -54 48 -60 -10 -38 -50 C -36 -56 -33 -62 -30 -68 Z" fill="url(#goldLinear)" opacity="0.5"/>
+
+    <!-- Central Calligraphy Emblem: "ذِكْر" (Zikr) with bold aesthetic curves -->
+    <g transform="translate(0, 10)">
+      <!-- Dhal (ذ) -->
+      <path d="M 30 -36 C 46 -36 52 -20 52 -4 L 52 24 C 52 30 44 32 38 28 C 34 26 34 20 34 16 L 34 4 C 34 -4 24 -4 16 -2 C 8 0 4 10 4 18 C 4 26 -6 30 -12 26 C -16 23 -14 16 -10 10 C 2 -6 12 -36 30 -36 Z" fill="url(#goldLight)"/>
+      <polygon points="42,-46 51,-55 60,-46 51,-37" fill="url(#goldLinear)"/>
+
+      <!-- Kaf (ك) connected gracefully -->
+      <path d="M -6 -28 C 6 -36 20 -44 30 -46 C 34 -46 36 -43 33 -39 C 30 -35 20 -32 8 -26 C -2 -18 -18 -6 -28 8 C -36 20 -48 24 -60 24 C -70 24 -74 18 -70 10 C -66 0 -50 -10 -32 -16 L -6 -28 Z" fill="url(#goldLight)"/>
+
+      <!-- Ra (ر) sweeping underline -->
+      <path d="M -34 12 C -24 12 -18 18 -20 26 C -24 44 -44 60 -72 66 C -86 69 -94 63 -90 54 C -86 46 -68 44 -56 38 C -44 32 -40 22 -38 14 C -37 12 -36 12 -34 12 Z" fill="url(#goldLinear)"/>
+
+      <!-- Harakat (Fatha / Kasra / Sukun flourishes) -->
+      <path d="M 22 -62 L 36 -73 C 38 -75 42 -74 41 -70 L 28 -59 C 25 -57 22 -58 22 -62 Z" fill="url(#goldLight)" opacity="0.95"/>
+      <circle cx="-16" cy="-4" r="5" fill="url(#goldLight)"/>
+    </g>
+
+    <!-- Subtitle: "الأسماء الحسنى" -->
+    <text x="0" y="86" text-anchor="middle" font-family="'Scheherazade New', 'Amiri', 'Noto Naskh Arabic', serif" font-weight="bold" font-size="20" fill="url(#goldLinear)" letter-spacing="1.5">الْأَسْمَاءُ الْحُسْنَى</text>
+  </g>
+
+  <!-- Crown Star Top -->
+  <g transform="translate(256, 44)">
+    <circle r="7" fill="url(#goldLinear)"/>
+    <polygon points="0,-15 3.5,-5.5 13.5,-5.5 5.5,1 9,11 0,4.5 -9,11 -5.5,1 -13.5,-5.5 -3.5,-5.5" fill="url(#goldLight)"/>
+  </g>
+</svg>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -10,13 +10,16 @@
 <meta name="apple-mobile-web-app-title" content="أذكار">
 <meta name="description" content="تطبيق أذكار الأسماء الحسنى — ذكر اسم الله يومياً">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <title>أذكار الأسماء الحسنى</title>
@@ -671,18 +674,18 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 .tv-nav,.tv-size button{width:34px;height:34px;border-radius:10px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.12);color:var(--gold-light);font-size:17px;font-weight:700;cursor:pointer;flex-shrink:0}
 #tvSurah{flex-shrink:1}
 #tvVal{min-width:28px;text-align:center;font-size:13px;font-weight:700;color:#f3ead0}
-#tvBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;text-align:justify;font-family:"Scheherazade New","Traditional Arabic",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--tv-size,30px);line-height:2.15;position:relative}
-.tv-surah-title{text-align:center;font-size:.72em;letter-spacing:.5px;color:#7a5b13;background:linear-gradient(90deg,transparent,rgba(212,175,55,.18),transparent);padding:10px 0;margin:-6px 0 14px;border-radius:10px}
-.tv-basmala{text-align:center;color:#0d1f16;font-weight:700;font-size:.82em;margin-bottom:14px}
-.tv-n{color:#b58a1f;font-size:.6em;white-space:nowrap}
-.tv-jmark{display:block;text-align:center;color:#0d1f16;background:rgba(212,175,55,.16);border-radius:10px;font-size:.55em;padding:6px;margin:14px 0;font-family:Tajawal,system-ui,sans-serif;font-weight:700}
+#tvBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:22px 20px 48px;text-align:justify;text-justify:arabic;text-align-last:center;font-family:"Amiri Quran","Amiri","Scheherazade New",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--tv-size,30px);line-height:2.65;word-spacing:0.08em;position:relative}
+.tv-surah-title{text-align:center;font-family:"Amiri",serif;font-weight:700;font-size:1.05em;letter-spacing:.5px;color:#7a5b13;background:linear-gradient(90deg,transparent,rgba(212,175,55,.22),transparent);border-top:1px solid rgba(212,175,55,.35);border-bottom:1px solid rgba(212,175,55,.35);padding:10px 0;margin:10px 0 16px;border-radius:8px}
+.tv-basmala{text-align:center;color:#0d1f16;font-family:"Amiri Quran","Amiri",serif;font-weight:700;font-size:1.05em;line-height:2.3;margin-bottom:18px}
+.tv-n{display:inline-flex;align-items:center;justify-content:center;color:#b58a1f;font-family:"Amiri",serif;font-size:.62em;border:1px solid rgba(181,138,31,.55);border-radius:50%;width:1.75em;height:1.75em;margin:0 5px;vertical-align:middle;line-height:1;background:rgba(212,175,55,.1);box-shadow:inset 0 0 4px rgba(212,175,55,.18);white-space:nowrap}
+.tv-jmark{display:block;text-align:center;color:#0d1f16;background:rgba(212,175,55,.18);border:1px solid rgba(212,175,55,.3);border-radius:10px;font-size:.58em;padding:7px;margin:16px 0;font-family:Tajawal,system-ui,sans-serif;font-weight:700}
 /* ===== Mode sombre Mushaf (texte + scan) ===== */
 #scr-mushaf.mu-dark #muText{background:#0d1a12}
-#scr-mushaf.mu-dark #tvBody{background:#0d1a12;color:#ece5cd}
-#scr-mushaf.mu-dark .tv-surah-title{color:var(--gold-light);background:linear-gradient(90deg,transparent,rgba(212,175,55,.25),transparent)}
+#scr-mushaf.mu-dark #tvBody{background:#0d1a12;color:#f4eee0}
+#scr-mushaf.mu-dark .tv-surah-title{color:var(--gold-light);background:linear-gradient(90deg,transparent,rgba(212,175,55,.28),transparent);border-color:rgba(212,175,55,.45)}
 #scr-mushaf.mu-dark .tv-basmala{color:#f0d279}
-#scr-mushaf.mu-dark .tv-n{color:#d4af37}
-#scr-mushaf.mu-dark .tv-jmark{color:#f0d279;background:rgba(212,175,55,.14)}
+#scr-mushaf.mu-dark .tv-n{color:#f0d279;border-color:rgba(212,175,55,.6);background:rgba(212,175,55,.14);box-shadow:0 0 6px rgba(212,175,55,.22)}
+#scr-mushaf.mu-dark .tv-jmark{color:#f0d279;background:rgba(212,175,55,.18);border-color:rgba(212,175,55,.35)}
 #scr-mushaf.mu-dark .tv-sheet-card{background:#132419}
 #scr-mushaf.mu-dark .tv-sheet-card h4{color:var(--gold-light)}
 #scr-mushaf.mu-dark .tv-grid button{background:rgba(255,255,255,.06);color:#ece5cd;border-color:rgba(255,255,255,.12)}
@@ -692,21 +695,22 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:auto;min-height:0
 #scr-mushaf.mu-dark .mu-viewport{background:#000000}
 #scr-mushaf.mu-dark .mu-viewport #muPage{filter:invert(90%) hue-rotate(180deg) contrast(88%) brightness(.96)}
 body.mu-fullscreen #scr-mushaf.mu-dark .mu-viewport{background:#000000}
-.tv-hmark{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin:0 3px;font-size:.85em;font-weight:800;cursor:help;padding:3px 8px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-.tv-hizb-boundary{color:#fff;background:#e74c3c;font-size:1em;padding:4px 10px;animation:tv-pulse 1.5s infinite;box-shadow:0 2px 8px rgba(231,76,60,.5)}
+.tv-hmark{display:inline-flex;align-items:center;gap:2px;vertical-align:middle;margin:0 2px;font-size:.7em;font-weight:800;cursor:help;padding:2px 5px;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tv-hizb-boundary{color:#fff;background:#e74c3c;font-size:.85em;padding:3px 8px;animation:tv-pulse 1.5s infinite;box-shadow:0 2px 6px rgba(231,76,60,.5)}
 .tv-hizb-num{font-weight:900}
-.tv-hizb-label{font-size:.75em;opacity:.95}
-.tv-quarter{font-size:.9em;padding:4px 10px;box-shadow:0 2px 6px rgba(0,0,0,.25);border-width:2px}
+.tv-quarter .tv-hizb-num{background:rgba(255,255,255,.2);padding:0 3px;border-radius:3px;font-size:.85em}
+.tv-hizb-label{font-size:.7em;opacity:.95}
+.tv-quarter{font-size:.7em;padding:2px 6px;box-shadow:0 1px 4px rgba(0,0,0,.2);border-width:1.5px}
 .tv-quarter-1{background:#27ae60;color:#fff;border-color:#27ae60}
 .tv-quarter-2{background:#2980b9;color:#fff;border-color:#2980b9}
 .tv-quarter-3{background:#8e44ad;color:#fff;border-color:#8e44ad}
 .tv-quarter-4{background:#d35400;color:#fff;border-color:#d35400}
 .tv-quarter[data-q="1"]{background:#27ae60;color:#fff;border-color:#27ae60}
 .tv-quarter[data-q="2"]{background:#2980b9;color:#fff;border-color:#2980b9}
-.tv-quarter-num{font-weight:900;font-size:1.1em}
-.tv-quarter-sep{opacity:.7;margin:0 1px}
-.tv-quarter-total{font-size:.85em;opacity:.85}
-.tv-quarter-label{font-size:.7em;opacity:.95;margin-left:2px}
+.tv-quarter-num{font-weight:900;font-size:.9em}
+.tv-quarter-sep{opacity:.6;margin:0 1px}
+.tv-quarter-total{font-size:.75em;opacity:.8}
+.tv-quarter-label{font-size:.65em;opacity:.9;margin-left:1px}
 /* Surlignage du verset au quart */
 .tv-ayah{transition:background .3s}
 .tv-quarter-ayah{background:rgba(39,174,96,.08)}
@@ -1111,6 +1115,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
           <button class="mu-size-btn active" id="muModeText">قراءة نصية</button>
           <button class="mu-size-btn" id="muModeScan">المصحف الممسوح</button>
           <button class="mu-size-btn" id="muDarkBtn" title="الوضع الليلي">🌙 ليلي</button>
+          <button class="mu-size-btn" id="muSyncBtn" title="مزامنة مع السحابة" style="margin-right:auto">🔄 مزامنة</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
           <div>
@@ -1724,19 +1729,19 @@ const FB_CONFIG = {
   messagingSenderId: "982754726730",
   appId: "1:982754726730:web:d70f11299d2a3b0677a7b3"
 };
-const FB = { ready:false, app:null, db:null, ref:null, deviceId:null, pushTimer:null, merging:false };
+const FB = { ready:false, app:null, db:null, ref:null, deviceId:null, pushTimer:null, merging:false, pendingPush:false };
 
 /* ===================== ÉTAT ===================== */
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 
 function defaultState(){
   const counts = new Array(NAMES.length).fill(0);
-  for(let i=0;i<55;i++) counts[i]=GOAL;      // الرحمن → الولي : terminés (liste 1)
+  for(let i=0;i<56;i++) counts[i]=GOAL;      // الرحمن → الحميد : terminés
   counts[66]=GOAL;                           // الأحد : exclu (ni fait ni à faire)
   return {
     counts: counts,
-    currentIndex: 55,                        // الحميد — commence aujourd'hui
-    scheme: 2,                               // v2 : liste restante = الحميد → الصبور
+    currentIndex: 56,                        // المحصي — commence aujourd'hui
+    scheme: 3,                               // v3 : liste restante = المحصي → الصبور
     todayDate: todayStr(),
     todayCount: 0,
     nights: {},             // {date: count}
@@ -1747,7 +1752,10 @@ function defaultState(){
     orad: { m: [], e: [] }, // m: morning, e: evening (cases cochées)
     oradCounts: { m: [], e: [] }, // nb de fois prononcé aujourd'hui par ZIKR
     oradCollapsed: { m: [], e: [] }, // zikrs repliés (texte masqué)
-    nameStartDates: {}            // {index: "YYYY-MM-DD"} — date de commencement de chaque nom
+    oradGroupCollapsed: { m: {}, e: {} }, // groupes repliés
+    nameStartDates: {},           // {index: "YYYY-MM-DD"} — date de commencement de chaque nom
+    mushaf: { page:1, juz:1, mode:"text", tvSurah:1, tvScrollY:0, lastRead:"" },
+    mushafAt: 0            // horodatage propre du mushaf pour le sync entre devices
   };
 }
 
@@ -1757,12 +1765,16 @@ function load(){
     if(raw){
       const d = JSON.parse(raw);
       if(Array.isArray(d.counts) && d.counts.length===NAMES.length){
-        if(d.scheme !== 2){
+        if(d.scheme !== 3){
           const base = defaultState();
           d.counts = base.counts;
           d.currentIndex = base.currentIndex;
-          d.scheme = 2;
+          d.scheme = 3;
         }
+        if(!d.mushaf){
+          d.mushaf = { page:parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1, juz:parseInt(localStorage.getItem("mushaf_current_juz")||"1",10)||1, mode:localStorage.getItem("mushaf_mode")||"text", tvSurah:parseInt(localStorage.getItem("mushaf_tv_cur")||"1",10)||1, tvScrollY:0, lastRead:localStorage.getItem("mushaf_last_read")||"" };
+        }
+        if(typeof d.mushafAt !== "number") d.mushafAt = 0;
         return d;
       }
     }
@@ -1778,6 +1790,7 @@ function save(s){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(s)); }
   catch(e){ console.warn("save failed", e); }
   if(!FB.merging) pushState();
+  else FB.pendingPush = true;
 }
 
 function fbDeviceId(){
@@ -1791,26 +1804,123 @@ function setSyncUI(kind, msg){
   el.className = "sync-badge " + kind;
   el.innerHTML = '<span class="dot"></span>' + (msg || (kind==="on" ? "متصل" : kind==="off" ? "غير متصل" : "جارٍ الاتصال…"));
 }
+
+function decodeFirestoreValue(v){
+  if(!v) return null;
+  if(v.stringValue !== undefined) {
+    try { return JSON.parse(v.stringValue); } catch(e) { return v.stringValue; }
+  }
+  if(v.integerValue !== undefined) return parseInt(v.integerValue, 10);
+  if(v.doubleValue !== undefined) return parseFloat(v.doubleValue);
+  if(v.booleanValue !== undefined) return v.booleanValue;
+  if(v.arrayValue !== undefined) {
+    return (v.arrayValue.values || []).map(decodeFirestoreValue);
+  }
+  if(v.mapValue !== undefined) {
+    const res = {};
+    const f = v.mapValue.fields || {};
+    Object.keys(f).forEach(k => { res[k] = decodeFirestoreValue(f[k]); });
+    return res;
+  }
+  return null;
+}
+
+function encodeFirestoreValue(val) {
+  if (val === null || val === undefined) return { nullValue: null };
+  if (typeof val === 'boolean') return { booleanValue: val };
+  if (typeof val === 'number') {
+    if (Number.isInteger(val)) return { integerValue: val.toString() };
+    return { doubleValue: val };
+  }
+  if (typeof val === 'string') return { stringValue: val };
+  if (Array.isArray(val)) {
+    return { arrayValue: { values: val.map(encodeFirestoreValue) } };
+  }
+  if (typeof val === 'object') {
+    const fields = {};
+    Object.keys(val).forEach(k => {
+      fields[k] = encodeFirestoreValue(val[k]);
+    });
+    return { mapValue: { fields } };
+  }
+  return { stringValue: String(val) };
+}
+
+async function fetchRestDocAndMerge(){
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/apexcrm-f4d3a/databases/(default)/documents/adhkar/main?key=AIzaSyDIc44Bwr6J67PsngXXT85CFSaGCy1xUuQ`;
+    const res = await fetch(url);
+    if(!res.ok) return false;
+    const doc = await res.json();
+    if(doc && doc.fields && doc.fields.data){
+      const parsedData = decodeFirestoreValue(doc.fields.data);
+      if(parsedData && Array.isArray(parsedData.counts)){
+        applyRemote({ data: parsedData, device: "remote_rest" }, false);
+        restoreMushafFromState();
+        return true;
+      }
+    }
+  } catch(e){
+    console.warn("fetchRestDoc error:", e);
+  }
+  return false;
+}
+
+async function pushRestDoc(){
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/apexcrm-f4d3a/databases/(default)/documents/adhkar/main?key=AIzaSyDIc44Bwr6J67PsngXXT85CFSaGCy1xUuQ`;
+    const payload = {
+      fields: {
+        data: encodeFirestoreValue(JSON.parse(JSON.stringify(state))),
+        at: { integerValue: String(Date.now()) },
+        device: { stringValue: FB.deviceId || fbDeviceId() }
+      }
+    };
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch(e){
+    console.warn("pushRestDoc error:", e);
+    return false;
+  }
+}
+
 function initFirestore(){
   try{
-    if(typeof firebase === "undefined"){ setSyncUI("off", "غير متصل"); return; }
     FB.deviceId = fbDeviceId();
+    if(typeof firebase === "undefined"){
+      // Pas de SDK Firebase, bascule directe vers REST
+      setSyncUI("connecting", "جارٍ الاتصال…");
+      fetchRestDocAndMerge().then(ok => {
+        setSyncUI(ok ? "on" : "off", ok ? "متصل" : "غير متصل");
+      }).catch(()=>{ setSyncUI("off", "غير متصل"); });
+      return;
+    }
+
     FB.app = firebase.initializeApp(FB_CONFIG, "adhkar");
     FB.db = firebase.firestore(FB.app);
     FB.db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
     FB.ref = FB.db.collection("adhkar").doc("main");
     FB.ready = true;
-    setSyncUI("connecting");
+    setSyncUI("connecting", "جارٍ الاتصال…");
 
     FB.ref.get().then(snap => {
       if(snap.exists && snap.data().data){
         applyRemote(snap.data(), true);
+        restoreMushafFromState();
       } else {
         pushState();
       }
-      pushState();
-      setSyncUI("on");
-    }).catch(()=>{ setSyncUI("off", "hors ligne"); });
+      setSyncUI("on", "متصل");
+    }).catch(err => {
+      console.warn("Firebase SDK get failed, trying REST:", err);
+      fetchRestDocAndMerge().then(ok => {
+        setSyncUI(ok ? "on" : "off", ok ? "متصل" : "غير متصل");
+      }).catch(()=>{ setSyncUI("off", "غير متصل"); });
+    });
 
     FB.ref.onSnapshot(snap => {
       if(!snap.exists) return;
@@ -1818,29 +1928,95 @@ function initFirestore(){
       if(!r || !r.data) return;
       if(r.device === FB.deviceId) return;
       applyRemote(r, false);
-    }, ()=>{ setSyncUI("off", "hors ligne"); });
-  }catch(e){ setSyncUI("off", "erreur"); console.warn("Firestore init failed", e); }
+      restoreMushafFromState();
+    }, ()=>{
+      setSyncUI("off", "غير متصل");
+    });
+  }catch(e){
+    console.warn("Firestore init failed, trying REST fallback:", e);
+    fetchRestDocAndMerge().then(ok => {
+      setSyncUI(ok ? "on" : "off", ok ? "متصل" : "غير متصل");
+    }).catch(()=>{ setSyncUI("off", "غير متصل"); });
+  }
 }
+
 function pushState(){
-  if(!FB.ready || !FB.ref) return;
   clearTimeout(FB.pushTimer);
   FB.pushTimer = setTimeout(()=>{
-    if(!FB.ready || !FB.ref) return;
-    FB.ref.set({
-      data: JSON.parse(JSON.stringify(state)),
-      at: Date.now(),
-      device: FB.deviceId
-    }).then(()=>setSyncUI("on")).catch(()=>setSyncUI("off", "hors ligne"));
+    if(FB.ready && FB.ref){
+      FB.pendingPush = false;
+      FB.ref.set({
+        data: JSON.parse(JSON.stringify(state)),
+        at: Date.now(),
+        device: FB.deviceId
+      }).then(()=>setSyncUI("on", "متصل")).catch(()=>{
+        // Fallback REST si le SDK échoue
+        pushRestDoc().then(ok => {
+          setSyncUI(ok ? "on" : "off", ok ? "متصل" : "غير متصل");
+        });
+      });
+    } else {
+      pushRestDoc().then(ok => {
+        setSyncUI(ok ? "on" : "off", ok ? "متصل" : "غير متصل");
+      });
+    }
   }, 500);
+}
+
+async function forceSync(){
+  setSyncUI("connecting", "جارٍ المزامنة…");
+  toast("🔄 جاري مزامنة بياناتك مع السحابة…");
+  let synced = false;
+
+  // 1. Synchronisation via Firebase SDK
+  if(FB.ready && FB.ref){
+    try {
+      const snap = await FB.ref.get();
+      if(snap.exists && snap.data().data){
+        applyRemote(snap.data(), false);
+        restoreMushafFromState();
+      }
+      await new Promise((resolve, reject) => {
+        FB.ref.set({
+          data: JSON.parse(JSON.stringify(state)),
+          at: Date.now(),
+          device: FB.deviceId
+        }).then(resolve).catch(reject);
+      });
+      synced = true;
+    } catch(e){
+      console.warn("Firebase SDK forceSync error, fallback REST:", e);
+    }
+  }
+
+  // 2. Fallback REST si nécessaire
+  if(!synced){
+    try {
+      const got = await fetchRestDocAndMerge();
+      const pushed = await pushRestDoc();
+      if(got || pushed) synced = true;
+    } catch(e){
+      console.warn("REST forceSync error:", e);
+    }
+  }
+
+  if(synced){
+    setSyncUI("on", "متصل");
+    toast("✅ تمت المزامنة السحابية بنجاح وحفظ أحدث تقدم!");
+  } else {
+    setSyncUI("off", "غير متصل");
+    toast("تعذّر الاتصال بالسحابة حالياً — بياناتك محفوظة محلياً بأمان");
+  }
 }
 function applyRemote(r, isInit){
   const d = r.data;
   if(!d || !Array.isArray(d.counts) || d.counts.length !== NAMES.length) return;
-  if(d.scheme !== 2){
+  if(d.scheme !== 3){
     pushState();
     return;
   }
   FB.merging = true;
+  FB.pendingPush = false;
   const local = state;
   const snapKey = (k,v)=> (k==="_at" ? undefined : v);
   const before = JSON.stringify(local, snapKey);
@@ -1883,20 +2059,64 @@ function applyRemote(r, isInit){
       for(let i=0;i<len;i++){ if(b[i]) a[i]=Math.max(a[i]||0, b[i]||0); }
       local.oradCounts[sk]=a;
     });
+    ["m","e"].forEach(sk=>{
+      const a = local.oradCollapsed[sk]||[], b = (d.oradCollapsed&&d.oradCollapsed[sk])||[];
+      const len = Math.max(a.length, b.length);
+      for(let i=0;i<len;i++){ if(b[i]) a[i]=true; }
+      local.oradCollapsed[sk]=a;
+    });
+    if(d.oradGroupCollapsed && local.oradGroupCollapsed){
+      ["m","e"].forEach(sk=>{
+        const a = local.oradGroupCollapsed[sk]||{}, b = (d.oradGroupCollapsed[sk])||{};
+        Object.keys(b).forEach(k=>{ a[k]=b[k]; });
+        local.oradGroupCollapsed[sk]=a;
+      });
+    }
   } else if((d._at||0) > (local._at||0)){
     local.orad = JSON.parse(JSON.stringify(d.orad||{m:[],e:[]}));
     local.oradDate = d.oradDate;
     if(d.oradCounts) local.oradCounts = JSON.parse(JSON.stringify(d.oradCounts));
+    if(d.oradCollapsed) local.oradCollapsed = JSON.parse(JSON.stringify(d.oradCollapsed));
+    if(d.oradGroupCollapsed) local.oradGroupCollapsed = JSON.parse(JSON.stringify(d.oradGroupCollapsed));
   }
 
-  if((d._at||0) >= (local._at||0) && d.s) local.s = Object.assign({}, local.s, d.s);
+  if(d.s && (d._at||0) >= (local._at||0)){
+    local.s = local.s || {};
+    Object.keys(d.s).forEach(k=>{
+      if(d.s[k] !== undefined && d.s[k] !== null) local.s[k] = d.s[k];
+    });
+  }
+
+  if(d.mushaf && (d.mushafAt||0) > (local.mushafAt||0)){
+    local.mushaf = Object.assign({}, local.mushaf||{}, d.mushaf);
+    local.mushafAt = d.mushafAt||0;
+  }
+
   local._at = Math.max(local._at||0, d._at||0);
   const changed = JSON.stringify(state, snapKey) !== before;
   save(local);
   renderAll(); scheduleReminder(); checkMilestones();
   FB.merging = false;
-  if(changed) pushState();
-  if(!isInit) toast("تمت المزامنة مع السحابة");
+  if(changed || FB.pendingPush) pushState();
+  FB.pendingPush = false;
+  if(!isInit && changed) toast("تمت المزامنة مع السحابة");
+}
+
+function restoreMushafFromState(){
+  const m = state.mushaf;
+  if(!m) return;
+  if(m.page){ muPage = Math.min(Math.max(m.page,1),MU_TOTAL); localStorage.setItem("mushaf_current_page", String(muPage)); }
+  if(m.juz) localStorage.setItem("mushaf_current_juz", String(m.juz));
+  if(m.tvSurah){ tvCur = m.tvSurah; localStorage.setItem("mushaf_tv_cur", String(tvCur)); }
+  if(m.lastRead) localStorage.setItem("mushaf_last_read", m.lastRead);
+  if(typeof m.tvScrollY === "number" && m.tvScrollY > 0){
+    localStorage.setItem("mushaf_tv_pos", JSON.stringify({s:m.tvSurah||tvCur, y:m.tvScrollY}));
+  }
+  const mushafScreen = $("scr-mushaf");
+  if(mushafScreen && mushafScreen.classList.contains("active")){
+    if(muMode === "scan") muRender();
+    else openTextMode();
+  }
 }
 
 /* rollover jour */
@@ -2829,7 +3049,7 @@ function importData(file){
     try{
       const j = JSON.parse(reader.result);
       if(!Array.isArray(j.state?.counts) || j.state.counts.length!==NAMES.length) throw new Error("bad");
-      if(j.state.scheme !== 2) throw new Error("old");
+      if(j.state.scheme !== 3) throw new Error("old");
       state = Object.assign(defaultState(), j.state);
       save(state);
       renderAll(); scheduleReminder();
@@ -2944,6 +3164,11 @@ function muRender(anim){
   localStorage.setItem("mushaf_current_page", String(muPage));
   localStorage.setItem("mushaf_current_juz", String(j+1));
   localStorage.setItem("mushaf_last_read", todayStr());
+  state.mushaf.page = muPage;
+  state.mushaf.juz = j+1;
+  state.mushaf.lastRead = todayStr();
+  state.mushafAt = Date.now();
+  save(state);
   [muPage-1, muPage+1, muPage+2].forEach(pp=>{
     if(pp>=1 && pp<=MU_TOTAL && !muPreloaded[pp]){ muPreloaded[pp]=true; new Image().src = muUrl(pp); }
   });
@@ -3033,6 +3258,9 @@ function renderMuGrid(){
     c.addEventListener("click", ()=>{
       $("muGridOverlay").classList.remove("show");
       localStorage.setItem("mushaf_current_juz", String(i+1));
+      state.mushaf.juz = i+1;
+      state.mushafAt = Date.now();
+      save(state);
       muGo(st, "slide-next");
     });
     g.appendChild(c);
@@ -3458,8 +3686,8 @@ function muApplyMode(){
   $("muModeText").classList.toggle("active", muMode === "text");
   $("muModeScan").classList.toggle("active", muMode === "scan");
 }
-$("muModeText").addEventListener("click", ()=>{ muMode="text"; localStorage.setItem("mushaf_mode","text"); muApplyMode(); openTextMode(); });
-$("muModeScan").addEventListener("click", ()=>{ muMode="scan"; localStorage.setItem("mushaf_mode","scan"); muApplyMode(); });
+$("muModeText").addEventListener("click", ()=>{ muMode="text"; state.mushaf.mode="text"; localStorage.setItem("mushaf_mode","text"); muApplyMode(); openTextMode(); state.mushafAt=Date.now(); save(state); });
+$("muModeScan").addEventListener("click", ()=>{ muMode="scan"; state.mushaf.mode="scan"; localStorage.setItem("mushaf_mode","scan"); muApplyMode(); state.mushafAt=Date.now(); save(state); });
 muApplyMode();
 /* ===== Mode sombre Mushaf (texte + scan) ===== */
 let muDark = localStorage.getItem("mushaf_dark")==="1";
@@ -3509,15 +3737,18 @@ function tvRender(){
         hmark='<span class="tv-hmark tv-hizb-boundary" title="بداية الحزب '+tvAr(hz)+' — نهاية الحزب '+tvAr(hz-1)+'" data-hq="'+hq+'" data-hz="'+hz+'" id="tv-hq'+hq+'">۞۞ <span class="tv-hizb-num">'+tvAr(hz)+'</span> <span class="tv-hizb-label">ح</span></span>';
         ayahClass=" tv-hizb-ayah";
       }else{
-        hmark='<span class="tv-hmark tv-quarter tv-quarter-'+quartInHizb+'" title="الحزب '+tvAr(hz)+' — الربع '+tvAr(quartInHizb)+' من ٤" data-hq="'+hq+'" data-hz="'+hz+'" data-q="'+quartInHizb+'" id="tv-hq'+hq+'">۞ <span class="tv-quarter-num">'+tvAr(quartInHizb)+'</span><span class="tv-quarter-sep">/</span><span class="tv-quarter-total">٤</span> <span class="tv-quarter-label">ر</span></span>';
+        hmark='<span class="tv-hmark tv-quarter tv-quarter-'+quartInHizb+'" title="الحزب '+tvAr(hz)+' — الربع '+tvAr(quartInHizb)+' من ٤" data-hq="'+hq+'" data-hz="'+hz+'" data-q="'+quartInHizb+'" id="tv-hq'+hq+'">۞ <span class="tv-hizb-num">'+tvAr(hz)+'</span> <span class="tv-quarter-num">'+tvAr(quartInHizb)+'</span><span class="tv-quarter-sep">/</span><span class="tv-quarter-total">٤</span> <span class="tv-quarter-label">ر</span></span>';
         ayahClass=" tv-quarter-ayah tv-quarter-"+quartInHizb+"-ayah";
       }
     }
-    return jmark+hmark+'<span class="tv-ayah'+ayahClass+'">'+t+' <span class="tv-n">﴿'+tvAr(ayah)+'﴾</span> </span>';
+    return jmark+hmark+'<span class="tv-ayah'+ayahClass+'">'+t+' <span class="tv-n">'+tvAr(ayah)+'</span> </span>';
   }).join('');
   $("tvBody").innerHTML=h;
   $("tvBody").scrollTop=0;
   localStorage.setItem("mushaf_tv_cur",String(tvCur));
+  state.mushaf.tvSurah = tvCur;
+  state.mushafAt = Date.now();
+  save(state);
 }
 /* suivi et navigation par juz */
 const TV_JUZ_STARTS=[[1,1],[2,142],[2,226],[3,93],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],[9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],[29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
@@ -3596,7 +3827,12 @@ let tvSaveT=null;
 $("tvBody").addEventListener("scroll",()=>{
   tvUpdateBadge();
   clearTimeout(tvSaveT); tvSaveT=setTimeout(()=>{
-  localStorage.setItem("mushaf_tv_pos",JSON.stringify({s:tvCur,y:$("tvBody").scrollTop}));
+  const pos={s:tvCur,y:$("tvBody").scrollTop};
+  localStorage.setItem("mushaf_tv_pos",JSON.stringify(pos));
+  state.mushaf.tvSurah = tvCur;
+  state.mushaf.tvScrollY = pos.y;
+  state.mushafAt = Date.now();
+  save(state);
 },400); });
 /* sélecteur de juz / quart */
 $("tvBadge").addEventListener("click",()=>{
@@ -3609,11 +3845,11 @@ $("tvBadge").addEventListener("click",()=>{
       g.appendChild(b);
     }
     g.appendChild(document.createElement("hr")).style.cssText="margin:8px 0;border:0;border-top:1px solid var(--line)";
-    for(let q=1;q<=240;q++){
+    for(let h=1;h<=60;h++){
       const b=document.createElement("button");
-      const h=Math.ceil(q/4), r=((q-1)%4)+1;
-      b.textContent=tvAr(q)+" (ح"+tvAr(h)+" ر"+tvAr(r)+")";
-      b.addEventListener("click",()=>tvGoHq(q));
+      const startQ=(h-1)*4+1;
+      b.textContent="حزب "+tvAr(h);
+      b.addEventListener("click",()=>tvGoHq(startQ));
       g.appendChild(b);
     }
   }
@@ -3621,7 +3857,7 @@ $("tvBadge").addEventListener("click",()=>{
 });
 $("tvClose").addEventListener("click",()=>$("tvSheet").classList.remove("open"));
 $("tvSheet").addEventListener("click",e=>{ if(e.target===$("tvSheet")) $("tvSheet").classList.remove("open"); });
-$("tvSurah").addEventListener("change",()=>{ tvRender(); });
+$("tvSurah").addEventListener("change",()=>{ tvRender(); state.mushafAt=Date.now(); save(state); });
 function tvGo(delta){
   const cur=parseInt($("tvSurah").value||"1",10);
   const nxt=Math.min(114,Math.max(1,cur+delta));
@@ -3694,10 +3930,9 @@ $("btnTest").addEventListener("click", async ()=>{
 $("btnExport").addEventListener("click", exportData);
 $("btnImport").addEventListener("click", ()=>$("importFile").click());
 $("importFile").addEventListener("change", e=>{ if(e.target.files[0]) importData(e.target.files[0]); e.target.value=""; });
-$("btnSyncNow").addEventListener("click", ()=>{
-  pushState();
-  toast("جارٍ المزامنة…");
-});
+$("btnSyncNow").addEventListener("click", forceSync);
+const muSyncEl = $("muSyncBtn");
+if(muSyncEl) muSyncEl.addEventListener("click", forceSync);
 $("btnReset").addEventListener("click", ()=>{
   if(confirm("هل أنت متأكد؟ سيتم حذف كل الأعداد نهائياً.")){
     if(confirm("تأكيد أخير — سيبدأ كل شيء من «الحميد» عند صفر؟ اضغط إلغاء للحفاظ على البيانات.")){
