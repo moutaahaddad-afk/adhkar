@@ -123,6 +123,31 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .pbar>span.teal{background:linear-gradient(90deg,#0e6b4a,var(--emerald));box-shadow:0 0 12px rgba(16,185,129,.5)}
 .goal-line{font-size:11px;color:var(--muted);margin-top:3px;display:flex;justify-content:space-between}
 
+/* ---------- stepper multi-nuits ---------- */
+.nights-card{margin-top:2px}
+.nc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.nc-title{font-family:'Scheherazade New',serif;font-size:15px;font-weight:700;color:var(--gold-light)}
+.nc-count{font-size:11.5px;color:var(--muted)}
+.nc-steps{display:flex;flex-wrap:wrap;gap:6px}
+.nc-cell{
+  width:34px;height:34px;border-radius:11px;background:var(--card2);border:1px dashed var(--line-soft);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);
+  cursor:pointer;transition:transform .12s,border-color .15s;line-height:1
+}
+.nc-cell:active{transform:scale(.9)}
+.nc-cell.done{background:linear-gradient(145deg,var(--gold-light),var(--gold));border:1px solid var(--gold);color:#241b05;box-shadow:0 3px 10px rgba(212,175,55,.25)}
+.nc-cell.partial{border:1px solid var(--gold);color:var(--gold-light);background:rgba(212,175,55,.1)}
+.nc-cell.miss:hover{border-color:var(--gold)}
+.nc-cell.today{border:1px solid var(--emerald);color:var(--emerald-soft);box-shadow:0 0 0 2px rgba(16,185,129,.25);cursor:default}
+.nc-catch{display:flex;align-items:center;gap:10px;margin-top:12px}
+.nc-ctl{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line-soft);border-radius:14px;padding:4px}
+.nc-btn{width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--line-soft);color:var(--gold-light);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.nc-btn:active{transform:scale(.88)}
+.nc-btn:disabled{opacity:.35;cursor:default}
+.nc-val{min-width:34px;text-align:center;font-size:16px;font-weight:700;color:var(--cream);font-family:'Scheherazade New',serif}
+.nc-go{flex:1;justify-content:center;min-height:44px;border-radius:14px}
+.nc-go:disabled{opacity:.4}
+
 /* reminder chip */
 .chip{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);color:var(--emerald-soft);border-radius:30px;padding:4px 12px;font-size:12.5px;font-weight:600;margin-top:6px}
 .chip svg{width:16px;height:16px}
@@ -330,6 +355,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   margin-bottom:10px;padding:9px 14px;border-radius:16px;display:none;
   background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.4);
 }
+.nudge .b .btn{margin-top:8px;display:block;width:100%;text-align:center}
 .nudge.show{display:flex;align-items:center;gap:10px;animation:fadein .5s ease}
 .nudge .t{font-weight:700;color:var(--emerald-soft);font-size:14.5px;white-space:nowrap;flex-shrink:0}
 .nudge .b{font-size:13px;color:var(--cream);line-height:1.4}
@@ -647,7 +673,12 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
 .mu-viewport.fitw #muPage{max-width:none;max-height:none;width:100%;height:auto}
 body.mu-fullscreen header,body.mu-fullscreen nav,body.mu-fullscreen #scr-mushaf .mu-head{display:none!important}
 body.mu-fullscreen #scr-mushaf{padding:0}
+body.mu-fullscreen #app{max-width:none;padding:0!important}
+body.mu-fullscreen #scr-mushaf .mu-stage{max-width:none}
 body.mu-fullscreen .mu-stage{height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column}
+body.mu-fullscreen .mu-topbar,body.mu-fullscreen .mu-botbar{position:absolute;left:0;right:0;z-index:5;border:none;background:rgba(11,18,14,.6)}
+body.mu-fullscreen .mu-topbar{top:0;bottom:auto;border-bottom:1px solid rgba(212,175,55,.18)}
+body.mu-fullscreen .mu-botbar{bottom:0;top:auto;border-top:1px solid rgba(212,175,55,.18);padding-bottom:calc(8px + env(safe-area-inset-bottom))}
 body.mu-fullscreen .mu-viewport{flex:1;height:auto;min-height:0;max-height:none;background:#ffffff}
 body.mu-fullscreen #muPage{box-shadow:none}
 body.mu-fullscreen .mu-hint{color:rgba(40,50,45,.55);background:rgba(255,255,255,.7)}
@@ -711,6 +742,13 @@ body.mu-fullscreen #scr-mushaf.mu-dark .mu-viewport{background:#000000}
 .tv-quarter-sep{opacity:.6;margin:0 1px}
 .tv-quarter-total{font-size:.75em;opacity:.8}
 .tv-quarter-label{font-size:.65em;opacity:.9;margin-left:1px}
+/* ===== Arrêts Habiti (أوقاف الهبطي) : joli ص rouge style mushaf maghrébin ===== */
+.habiti-stop{display:inline-block;font-family:"Tajawal","Amiri",system-ui,sans-serif;font-weight:900;color:#c0392b;font-size:.7em;line-height:1;vertical-align:super;transform:translateY(-0.4em);margin:0 3px;padding:1px 3px;border-radius:4px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.35);box-shadow:0 1px 2px rgba(0,0,0,.15);cursor:help;user-select:none;text-decoration:none}
+.habiti-stop::before{content:"ص";position:relative;top:-0.06em}
+#scr-mushaf.mu-dark .habiti-stop{color:#ff7b72;background:rgba(255,123,114,.12);border-color:rgba(255,123,114,.4);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.habiti-legend{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding:10px 14px;border-radius:10px;background:rgba(212,175,55,.07);border:1px dashed rgba(212,175,55,.4);font-family:Tajawal,system-ui,sans-serif;font-size:13px;color:var(--muted)}
+.habiti-legend .lbl-habiti{color:#b8860b;font-weight:700}
+#scr-mushaf.mu-dark .habiti-legend{color:var(--gold-light);background:rgba(212,175,55,.06);border-color:rgba(212,175,55,.25)}
 /* Surlignage du verset au quart */
 .tv-ayah{transition:background .3s}
 .tv-quarter-ayah{background:rgba(39,174,96,.08)}
@@ -832,7 +870,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
 </style>
 </head>
 <body>
-<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v2.9.6</div>
+<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v2.9.8</div>
 <div id="app">
 
   <header>
@@ -866,6 +904,22 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <div class="goal-line"><span>الهدف: 100,000</span><span id="totalPct">—</span></div>
     </div>
 
+    <div class="card nights-card" id="nightsCard">
+      <div class="nc-head">
+        <span class="nc-title">سجل الليالي</span>
+        <span class="nc-count" id="ncCount"></span>
+      </div>
+      <div class="nc-steps" id="ncSteps"></div>
+      <div class="nc-catch" id="ncCatch" style="display:none">
+        <div class="nc-ctl">
+          <button class="nc-btn" id="ncMinus">−</button>
+          <span class="nc-val" id="ncVal">1</span>
+          <button class="nc-btn" id="ncPlus">+</button>
+        </div>
+        <button class="btn btn-gold nc-go" id="ncGo">سجّل ليلة فائتة</button>
+      </div>
+    </div>
+
     <div class="counter-zone card">
       <button class="fullscreen-btn" id="btnFullscreen" title="وضع العد الكامل">⛶</button>
       <div class="ring-wrap">
@@ -887,6 +941,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
         <button class="btn btn-ghost" id="btn100">+100</button>
         <button class="btn btn-gold" id="btnNight">أتممتُ الليلة 5,000</button>
       </div>
+      <button class="btn btn-ghost btn-catch" id="btnCatch" style="display:none;margin-top:10px;width:100%">سجّل ليلة فائتة (+5,000)</button>
       <div class="chip" id="reminderChip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         <span>تذكير يومي — <span id="reminderTime">20:00</span></span>
@@ -926,6 +981,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <div class="fs-info">
         <span id="fsTotal">—</span>
       </div>
+      <button class="btn btn-gold btn-catch fs-catch" id="fsCatch" style="display:none">سجّل ليلة فائتة (+5,000)</button>
     </div>
 
     <div class="sheikh-banner" id="sheikhBanner">
@@ -1277,6 +1333,14 @@ body.bd-fullscreen #bdText{padding-top:54px}
           <div class="switch on" id="swMushaf"></div>
           <input type="time" id="setMushafTime" value="21:00" style="width:104px">
         </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2>المصحف — العلامات</h2>
+      <div class="set-row">
+        <div><div class="lbl">أوقاف الهبطي <span class="habiti-stop" style="transform:none;vertical-align:middle;font-size:.95em"></span></div><div class="sub">إظهار علامة الوقف الحسنة بخط مغاربي واضح وبديع</div></div>
+        <div class="switch on" id="swHabiti"></div>
       </div>
     </div>
 
@@ -1736,24 +1800,25 @@ function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMo
 
 function defaultState(){
   const counts = new Array(NAMES.length).fill(0);
-  for(let i=0;i<56;i++) counts[i]=GOAL;      // الرحمن → الحميد : terminés
+  for(let i=0;i<59;i++) counts[i]=GOAL;      // الرحمن → المعيد : terminés (0 à 58 = 100 000)
+  counts[59]=0;                              // المحيي : 0 (en cours)
   counts[66]=GOAL;                           // الأحد : exclu (ni fait ni à faire)
   return {
     counts: counts,
-    currentIndex: 56,                        // المحصي — commence aujourd'hui
-    scheme: 3,                               // v3 : liste restante = المحصي → الصبور
+    currentIndex: 59,                        // المحيي
+    scheme: 3,                               // v3 : liste restante = المحيي → الصبور
     todayDate: todayStr(),
     todayCount: 0,
     nights: {},             // {date: count}
     sheikhAck: {},          // {index: true}
-    s: { hour:20, minute:0, vibrate:true, sound:true, wake:true, light:false, textSize:"md", wirdM:true, wirdE:true, wirdMTime:"05:30", wirdETime:"17:30", morningReminder:true, eveningReminder:true, morningReminderTime:"04:30", eveningReminderTime:"23:00", mushafReminder:true, mushafTime:"21:00", prayMethod:"TUN", tunisiaTZ:true },
-    completedNotified:{},   // {index:true} notifications 95k/100k déjà envoyées
+    s: { hour:20, minute:0, vibrate:true, sound:true, wake:true, light:false, textSize:"md", wirdM:true, wirdE:true, wirdMTime:"05:30", wirdETime:"17:30", morningReminder:true, eveningReminder:true, morningReminderTime:"04:30", eveningReminderTime:"23:00", mushafReminder:true, mushafTime:"21:00", prayMethod:"TUN", tunisiaTZ:true, habiti:true },
+    completedNotified:{ "58": true },   // notifications 100k déjà envoyées pour المعيد
     allDoneNotified:false,
     orad: { m: [], e: [] }, // m: morning, e: evening (cases cochées)
     oradCounts: { m: [], e: [] }, // nb de fois prononcé aujourd'hui par ZIKR
     oradCollapsed: { m: [], e: [] }, // zikrs repliés (texte masqué)
     oradGroupCollapsed: { m: {}, e: {} }, // groupes repliés
-    nameStartDates: {},           // {index: "YYYY-MM-DD"} — date de commencement de chaque nom
+    nameStartDates: { "58": "2026-10-31", "59": todayStr() },           // {index: "YYYY-MM-DD"}
     mushaf: { page:1, juz:1, mode:"text", tvSurah:1, tvScrollY:0, lastRead:"" },
     mushafAt: 0            // horodatage propre du mushaf pour le sync entre devices
   };
@@ -1771,6 +1836,18 @@ function load(){
           d.currentIndex = base.currentIndex;
           d.scheme = 3;
         }
+        // Mise à niveau automatique du progrès vers المحيي (المعيد 100 000 terminé)
+        if((d.counts[58]||0) < 100000 || d.currentIndex <= 58){
+          d.counts[56] = GOAL;
+          d.counts[57] = GOAL;
+          d.counts[58] = GOAL;
+          if(d.currentIndex <= 58){
+            d.currentIndex = 59;
+            d.todayCount = 0;
+          }
+          if(!d.nameStartDates) d.nameStartDates = {};
+          d.nameStartDates["59"] = todayStr();
+        }
         if(!d.mushaf){
           d.mushaf = { page:parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1, juz:parseInt(localStorage.getItem("mushaf_current_juz")||"1",10)||1, mode:localStorage.getItem("mushaf_mode")||"text", tvSurah:parseInt(localStorage.getItem("mushaf_tv_cur")||"1",10)||1, tvScrollY:0, lastRead:localStorage.getItem("mushaf_last_read")||"" };
         }
@@ -1784,6 +1861,18 @@ function load(){
   return st;
 }
 let state = load();
+
+// Auto-sync immédiate sur le serveur souverain
+setTimeout(function autoSyncStartup(){
+  fetch("/api/sync")
+    .then(r => r.json())
+    .then(doc => {
+      if(doc && Array.isArray(doc.counts)){
+        applyRemote({ data: doc, device: "server_sovereign" }, false);
+      }
+    })
+    .catch(()=>{});
+}, 200);
 
 function save(s){
   s._at = Date.now();
@@ -1848,6 +1937,18 @@ function encodeFirestoreValue(val) {
 
 async function fetchRestDocAndMerge(){
   try {
+    try {
+      const lRes = await fetch("/api/sync");
+      if(lRes.ok){
+        const lDoc = await lRes.json();
+        if(lDoc && Array.isArray(lDoc.counts)){
+          applyRemote({ data: lDoc, device: "local_sync" }, false);
+          restoreMushafFromState();
+          return true;
+        }
+      }
+    } catch(errLocal){}
+
     const url = `https://firestore.googleapis.com/v1/projects/apexcrm-f4d3a/databases/(default)/documents/adhkar/main?key=AIzaSyDIc44Bwr6J67PsngXXT85CFSaGCy1xUuQ`;
     const res = await fetch(url);
     if(!res.ok) return false;
@@ -1867,6 +1968,16 @@ async function fetchRestDocAndMerge(){
 }
 
 async function pushRestDoc(){
+  let localOk = false;
+  try {
+    const lRes = await fetch("/api/sync", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: state, device: FB.deviceId || fbDeviceId() })
+    });
+    if(lRes.ok) localOk = true;
+  } catch(errLocal){}
+
   try {
     const url = `https://firestore.googleapis.com/v1/projects/apexcrm-f4d3a/databases/(default)/documents/adhkar/main?key=AIzaSyDIc44Bwr6J67PsngXXT85CFSaGCy1xUuQ`;
     const payload = {
@@ -1881,10 +1992,10 @@ async function pushRestDoc(){
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    return res.ok;
+    return res.ok || localOk;
   } catch(e){
     console.warn("pushRestDoc error:", e);
-    return false;
+    return localOk;
   }
 }
 
@@ -2024,9 +2135,10 @@ function applyRemote(r, isInit){
   for(let i=0;i<local.counts.length;i++){
     if((d.counts[i]||0) > local.counts[i]) local.counts[i] = d.counts[i];
   }
-  if((d.currentIndex||0) > local.currentIndex) local.currentIndex = d.currentIndex;
-
-  if(d.todayDate === local.todayDate){
+  if((d.currentIndex||0) > local.currentIndex){
+    local.currentIndex = d.currentIndex;
+    local.todayCount = d.todayCount || 0;
+  } else if(d.todayDate === local.todayDate){
     local.todayCount = Math.max(local.todayCount, d.todayCount||0);
   } else if((d._at||0) > (local._at||0)){
     local.todayDate = d.todayDate; local.todayCount = d.todayCount||0;
@@ -2087,9 +2199,21 @@ function applyRemote(r, isInit){
     });
   }
 
-  if(d.mushaf && (d.mushafAt||0) > (local.mushafAt||0)){
-    local.mushaf = Object.assign({}, local.mushaf||{}, d.mushaf);
-    local.mushafAt = d.mushafAt||0;
+  if(d.mushaf){
+    const dm=d.mushaf, lm=local.mushaf||{};
+    const sameSurah = dm.tvSurah && dm.tvSurah===lm.tvSurah;
+    let apply=false;
+    if(sameSurah){
+      const dY=typeof dm.tvScrollY==="number"?dm.tvScrollY:0;
+      const lY=typeof lm.tvScrollY==="number"?lm.tvScrollY:0;
+      apply = dY>0 && dY>lY;
+    } else {
+      apply = (d.mushafAt||0) > (local.mushafAt||0);
+    }
+    if(apply){
+      local.mushaf = Object.assign({}, lm, dm);
+      local.mushafAt = d.mushafAt||0;
+    }
   }
 
   local._at = Math.max(local._at||0, d._at||0);
@@ -2115,7 +2239,7 @@ function restoreMushafFromState(){
   const mushafScreen = $("scr-mushaf");
   if(mushafScreen && mushafScreen.classList.contains("active")){
     if(muMode === "scan") muRender();
-    else openTextMode();
+    else openTextMode(true);
   }
 }
 
@@ -2177,15 +2301,24 @@ function vib(p){ if(state.s.vibrate && navigator.vibrate){ try{ navigator.vibrat
 let wakeLock = null;
 async function updateWake(){
   if(!("wakeLock" in navigator)) return;
-  try{
-    if(state.s.wake){
-      wakeLock = wakeLock || await navigator.wakeLock.request("screen");
-    } else if(wakeLock){
-      wakeLock.release(); wakeLock = null;
-    }
-  }catch(e){ wakeLock = null; }
+  if(state.s.wake){
+    if(wakeLock && !wakeLock.released) return;
+    try{
+      wakeLock = await navigator.wakeLock.request("screen");
+      wakeLock.addEventListener("release", ()=>{ wakeLock = null; });
+    }catch(e){ wakeLock = null; }
+  } else if(wakeLock){
+    const w = wakeLock; wakeLock = null;
+    try{ w.release(); }catch(e){}
+  }
 }
 document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") updateWake(); });
+/* ré-acquisition agressive pendant l'usage : les navigateurs Android relâchent le verrou
+   silencieusement (30 s sans interaction, verrou d'écran, retour d'arrière-plan) */
+["pointerdown","touchstart","scroll","keydown"].forEach(ev=>{
+  document.addEventListener(ev, ()=>{ if(state.s.wake && (!wakeLock || wakeLock.released)) updateWake(); }, {passive:true});
+});
+setInterval(()=>{ if(state.s.wake && document.visibilityState==="visible" && (!wakeLock || wakeLock.released)) updateWake(); }, 15000);
 
 /* ===================== NOTIFICATIONS ===================== */
 const hasTriggers = typeof Notification !== "undefined" && "showTrigger" in Notification.prototype && "NotificationTrigger" in window;
@@ -2277,6 +2410,12 @@ function checkWirdReminder(){
     const jp = parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1;
     fireNotification("حان وقت الوَرْد القرآني", "واصِل قراءة الجزء " + MU_JUZ_NAMES[muJuzOf(jp)] + " — صفحة " + (jp+1) + " من المصحف الشريف.", "adhkar-mushaf");
   }
+  const mn = missedNights();
+  if(mn.length >= 2 && !state.completedNotified["missed_"+today]){
+    state.completedNotified["missed_"+today] = true;
+    save(state);
+    fireNotification("ليالٍ غير مسجلة", "يبدو أن " + fmtAr(mn.length) + " ليالٍ لم تُسجَّل. إذا كنتَ أدّيتها فعلاً، افتح التطبيق وسجّلها بإذن الله.", "adhkar-missed");
+  }
 }
 
 function updateNotifUI(){
@@ -2333,6 +2472,9 @@ function renderCounter(){
   updateNudge();
   updateSheikh();
   $("reminderTime").textContent = fmtTime(state.s.hour, state.s.minute);
+  const miss = missedNights();
+  $("btnCatch").style.display = miss.length ? "" : "none";
+  renderNights();
 }
 
 const AR_UNITS = ["","الأول","الثاني","الثالث","الرابع","الخامس","السادس","السابع","الثامن","التاسع"];
@@ -2353,6 +2495,14 @@ function updateToday(){
 
 function updateNudge(){
   const n = $("nudge");
+  const miss = missedNights();
+  if(miss.length >= 2){
+    n.classList.add("show","missed");
+    n.innerHTML = '<div class="t">⚠ ' + fmtAr(miss.length) + ' ليالٍ غير مسجلة</div><div class="b">لم تُسجَّل ليالٍ عديدة. إذا أدّيتها فعلاً، سجّلها الآن بإذن الله.<button class="btn btn-gold" id="nudgeCatch">سجّل ليلة</button></div>';
+    const nc = $("nudgeCatch");
+    if(nc) nc.addEventListener("click", catchUpNight);
+    return;
+  }
   if(state.todayCount >= DAILY){ n.classList.remove("show","missed"); return; }
   const now = new Date();
   const hm = now.getHours()*60 + now.getMinutes();
@@ -2896,6 +3046,7 @@ function renderSettings(){
   $("setMorningReminderTime").value = state.s.morningReminderTime || "04:30";
   $("setEveningReminderTime").value = state.s.eveningReminderTime || "23:00";
   $("swMushaf").classList.toggle("on", state.s.mushafReminder !== false);
+  $("swHabiti").classList.toggle("on", state.s.habiti !== false);
   $("setMushafTime").value = state.s.mushafTime || "21:00";
   $("swTunisiaTZ").classList.toggle("on", state.s.tunisiaTZ !== false);
   const sel = $("setName");
@@ -2971,6 +3122,102 @@ function completeNight(){
     chimeSound(); vib([30,60,30]);
     toast("تم تسجيل الليلة كاملة — " + fmtAr(DAILY));
     renderCounter(); checkMilestones();
+  }
+}
+
+/* nuits non enregistrées pour le nom actuel (depuis son début, avant aujourd'hui) */
+function missedNights(){
+  const out = [];
+  const s = state.nameStartDates && state.nameStartDates[state.currentIndex];
+  if(!s) return out;
+  const sd = new Date(s + "T00:00:00");
+  const td = new Date(todayStr() + "T00:00:00");
+  for(let d = new Date(sd); d < td; d.setDate(d.getDate()+1)){
+    const ds = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    if(!(state.nights && state.nights[ds] >= DAILY)) out.push(ds);
+  }
+  return out;
+}
+
+/* enregistre n nuit(s) manquée(s) : complète les n plus anciennes nuits < 5,000 (plafond GOAL).
+   target=YYYY-MM-DD : rattrape uniquement cette nuit précise. */
+function catchUpNight(n, target){
+  let miss = missedNights();
+  if(target){
+    miss = miss.includes(target) ? [target] : [];
+  }
+  n = (n|0) || 1;
+  if(!miss.length){ toast("لا توجد ليلة ناقصة — أحسنت"); return; }
+  const maxCan = Math.max(0, Math.min(miss.length, Math.ceil(Math.max(0, GOAL - curTotal())/DAILY)));
+  n = Math.min(n, maxCan);
+  if(n <= 0){ toast("أحسنت! اكتمل الاسم"); return; }
+  let addedTotal = 0, cnt = 0, lastD = "";
+  for(let k=0;k<n;k++){
+    const d = miss[k];
+    const rem = GOAL - curTotal();
+    if(rem <= 0) break;
+    const cur = (state.nights && state.nights[d]) || 0;
+    const added = Math.min(DAILY - cur, rem);
+    if(added <= 0) continue;
+    state.nights[d] = cur + added;
+    state.counts[state.currentIndex] = (state.counts[state.currentIndex] || 0) + added;
+    addedTotal += added; cnt++; lastD = d;
+  }
+  if(cnt > 0){
+    save(state);
+    chimeSound(); vib([30,60,30]);
+    toast(cnt>1 ? "تم تسجيل " + fmtAr(cnt) + " ليالٍ فائتة — +" + fmtAr(addedTotal)
+                : "تم تسجيل ليلة " + lastD + " — +" + fmtAr(addedTotal));
+    renderCounter(); checkMilestones();
+  }
+}
+
+/* ---------- STEMMER MULTI-NUITS ---------- */
+let ncVal = 1;
+/* toutes les nuits du nom courant : de son début jusqu'à aujourd'hui */
+function nightsTimeline(){
+  const out = [];
+  const s = state.nameStartDates && state.nameStartDates[state.currentIndex];
+  const start = s ? new Date(s+"T00:00:00") : new Date(todayStr()+"T00:00:00");
+  const end = new Date(todayStr()+"T00:00:00");
+  for(let d = new Date(start); d <= end; d.setDate(d.getDate()+1)){
+    const ds = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    out.push({ ds: ds, count: (state.nights && state.nights[ds])||0 });
+  }
+  return out;
+}
+function maxCatchable(){
+  const m = missedNights();
+  return Math.max(0, Math.min(m.length, Math.ceil(Math.max(0, GOAL - curTotal())/DAILY)));
+}
+function renderNights(){
+  const tl = nightsTimeline();
+  const doneCount = tl.filter(t=>t.count>=DAILY).length;
+  $("ncCount").textContent = fmtAr(doneCount) + " / " + fmtAr(tl.length) + " ليلة كاملة";
+  const steps = $("ncSteps");
+  steps.innerHTML = "";
+  tl.forEach((t,i)=>{
+    const done = t.count >= DAILY;
+    const c = document.createElement("div");
+    c.className = "nc-cell" + (done ? " done" : (t.count>0 ? " partial" : " miss")) + (t.ds===todayStr() ? " today" : "");
+    c.title = t.ds + " — " + fmtAr(t.count) + " / " + fmtAr(DAILY) + (t.ds===todayStr() ? " (اليوم)" : "");
+    c.textContent = done ? "✓" : (t.count>0 ? fmtAr(Math.round(t.count/500)) + "k" : toAr(i+1));
+    if(!done && t.ds !== todayStr()){
+      c.addEventListener("click", ()=>catchUpNight(1, t.ds));
+    }
+    steps.appendChild(c);
+  });
+  const ct = $("ncCatch");
+  const maxCan = maxCatchable();
+  if(maxCan >= 1){
+    ct.style.display = "";
+    ncVal = Math.max(1, Math.min(ncVal, maxCan));
+    $("ncVal").textContent = toAr(ncVal);
+    $("ncPlus").disabled = ncVal >= maxCan;
+    $("ncMinus").disabled = ncVal <= 1;
+    $("ncGo").textContent = ncVal>1 ? "سجّل " + fmtAr(ncVal) + " ليالٍ فائتة" : "سجّل ليلة فائتة";
+  } else {
+    ct.style.display = "none";
   }
 }
 
@@ -3180,6 +3427,7 @@ function muGo(np, anim){
   muRender(anim);
 }
 function openMushaf(){
+  updateWake();
   /* Mode texte actif : rendre le texte immédiatement (sinon aperçu vide) */
   if(muMode === "text"){ openTextMode(); return; }
   if(muMode === "flash" && navigator.onLine === false){
@@ -3376,6 +3624,19 @@ $("tasbih").addEventListener("pointerdown", countTap);
 $("tasbih").addEventListener("contextmenu", e=>e.preventDefault());
 $("btn100").addEventListener("click", ()=>doCount(100));
 $("btnNight").addEventListener("click", completeNight);
+$("btnCatch").addEventListener("click", catchUpNight);
+$("ncMinus").addEventListener("click", ()=>{
+  ncVal = Math.max(1, ncVal-1);
+  renderNights();
+});
+$("ncPlus").addEventListener("click", ()=>{
+  ncVal = Math.min(maxCatchable(), ncVal+1);
+  renderNights();
+});
+$("ncGo").addEventListener("click", ()=>{
+  catchUpNight(ncVal);
+  updateNudge();
+});
 
 /* Full-screen tasbih */
 function openFullscreen(){
@@ -3402,6 +3663,7 @@ function renderFS(){
   $("fsBar").style.width = pct.toFixed(1) + "%";
   $("fsPct").textContent = toAr(Math.floor(pct)) + "٪";
   $("fsTotal").textContent = fmtAr(curTotal()) + " / " + fmtAr(GOAL);
+  $("fsCatch").style.display = missedNights().length ? "" : "none";
 }
 function fsCount(n){
   if(n < 0){
@@ -3439,6 +3701,7 @@ $("fsLeft").addEventListener("click", ()=>fsCount(10));
 $("fsRight").addEventListener("click", ()=>fsCount(100));
 $("fsUp").addEventListener("click", ()=>fsCount(-1));
 $("fsDown").addEventListener("click", ()=>{ completeNight(); renderFS(); });
+$("fsCatch").addEventListener("click", ()=>{ catchUpNight(); renderFS(); });
 let fsTouchStartY = 0;
 $("fsTasbih").addEventListener("touchstart", e=>{ fsTouchStartY = e.touches[0].clientY; }, {passive:true});
 $("fsTasbih").addEventListener("touchend", e=>{
@@ -3631,6 +3894,7 @@ toggleSwitch("swWirdE","wirdE", on=>checkWirdReminder());
 toggleSwitch("swMorningReminder","morningReminder", on=>checkWirdReminder());
 toggleSwitch("swEveningReminder","eveningReminder", on=>checkWirdReminder());
 toggleSwitch("swMushaf","mushafReminder", on=>checkWirdReminder());
+toggleSwitch("swHabiti","habiti", on=>{ if(muMode==="text") { tvRender(); tvUpdateBadge(); } });
 toggleSwitch("swTunisiaTZ","tunisiaTZ", on=>{
   if(on) toast("✅ Fuseau Tunisie (UTC+1) activé pour les prières");
   else toast("⚠️ Fuseau navigateur utilisé — prières peuvent décaler hors Tunisie");
@@ -3710,7 +3974,7 @@ let muQuran=null;
 const MU_BASMALA="بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
 let tvSize=parseFloat(localStorage.getItem("mushaf_tv_size"))||30; if(!(tvSize>=14&&tvSize<=64))tvSize=30;
 let tvCur=parseInt(localStorage.getItem("mushaf_tv_cur")||"1",10)||1;
-function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); $("tvVal").textContent=Math.round(tvSize); }
+function tvApplySize(){ $("tvBody").style.setProperty("--tv-size",tvSize+"px"); $("tvVal").textContent=Math.round(tvSize); requestAnimationFrame(tvComputeMarks); }
 function tvAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function tvEnsureData(){
   if(muQuran) return true;
@@ -3741,14 +4005,19 @@ function tvRender(){
         ayahClass=" tv-quarter-ayah tv-quarter-"+quartInHizb+"-ayah";
       }
     }
-    return jmark+hmark+'<span class="tv-ayah'+ayahClass+'">'+t+' <span class="tv-n">'+tvAr(ayah)+'</span> </span>';
+    return jmark+hmark+'<span class="tv-ayah'+ayahClass+'">'+tvHabiti(t)+' <span class="tv-n">'+tvAr(ayah)+'</span> </span>';
   }).join('');
+  if(state.s.habiti !== false) h+='<div class="habiti-legend"><span class="lbl-habiti">أوقاف الهبطي</span> <span class="habiti-stop" style="transform:none;vertical-align:middle;position:static"></span> <span style="color:var(--muting,#8a9aa8)">علامة الوقف الحسنة — تقاليد مغاربية عريقة في المقام</span></div>';
   $("tvBody").innerHTML=h;
+  tvComputeMarks();
+  requestAnimationFrame(tvComputeMarks);
   $("tvBody").scrollTop=0;
   localStorage.setItem("mushaf_tv_cur",String(tvCur));
   state.mushaf.tvSurah = tvCur;
-  state.mushafAt = Date.now();
-  save(state);
+}
+function tvHabiti(t){
+  if(state.s.habiti === false) return t;
+  return String(t).replace(/[\u06D6]\u200F?/g, '<span class="habiti-stop" title="وقف الهبطي — حسن الوقف هنا"></span>');
 }
 /* suivi et navigation par juz */
 const TV_JUZ_STARTS=[[1,1],[2,142],[2,226],[3,93],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],[9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],[29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
@@ -3763,11 +4032,31 @@ function tvHizbOf(q){ return q>0 ? Math.ceil(q/4) : 0; }
 function tvQuartOf(q){ return q>0 ? (((q-1)%4)+1) : 0; }
 /* Frontière de Hizb = début d'un nouveau hizb (quart n°1 d'un hizb > 1) */
 function tvIsHizbBoundary(q){ return q>1 && (q%4===1); }
-function tvUpdateBadge(){
+let tvMarks=[];            // marqueurs pré-calculés [{top,type:'j'|'h',k}] — évite querySelectorAll à chaque scroll
+let tvUserScrollAt=0;      // dernier geste de défilement — protège le scroll contre les restaurations
+let tvBadgeScheduled=false;
+function tvComputeMarks(){
+  tvMarks=[];
   const body=$("tvBody");
+  body.querySelectorAll(".tv-jmark").forEach(m=>{ tvMarks.push({top:m.offsetTop,type:"j",k:parseInt(m.dataset.j,10)||0}); });
+  body.querySelectorAll(".tv-hmark").forEach(m=>{ tvMarks.push({top:m.offsetTop,type:"h",k:parseInt(m.dataset.hq,10)||0}); });
+  tvMarks.sort((a,b)=>a.top-b.top);
+}
+function tvUpdateBadge(){
+  if(tvBadgeScheduled) return;
+  tvBadgeScheduled=true;
+  requestAnimationFrame(()=>{ tvBadgeScheduled=false; tvBadgeNow(); });
+}
+function tvBadgeNow(){
+  const body=$("tvBody");
+  if(!body.childElementCount) return;
+  const threshold=body.scrollTop+60;
   let curJ=1, curHQ=0;
-  body.querySelectorAll(".tv-jmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) curJ=parseInt(m.dataset.j); });
-  body.querySelectorAll(".tv-hmark").forEach(m=>{ if(m.offsetTop<=body.scrollTop+60) curHQ=parseInt(m.dataset.hq); });
+  for(let i=0;i<tvMarks.length;i++){
+    const m=tvMarks[i];
+    if(m.top>threshold) break;
+    if(m.type==="j") curJ=m.k; else curHQ=m.k;
+  }
   const hz=tvHizbOf(curHQ);
   const quartInHizb=tvQuartOf(curHQ); // 1..4
   const isBoundary=tvIsHizbBoundary(curHQ);
@@ -3806,9 +4095,18 @@ function tvGoHq(q){
   });
   $("tvSheet").classList.remove("open");
 }
-async function openTextMode(){
+async function openTextMode(restoreOnly){
   const ok=await tvEnsureData();
   if(!ok){ toast("تعذّر تحميل النص"); return; }
+  if(restoreOnly && $("tvBody").childElementCount>0 && String(tvCur)===$("tvSurah").value){
+    /* Déjà rendu dans le même texte : on ne re-construit pas le DOM (évite le blocage)
+       et on ne remonte jamais — on ne va que vers l'avant si la position est plus avancée */
+    let savedY=-1;
+    try{ const pos=JSON.parse(localStorage.getItem("mushaf_tv_pos")||"null"); if(pos && pos.s===tvCur) savedY=pos.y||0; }catch(e){}
+    if(savedY>0 && savedY>$("tvBody").scrollTop){ tvRestoreAt=Date.now(); $("tvBody").scrollTop=savedY; }
+    requestAnimationFrame(tvUpdateBadge);
+    return;
+  }
   if(!$("tvSurah").options.length){
     muQuran.forEach((s,i)=>{ const o=document.createElement("option"); o.value=i+1; o.textContent=(i+1)+' — '+s.n; $("tvSurah").appendChild(o); });
   }
@@ -3820,20 +4118,23 @@ async function openTextMode(){
   }catch(e){}
   $("tvSurah").value=String(tvCur);
   tvRender(); tvApplySize();
-  if(savedY>0) $("tvBody").scrollTop=savedY;
+  if(savedY>0){ tvRestoreAt=Date.now(); $("tvBody").scrollTop=savedY; }
   requestAnimationFrame(tvUpdateBadge);
 }
-let tvSaveT=null;
+let tvSaveT=null, tvLastStateSave=0, tvRestoreAt=0;
 $("tvBody").addEventListener("scroll",()=>{
+  tvUserScrollAt=Date.now();
   tvUpdateBadge();
   clearTimeout(tvSaveT); tvSaveT=setTimeout(()=>{
-  const pos={s:tvCur,y:$("tvBody").scrollTop};
-  localStorage.setItem("mushaf_tv_pos",JSON.stringify(pos));
-  state.mushaf.tvSurah = tvCur;
-  state.mushaf.tvScrollY = pos.y;
-  state.mushafAt = Date.now();
-  save(state);
-},400); });
+    const pos={s:tvCur,y:$("tvBody").scrollTop};
+    localStorage.setItem("mushaf_tv_pos",JSON.stringify(pos));
+    state.mushaf.tvSurah = tvCur;
+    state.mushaf.tvScrollY = pos.y;
+    if(Date.now()-tvRestoreAt<1000) return; /* restauration programmatique : ne pas bumper ni pousser */
+    state.mushafAt = Date.now();
+    const now=Date.now();
+    if(now-tvLastStateSave>=2000){ tvLastStateSave=now; save(state); }
+  },400); });
 /* sélecteur de juz / quart */
 $("tvBadge").addEventListener("click",()=>{
   const g=$("tvGrid");
@@ -3861,7 +4162,7 @@ $("tvSurah").addEventListener("change",()=>{ tvRender(); state.mushafAt=Date.now
 function tvGo(delta){
   const cur=parseInt($("tvSurah").value||"1",10);
   const nxt=Math.min(114,Math.max(1,cur+delta));
-  if(nxt!==cur){ $("tvSurah").value=String(nxt); tvRender(); }
+  if(nxt!==cur){ $("tvSurah").value=String(nxt); tvRender(); state.mushafAt=Date.now(); save(state); }
 }
 $("tvNext").addEventListener("click",()=>tvGo(1));
 $("tvPrev").addEventListener("click",()=>tvGo(-1));
