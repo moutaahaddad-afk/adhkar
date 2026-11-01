@@ -102,7 +102,7 @@
                ],
     "currentIndex":  59,
     "scheme":  3,
-    "todayDate":  "2026-10-31",
+    "todayDate":  "2026-11-01",
     "todayCount":  0,
     "nights":  {
 
@@ -110,7 +110,7 @@
     "sheikhAck":  {
 
                   },
-    "_at":  1793477134748,
+    "_at":  1793507215254,
     "device":  "server_backup",
     "completedNotified":  {
                               "58":  true
@@ -118,6 +118,7 @@
     "allDoneNotified":  false,
     "nameStartDates":  {
                            "58":  "2026-10-31",
-                           "59":  "2026-10-31"
+                           "60":  "2026-11-01",
+                           "59":  "2026-11-01"
                        }
 }
