@@ -1,0 +1,5 @@
+package tn.apexgs.adhkar;
+
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {}

@@ -1,0 +1,21 @@
+{
+  "appId": "tn.apexgs.adhkar",
+  "appName": "Adhkar",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "hostname": "localhost"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#062a1e"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_adhkar",
+      "iconColor": "#D4AF37",
+      "allowWhileIdle": true
+    }
+  }
+}

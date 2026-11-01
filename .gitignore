@@ -2,3 +2,21 @@
 .netlify
 *.backup*
 *backup*
+
+# --- Application Android (Capacitor) -------------------------------------
+# Generes a chaque build : jamais versionnes
+app/node_modules/
+app/www/
+app/android/.gradle/
+app/android/build/
+app/android/app/build/
+app/android/capacitor-cordova-android-plugins/
+app/android/local.properties
+app/android/keystore.properties
+app/release/
+app/__pycache__/
+
+# Secrets de signature
+*.p12
+*.jks
+*.keystore

@@ -1,0 +1,20 @@
+{
+  "name": "adhkar-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Application Android (Capacitor) du site adhkar.apexgs.com.tn — sync cloud Firestore conservée",
+  "scripts": {
+    "sync-web": "powershell -NoProfile -ExecutionPolicy Bypass -File ./sync-web.ps1",
+    "cap:sync": "npm run sync-web && cap sync android",
+    "build:apk": "powershell -NoProfile -ExecutionPolicy Bypass -File ./build-apk.ps1"
+  },
+  "dependencies": {
+    "@capacitor/android": "7.6.10",
+    "@capacitor/app": "7.1.2",
+    "@capacitor/core": "7.6.10",
+    "@capacitor/local-notifications": "7.0.7"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "7.6.10"
+  }
+}

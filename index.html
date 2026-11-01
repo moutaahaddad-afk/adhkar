@@ -17,15 +17,18 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<!-- Polices et SDK Firebase servis localement : l'application doit démarrer hors ligne
+     (version Android embarquée / PWA installée). -->
+<script src="vendor/firebase-app-compat.js"></script>
+<script src="vendor/firebase-firestore-compat.js"></script>
 <title>أذكار الأسماء الحسنى</title>
 <style>
 @font-face{font-family:'Scheherazade New';src:url('fonts/scheherazade-400.ttf') format('truetype');font-weight:400;font-display:swap}
 @font-face{font-family:'Scheherazade New';src:url('fonts/scheherazade-700.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:'Amiri';src:url('fonts/amiri-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Amiri';src:url('fonts/amiri-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Naskh Arabic';src:url('fonts/noto-naskh-arabic.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Noto Naskh Arabic';src:url('fonts/noto-naskh-latin.woff2') format('woff2');font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 :root{
   --bg0:#03140d; --bg1:#062a1e; --bg2:#0a3d2c; --bg3:#0e6b4a;
   --emerald:#10b981; --emerald-soft:#34d399;
@@ -1575,6 +1578,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
 <script src="names-info-3.js"></script>
 <script src="sheikh-answers.js"></script>
 <script src="orad-data.js"></script>
+<script src="native-android.js"></script>
 <script>
 "use strict";
 /* ===================== NOMS (99) ===================== */
@@ -2378,11 +2382,29 @@ document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState=
 setInterval(()=>{ if(state.s.wake && document.visibilityState==="visible" && (!wakeLock || wakeLock.released)) updateWake(); }, 15000);
 
 /* ===================== NOTIFICATIONS ===================== */
+/* Sur Android (Capacitor) les rappels sont planifiés par AlarmManager via le
+   pont natif native-android.js : ils arrivent même application fermée.
+   Sur le web, on conserve le comportement historique (SW / showTrigger). */
+const NATIVE = !!(window.NativeReminders && window.NativeReminders.isNative);
 const hasTriggers = typeof Notification !== "undefined" && "showTrigger" in Notification.prototype && "NotificationTrigger" in window;
 
-async function swReg(){ try{ return await navigator.serviceWorker.ready; }catch(e){ return null; } }
+function nativePerm(){ return (NATIVE && window.NativeReminders.permission()) || "unknown"; }
+function notifPermission(){
+  if(NATIVE) return nativePerm();
+  if(!("Notification" in window)) return "denied";
+  return Notification.permission;
+}
+
+async function swReg(){ if(NATIVE) return null; try{ return await navigator.serviceWorker.ready; }catch(e){ return null; } }
 
 async function requestNotifPermission(){
+  if(NATIVE){
+    const r = await window.NativeReminders.requestPermission();
+    if(r === "granted"){ await window.NativeReminders.sync(); toast("تم تفعيل التذكير اليومي"); }
+    else toast("التذكير غير مفعّل — يمكن تفعيله من إعدادات الجهاز");
+    updateNotifUI();
+    return;
+  }
   if(!("Notification" in window)) return;
   if(Notification.permission === "granted"){ scheduleReminder(); updateNotifUI(); return; }
   if(Notification.permission === "default"){
@@ -2394,6 +2416,7 @@ async function requestNotifPermission(){
 }
 
 async function scheduleReminder(){
+  if(NATIVE){ await window.NativeReminders.sync(); return; }
   if(!("Notification" in window)) return;
   if(Notification.permission !== "granted") return;
   const reg = await swReg(); if(!reg) return;
@@ -2425,6 +2448,7 @@ function nextReminderTime(){
 }
 
 async function fireNotification(title, body, tag){
+  if(NATIVE){ await window.NativeReminders.notifyNow(title, body); return; }
   if(!("Notification" in window) || Notification.permission!=="granted") return;
   const reg = await swReg(); if(!reg) return;
   reg.showNotification(title, { body, tag, dir:"rtl", lang:"ar", icon:"icons/icon-192.png", badge:"icons/icon-192.png", renotify:true, requireInteraction:true });
@@ -2479,15 +2503,18 @@ function updateNotifUI(){
   const el = document.getElementById("notifStatus");
   const btn = document.getElementById("notifBtn");
   const badge = document.getElementById("notifBadge");
-  if(!("Notification" in window)){
+  if(!NATIVE && !("Notification" in window)){
     el.textContent = "هذا المتصفح لا يدعم الإشعارات.";
     return;
   }
-  if(Notification.permission === "granted"){
+  const perm = notifPermission();
+  if(perm === "granted"){
     badge.classList.add("show"); badge.textContent = "✓";
-    el.textContent = (hasTriggers ? "التذكير اليومي مضبوط على الساعة " + fmtTime(state.s.hour,state.s.minute) + " — سيظهر حتى لو كان التطبيق مغلقاً."
-                                : "تنبيه: هذا المتصفح لا يدعم التذكير المجدول. سترى التذكير عند فتح التطبيق بعد الساعة " + fmtTime(state.s.hour,state.s.minute) + ".");
-  } else if(Notification.permission === "default"){
+    el.textContent = NATIVE
+      ? "التذكير اليومي مضبوط على الساعة " + fmtTime(state.s.hour,state.s.minute) + " — سيصلك إشعار الجهاز حتى لو كان التطبيق مغلقاً."
+      : (hasTriggers ? "التذكير اليومي مضبوط على الساعة " + fmtTime(state.s.hour,state.s.minute) + " — سيظهر حتى لو كان التطبيق مغلقاً."
+                     : "تنبيه: هذا المتصفح لا يدعم التذكير المجدول. سترى التذكير عند فتح التطبيق بعد الساعة " + fmtTime(state.s.hour,state.s.minute) + ".");
+  } else if(perm === "default" || perm === "prompt" || perm === "unknown"){
     badge.classList.add("show"); badge.textContent = "1";
     el.textContent = "اضغط زر الجرس أعلاه لتفعيل التذكير اليومي.";
   } else {
@@ -4038,11 +4065,11 @@ $("setTextSize").addEventListener("change", e=>{
   toast("حجم الخط: " + (e.target.value==="sm" ? "صغير" : e.target.value==="lg" ? "كبير" : "عادي"));
 });
 
-$("setWirdM").addEventListener("change", e=>{ state.s.wirdMTime = e.target.value || "05:30"; save(state); checkWirdReminder(); toast("تذكير أوراد الصباح: " + e.target.value); });
-$("setWirdE").addEventListener("change", e=>{ state.s.wirdETime = e.target.value || "17:30"; save(state); checkWirdReminder(); toast("تذكير أوراد المساء: " + e.target.value); });
-$("setMorningReminderTime").addEventListener("change", e=>{ state.s.morningReminderTime = e.target.value || "04:30"; save(state); checkWirdReminder(); toast("تذكير الصباح: " + e.target.value); });
-$("setEveningReminderTime").addEventListener("change", e=>{ state.s.eveningReminderTime = e.target.value || "23:00"; save(state); checkWirdReminder(); toast("تذكير المساء: " + e.target.value); });
-$("setMushafTime").addEventListener("change", e=>{ state.s.mushafTime = e.target.value || "21:00"; save(state); checkWirdReminder(); toast("تذكير الورد القرآني: " + e.target.value); });
+$("setWirdM").addEventListener("change", e=>{ state.s.wirdMTime = e.target.value || "05:30"; save(state); checkWirdReminder(); scheduleReminder(); toast("تذكير أوراد الصباح: " + e.target.value); });
+$("setWirdE").addEventListener("change", e=>{ state.s.wirdETime = e.target.value || "17:30"; save(state); checkWirdReminder(); scheduleReminder(); toast("تذكير أوراد المساء: " + e.target.value); });
+$("setMorningReminderTime").addEventListener("change", e=>{ state.s.morningReminderTime = e.target.value || "04:30"; save(state); checkWirdReminder(); scheduleReminder(); toast("تذكير الصباح: " + e.target.value); });
+$("setEveningReminderTime").addEventListener("change", e=>{ state.s.eveningReminderTime = e.target.value || "23:00"; save(state); checkWirdReminder(); scheduleReminder(); toast("تذكير المساء: " + e.target.value); });
+$("setMushafTime").addEventListener("change", e=>{ state.s.mushafTime = e.target.value || "21:00"; save(state); checkWirdReminder(); scheduleReminder(); toast("تذكير الورد القرآني: " + e.target.value); });
 
 /* Mushaf : boutons du lecteur */
 $("muPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
@@ -4355,8 +4382,8 @@ $("setName").addEventListener("change", ()=>{
 });
 
 $("btnTest").addEventListener("click", async ()=>{
-  if(!("Notification" in window)){ toast("المتصفح لا يدعم الإشعارات"); return; }
-  if(Notification.permission !== "granted"){ await requestNotifPermission(); }
+  if(!NATIVE && !("Notification" in window)){ toast("المتصفح لا يدعم الإشعارات"); return; }
+  if(notifPermission() !== "granted"){ await requestNotifPermission(); }
   await fireNotification("تذكير تجريبي", "الإشعارات تعمل بشكل جيد — في انتظار الذكر", "adhkar-test");
   toast("تم إرسال إشعار تجريبي");
 });
@@ -4379,7 +4406,9 @@ $("btnReset").addEventListener("click", ()=>{
 });
 
 /* ===================== SERVICE WORKER ===================== */
-if("serviceWorker" in navigator){
+/* Inutile (et nuisible : cache d'ancienne version) dans l'APK : les fichiers
+   sont déjà embarqués dans l'application. */
+if("serviceWorker" in navigator && !NATIVE){
   window.addEventListener("load", ()=>{
     navigator.serviceWorker.register("sw.js").catch(e=>console.warn("SW failed", e));
   });
