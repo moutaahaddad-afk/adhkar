@@ -1,5 +1,5 @@
 /* ????? ? Service Worker (hors-ligne) */
-const VERSION = "adhkar-v3.0.0";
+const VERSION = "adhkar-v3.0.1";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
@@ -35,6 +35,17 @@ self.addEventListener("activate", (event) => {
 /* navigation + assets : cache-first, puis r?seau */
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
+
+  /* Bloquer les scripts HUD / badge Netlify pour neutraliser le badge et economiser la bande passante */
+  if (url.pathname.includes(".netlify/scripts/hud") || url.pathname.includes("/.netlify/")) {
+    event.respondWith(
+      new Response("", {
+        status: 200,
+        headers: { "Content-Type": "application/javascript" }
+      })
+    );
+    return;
+  }
 
   /* fichiers de polices Google : cache-first */
   if (url.hostname.includes("fonts.googleapis.com") || url.hostname.includes("fonts.gstatic.com")) {
