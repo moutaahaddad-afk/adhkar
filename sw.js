@@ -1,5 +1,5 @@
-/* ????? ? Service Worker (hors-ligne) */
-const VERSION = "adhkar-v3.0.1";
+/* 📿 Adhkar — Service Worker (hors-ligne) */
+const VERSION = "adhkar-v3.0.2";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
@@ -8,6 +8,14 @@ const APP_SHELL = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",
+  "./fonts/amiri-400.woff2",
+  "./fonts/amiri-700.woff2",
+  "./fonts/scheherazade-400.ttf",
+  "./fonts/scheherazade-700.ttf",
+  "./fonts/noto-naskh-arabic.woff2",
+  "./vendor/firebase-app-compat.js",
+  "./vendor/firebase-firestore-compat.js",
+  "./quran-data.json",
   "./names-info-1.js",
   "./names-info-2.js",
   "./names-info-3.js",
