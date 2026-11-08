@@ -1042,9 +1042,12 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <div class="prayer-head">
         <div>
           <div class="prayer-title">🕌 أوقات الصلاة</div>
-          <div class="prayer-loc" id="prayLoc">—</div>
+          <div class="prayer-loc" id="prayLoc">📍 تونس العاصمة (افتراضي)</div>
         </div>
-        <button class="btn btn-ghost" id="prayRelocate" style="font-size:12px;padding:7px 12px">تحديد الموقع</button>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-ghost" id="prayCityBtn" style="font-size:12px;padding:7px 11px">🏙️ اختر المدينة</button>
+          <button class="btn btn-emerald" id="prayRelocate" style="font-size:12px;padding:7px 11px">📍 GPS</button>
+        </div>
       </div>
       <div class="next-prayer" id="nextPrayer"></div>
       <div class="prayer-grid" id="prayerGrid"></div>
@@ -1501,6 +1504,23 @@ body.bd-fullscreen #bdText{padding-top:54px}
     <div class="next" id="ovNext"></div>
     <div class="meta" id="ovMeta"></div>
     <button class="btn btn-gold" id="ovBtn">ابدأ الاسم الجديد</button>
+  </div>
+</div>
+
+<!-- sélection de la ville pour les prières -->
+<div id="citySheetOverlay" style="position:fixed;inset:0;z-index:70;background:rgba(3,12,8,.65);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center">
+  <div class="sheet" style="max-height:85dvh">
+    <div class="sheet-head">
+      <div>
+        <div class="t" style="font-size:22px">🏙️ اختيار المدينة</div>
+        <div class="idx">تونس (24 ولاية) وعواصم إسلامية</div>
+      </div>
+      <button class="sheet-close" id="citySheetClose">✕</button>
+    </div>
+    <div style="padding:12px 18px 8px">
+      <input type="text" id="citySearchInput" placeholder="بحث عن مدينة أو ولاية..." style="width:100%;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--cream);font-size:14px;font-family:inherit;box-sizing:border-box;direction:rtl">
+    </div>
+    <div class="sheet-body" id="citySheetBody" style="padding:8px 18px 26px;display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:8px"></div>
   </div>
 </div>
 
@@ -2839,25 +2859,57 @@ function getPrayerDate(){
   const now = new Date();
   return { y:now.getFullYear(), mo:now.getMonth(), d:now.getDate(), now:now };
 }
+/* ---------- Liste des villes de Tunisie (24 gouvernorats) et capitales ---------- */
+const CITIES_TUNISIA = [
+  { name: "تونس العاصمة", lat: 36.8065, lng: 10.1815, reg: "تونس الكبرى" },
+  { name: "أريانة", lat: 36.8625, lng: 10.1956, reg: "تونس الكبرى" },
+  { name: "بن عروس", lat: 36.7531, lng: 10.2189, reg: "تونس الكبرى" },
+  { name: "منوبة", lat: 36.8083, lng: 10.0972, reg: "تونس الكبرى" },
+  { name: "بنزرت", lat: 37.2744, lng: 9.8739, reg: "الشمال" },
+  { name: "نابل / الوطن القبلي", lat: 36.4561, lng: 10.7376, reg: "الشمال الشرقي" },
+  { name: "زغوان", lat: 36.4029, lng: 10.1429, reg: "الشمال" },
+  { name: "باجة", lat: 36.7256, lng: 9.1817, reg: "الشمال الغربي" },
+  { name: "جندوبة", lat: 36.5011, lng: 8.7803, reg: "الشمال الغربي" },
+  { name: "الكاف", lat: 36.1742, lng: 8.7049, reg: "الشمال الغربي" },
+  { name: "سليانة", lat: 36.0850, lng: 9.3708, reg: "الشمال الغربي" },
+  { name: "سوسة", lat: 35.8256, lng: 10.6369, reg: "الساحل" },
+  { name: "المنستير", lat: 35.7833, lng: 10.8333, reg: "الساحل" },
+  { name: "المهدية", lat: 35.5047, lng: 11.0622, reg: "الساحل" },
+  { name: "صفاقس", lat: 34.7406, lng: 10.7603, reg: "الوسط الشرقي" },
+  { name: "القيروان", lat: 35.6781, lng: 10.0963, reg: "الوسط" },
+  { name: "سيدي بوزيد", lat: 35.0382, lng: 9.4849, reg: "الوسط" },
+  { name: "القصرين", lat: 35.1676, lng: 8.8365, reg: "الوسط الغربي" },
+  { name: "قفصة", lat: 34.4250, lng: 8.7842, reg: "الجنوب الغربي" },
+  { name: "توزر", lat: 33.9197, lng: 8.1335, reg: "الجريد" },
+  { name: "قبلي", lat: 33.7044, lng: 8.9690, reg: "الجنوب" },
+  { name: "قابس", lat: 33.8815, lng: 10.0982, reg: "الجنوب الشرقي" },
+  { name: "مدنين (وجربة)", lat: 33.3549, lng: 10.5055, reg: "الجنوب الشرقي" },
+  { name: "تطاوين", lat: 32.9297, lng: 10.4518, reg: "أقصى الجنوب" },
+  { name: "مكة المكرمة", lat: 21.4225, lng: 39.8262, reg: "الحرمين" },
+  { name: "المدينة المنورة", lat: 24.4672, lng: 39.6111, reg: "الحرمين" },
+  { name: "القدس الشريف", lat: 31.7683, lng: 35.2137, reg: "فلسطين" },
+  { name: "باريس", lat: 48.8566, lng: 2.3522, reg: "فرنسا" },
+  { name: "إسطنبول", lat: 41.0082, lng: 28.9784, reg: "تركيا" }
+];
+
 function renderPrayer(){
   const grid = $("prayerGrid");
   const nextEl = $("nextPrayer");
   const locEl = $("prayLoc");
   if(!grid) return;
-  /* Restaurer le méthode sauvegardée */
   const savedMethod = state.s.prayMethod || "TUN";
   $("prayMethod").value = savedMethod;
   const method = savedMethod;
-  const lat = parseFloat(localStorage.getItem("adhkar_lat") || "0");
-  const lng = parseFloat(localStorage.getItem("adhkar_lng") || "0");
+  let lat = parseFloat(localStorage.getItem("adhkar_lat") || "0");
+  let lng = parseFloat(localStorage.getItem("adhkar_lng") || "0");
+  let city = localStorage.getItem("adhkar_city") || "";
   if(!lat && !lng){
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted2);font-size:13.5px">📍 اضغط «تحديد الموقع» للسماح بمعرفة موقعك وحساب أوقات الصلاة بدقة</div>';
-    if(nextEl) nextEl.style.display = "none";
-    return;
+    lat = 36.8065;
+    lng = 10.1815;
+    city = "تونس العاصمة (افتراضي)";
   }
   const { y, mo, d, now } = getPrayerDate();
   const times = computePrayerTimes(lat, lng, method, now);
-  /* compute next prayer (tout en minutes) */
   const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
   const tMin = times.map(t => t.name < 0 ? -1 : t.name*60);
   let nextIdx = -1, nextMin = -1;
@@ -2879,8 +2931,7 @@ function renderPrayer(){
     const done = tMin[i] >= 0 && tMin[i] < nowMin;
     return '<div class="prayer-row' + (active ? ' active' : '') + '"><div><div class="pr-name">' + PRAY_NAMES[i] + '</div>' + (active ? '<div class="pr-state">' + (nextTomorrow ? 'القادمة' : 'القادمة') + '</div>' : (done ? '<div class="pr-state" style="color:var(--muted2)">انقضت</div>' : '')) + '</div><div class="pr-time">' + formatPrayerTime(t) + '</div></div>';
   }).join('');
-  const city = localStorage.getItem("adhkar_city") || (lat + ", " + lng);
-  if(locEl) locEl.textContent = "📍 " + city;
+  if(locEl) locEl.textContent = "📍 " + (city || (lat.toFixed(2) + ", " + lng.toFixed(2)));
 }
 function startPrayerTimer(){
   if(prayTimer) clearInterval(prayTimer);
@@ -2893,7 +2944,7 @@ function startPrayerTimer(){
 function locateAndRender(){
   const locEl = $("prayLoc");
   if(!navigator.geolocation){
-    toast("المتصفح لا يدعم تحديد الموقع");
+    toast("المتصفح لا يدعم تحديد الموقع GPS — يمكنك اختيار مدينتك يدوياً");
     renderPrayer();
     return;
   }
@@ -2904,15 +2955,14 @@ function locateAndRender(){
       const acc = Math.round(pos.coords.accuracy);
       localStorage.setItem("adhkar_lat", lat);
       localStorage.setItem("adhkar_lng", lng);
-      /* Reverse geocoding via Nominatim (OpenStreetMap) */
       fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=14&accept-language=ar")
         .then(r => r.json())
         .then(data => {
-          const city = data.address?.city || data.address?.town || data.address?.village || data.address?.municipality || data.address?.county || "";
+          const c = data.address?.city || data.address?.town || data.address?.village || data.address?.municipality || data.address?.county || "";
           const country = data.address?.country || "";
-          const name = city ? city + (country ? ", " + country : "") : (data.display_name?.split(",")[0] || lat.toFixed(4) + ", " + lng.toFixed(4));
+          const name = c ? c + (country ? ", " + country : "") : (data.display_name?.split(",")[0] || lat.toFixed(4) + ", " + lng.toFixed(4));
           localStorage.setItem("adhkar_city", name);
-          if(locEl) locEl.textContent = "📍 " + name + " (±" + acc + "m)";
+          if(locEl) locEl.textContent = "📍 " + name + " (±" + acc + "م)";
           renderPrayer();
         })
         .catch(()=>{
@@ -2922,14 +2972,58 @@ function locateAndRender(){
           renderPrayer();
         });
       renderQibla();
-      toast("تم تحديد موقعك — دقة " + acc + "م");
+      toast("✅ تم تحديد موقعك بدقة (±" + acc + "م)");
     },
     err => {
-      toast("تعذر تحديد الموقع: " + err.message);
+      let msg = "تعذر تحديد الموقع عبر GPS";
+      if(err.code === 1){
+        msg = "تم رفض إذن الموقع — تم اعتماد تونس العاصمة تلقائياً (يمكنك اختيار مدينتك يدوياً)";
+      } else if(err.code === 2){
+        msg = "خدمة GPS مغلقة في الهاتف — يرجى تفعيل الموقع أو اختيار مدينتك";
+      } else if(err.code === 3){
+        msg = "انتهت مهلة البحث عن الموقع — تأكد من شبكة الإنترنت أو اختر مدينتك";
+      }
+      toast(msg);
       renderPrayer();
     },
-    { enableHighAccuracy:true, timeout:15000, maximumAge:300000 }
+    { enableHighAccuracy:true, timeout:12000, maximumAge:300000 }
   );
+}
+
+function openCitySheet(){
+  renderCityGrid("");
+  const input = $("citySearchInput");
+  if(input) input.value = "";
+  $("citySheetOverlay").style.display = "flex";
+  setTimeout(()=>{ if(input) input.focus(); }, 150);
+}
+
+function renderCityGrid(query){
+  const body = $("citySheetBody");
+  if(!body) return;
+  const q = (query || "").trim().toLowerCase();
+  const filtered = CITIES_TUNISIA.filter(c => !q || c.name.toLowerCase().includes(q) || c.reg.toLowerCase().includes(q));
+  const currentCity = localStorage.getItem("adhkar_city") || "";
+  if(!filtered.length){
+    body.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted)">لا توجد مدينة مطابقة</div>';
+    return;
+  }
+  body.innerHTML = filtered.map(c => {
+    const isCur = currentCity.includes(c.name);
+    return '<button class="btn btn-ghost" style="padding:10px 8px;font-size:13.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:12px;' + (isCur ? 'background:rgba(212,175,55,.18);border-color:var(--gold);color:var(--gold-light)' : '') + '" onclick="selectCity(\'' + c.name + '\',' + c.lat + ',' + c.lng + ')">' +
+      '<span>' + c.name + '</span><span style="font-size:10.5px;color:var(--muted);font-weight:400">' + c.reg + '</span>' +
+      '</button>';
+  }).join('');
+}
+
+function selectCity(name, lat, lng){
+  localStorage.setItem("adhkar_lat", lat);
+  localStorage.setItem("adhkar_lng", lng);
+  localStorage.setItem("adhkar_city", name);
+  $("citySheetOverlay").style.display = "none";
+  renderPrayer();
+  renderQibla();
+  toast("✅ تم ضبط الموقع: " + name);
 }
 
 /* ---------- Qibla : direction de la Kaaba ---------- */
@@ -2950,27 +3044,31 @@ function computeQibla(lat, lng){
 function renderQibla(){
   const needle = $("qiblaNeedle"), angle = $("qiblaAngle"), sub = $("qiblaSub");
   if(!needle) return;
-  const lat = parseFloat(localStorage.getItem("adhkar_lat") || "0");
-  const lng = parseFloat(localStorage.getItem("adhkar_lng") || "0");
+  let lat = parseFloat(localStorage.getItem("adhkar_lat") || "0");
+  let lng = parseFloat(localStorage.getItem("adhkar_lng") || "0");
   if(!lat && !lng){
-    qiblaBearingDeg = null;
-    needle.style.transform = "translate(-50%,-50%) rotate(0deg)";
-    if(angle) angle.textContent = "—";
-    if(sub) sub.textContent = "حدد موقعك أولاً لمعرفة اتجاه القبلة";
-    return;
+    lat = 36.8065;
+    lng = 10.1815;
   }
   qiblaBearingDeg = computeQibla(lat, lng);
   const deg = (qiblaBearingDeg - (qiblaHeading || 0) + 360) % 360;
   needle.style.transform = "translate(-50%,-50%) rotate(" + deg + "deg)";
   if(angle) angle.textContent = toAr(Math.round(qiblaBearingDeg)) + "°";
-  if(sub) sub.textContent = qiblaHeading===null ? "من الشمال نحو مكة" : "وجه الجهة التي تشير إليها الإبرة";
+  const compassDir = (qiblaBearingDeg >= 90 && qiblaBearingDeg <= 180) ? "جنوب شرقي" : "";
+  if(sub){
+    if(qiblaHeading === null){
+      sub.textContent = (compassDir ? compassDir + " " : "") + "نحو مكة المكرمة (اضغط «تفعيل البوصلة» للتحريك)";
+    } else {
+      sub.textContent = "وجّه الهاتف نحو رأس الإبرة الذهبي";
+    }
+  }
 }
 
 function onDeviceOrient(e){
   if(e && e.webkitCompassHeading !== undefined && e.webkitCompassHeading !== null){
     qiblaHeading = e.webkitCompassHeading;   /* iOS */
   } else if(e && e.alpha !== undefined && e.alpha !== null){
-    qiblaHeading = e.alpha;                   /* Android (0 = nord, sens horaire) */
+    qiblaHeading = (e.absolute || "ondeviceorientationabsolute" in window) ? (360 - e.alpha) : e.alpha;
   }
   if($("scr-prayer") && $("scr-prayer").classList.contains("active")) renderQibla();
 }
@@ -2980,13 +3078,18 @@ async function startQibla(askPermission){
     try{ await DeviceOrientationEvent.requestPermission(); }catch(e){}
   }
   if(!qiblaListening){
-    window.addEventListener("deviceorientation", onDeviceOrient, true);
+    if("ondeviceorientationabsolute" in window){
+      window.addEventListener("deviceorientationabsolute", onDeviceOrient, true);
+    } else {
+      window.addEventListener("deviceorientation", onDeviceOrient, true);
+    }
     qiblaListening = true;
   }
   renderQibla();
 }
 function qiblaStop(){
   window.removeEventListener("deviceorientation", onDeviceOrient, true);
+  window.removeEventListener("deviceorientationabsolute", onDeviceOrient, true);
   qiblaHeading = null;
   renderQibla();
 }
@@ -3982,6 +4085,10 @@ $("ovBtn").addEventListener("click", advanceName);
 
 $("btnNameInfo").addEventListener("click", ()=>openName(state.currentIndex));
 $("prayRelocate").addEventListener("click", locateAndRender);
+if($("prayCityBtn")) $("prayCityBtn").addEventListener("click", openCitySheet);
+if($("citySheetClose")) $("citySheetClose").addEventListener("click", ()=> $("citySheetOverlay").style.display = "none");
+if($("citySheetOverlay")) $("citySheetOverlay").addEventListener("click", e=>{ if(e.target.id==="citySheetOverlay") $("citySheetOverlay").style.display = "none"; });
+if($("citySearchInput")) $("citySearchInput").addEventListener("input", e=> renderCityGrid(e.target.value));
 $("prayMethod").addEventListener("change", ()=>{
   state.s.prayMethod = $("prayMethod").value;
   save(state);
