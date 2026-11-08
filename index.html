@@ -894,7 +894,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
 </head>
 <div id="nl-badge-frame" style="display:none!important;width:0;height:0;opacity:0;pointer-events:none;"></div><div id="nl-hud-frame" style="display:none!important;width:0;height:0;opacity:0;pointer-events:none;"></div>
 <body>
-<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v2.9.8</div>
+<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v1.0.4</div>
 <div id="app">
 
   <header>
@@ -1429,7 +1429,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v2.9.6</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v1.0.4</p>
   </section>
 
   <section class="screen" id="scr-burdah">
@@ -1848,7 +1848,41 @@ const FB = { ready:false, app:null, db:null, ref:null, deviceId:null, pushTimer:
 
 /* ===================== ÉTAT ===================== */
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-function isPaired(i){ return i === 59 || i === 60; }
+const PAIRED_GROUPS = [
+  [19, 20], // القابض الباسط
+  [21, 22], // الخافض الرافع
+  [23, 24], // المعز المذل
+  [25, 26], // السميع البصير
+  [27, 28], // الحكم العدل
+  [29, 30], // اللطيف الخبير
+  [57, 58], // المبدئ المعيد
+  [59, 60], // المحيي المميت
+  [70, 71], // المقدم المؤخر
+  [72, 73], // الأول الآخر
+  [74, 75], // الظاهر الباطن
+  [80, 81], // المنتقم العفو
+  [88, 89], // المغني المانع
+  [90, 91]  // الضار النافع
+];
+
+function getPair(i){
+  return PAIRED_GROUPS.find(p => p[0] === i || p[1] === i) || null;
+}
+function isPaired(i){
+  return getPair(i) !== null;
+}
+function pairPrimary(i){
+  const p = getPair(i);
+  return p ? p[0] : i;
+}
+function pairPartner(i){
+  const p = getPair(i);
+  return p ? (p[0] === i ? p[1] : p[0]) : null;
+}
+function pairName(i){
+  const p = getPair(i);
+  return p ? (NAMES[p[0]] + " " + NAMES[p[1]]) : NAMES[i];
+}
 
 function defaultState(){
   const counts = new Array(NAMES.length).fill(0);
@@ -1902,13 +1936,13 @@ function load(){
           d.nameStartDates["59"] = todayStr();
           d.nameStartDates["60"] = todayStr();
         }
-        // Couplage المحيي المميت : toujours synchronisés
-        if(isPaired(d.currentIndex)){
-          const maxP = Math.max(d.counts[59]||0, d.counts[60]||0);
-          d.counts[59] = maxP;
-          d.counts[60] = maxP;
-          d.currentIndex = 59;
-        }
+        // Couplage des 14 groupes de noms مقترنة : toujours synchronisés
+        PAIRED_GROUPS.forEach(p => {
+          const maxP = Math.max(d.counts[p[0]]||0, d.counts[p[1]]||0);
+          d.counts[p[0]] = maxP;
+          d.counts[p[1]] = maxP;
+          if(d.currentIndex === p[1]) d.currentIndex = p[0];
+        });
         if(!d.mushaf){
           d.mushaf = { page:parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1, juz:parseInt(localStorage.getItem("mushaf_current_juz")||"1",10)||1, mode:localStorage.getItem("mushaf_mode")||"text", tvSurah:parseInt(localStorage.getItem("mushaf_tv_cur")||"1",10)||1, tvScrollY:0, lastRead:localStorage.getItem("mushaf_last_read")||"" };
         }
@@ -2196,11 +2230,11 @@ function applyRemote(r, isInit){
   for(let i=0;i<local.counts.length;i++){
     if((d.counts[i]||0) > local.counts[i]) local.counts[i] = d.counts[i];
   }
-  if(isPaired(local.currentIndex) || isPaired(d.currentIndex)){
-    const maxP = Math.max(local.counts[59]||0, local.counts[60]||0, d.counts[59]||0, d.counts[60]||0);
-    local.counts[59] = maxP;
-    local.counts[60] = maxP;
-  }
+  PAIRED_GROUPS.forEach(p => {
+    const maxP = Math.max(local.counts[p[0]]||0, local.counts[p[1]]||0, d.counts[p[0]]||0, d.counts[p[1]]||0);
+    local.counts[p[0]] = maxP;
+    local.counts[p[1]] = maxP;
+  });
   if((d.currentIndex||0) > local.currentIndex){
     local.currentIndex = d.currentIndex;
     local.todayCount = d.todayCount || 0;
@@ -2323,12 +2357,16 @@ if(state.todayDate !== todayStr()){
 function toAr(n){ return String(n); }
 function fmtAr(n){ return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 function curName(){
-  if(isPaired(state.currentIndex)) return "المحيي المميت";
+  if(state.currentIndex >= NAMES.length) return "أتممتَ الأسماء كلها";
+  const p = getPair(state.currentIndex);
+  if(p) return NAMES[p[0]] + " " + NAMES[p[1]];
   return NAMES[state.currentIndex];
 }
 function curTotal(){
-  if(isPaired(state.currentIndex)) return Math.max(state.counts[59]||0, state.counts[60]||0);
-  return state.counts[state.currentIndex];
+  if(state.currentIndex >= NAMES.length) return GOAL;
+  const p = getPair(state.currentIndex);
+  if(p) return Math.max(state.counts[p[0]]||0, state.counts[p[1]]||0);
+  return state.counts[state.currentIndex] || 0;
 }
 function todayRemainder(){ return Math.max(0, DAILY - state.todayCount); }
 
@@ -2552,22 +2590,22 @@ function applyTheme(){
 
 function renderCounter(){
   const i = state.currentIndex;
-  const isP = isPaired(i);
-  if(isP){
-    $("nameIndex").textContent = toAr(60) + " و " + toAr(61);
-    $("nameAr").textContent = "المحيي المميت";
-    $("nameOrder").textContent = "الاسمان الستون والحادي والستون من التسعة والتسعين (اسمان مقترنان)";
+  const p = getPair(i);
+  if(p){
+    $("nameIndex").textContent = toAr(p[0]+1) + " و " + toAr(p[1]+1);
+    $("nameAr").textContent = NAMES[p[0]] + " " + NAMES[p[1]];
+    $("nameOrder").textContent = "الاسمان " + ordinalAr(p[0]+1) + " و" + ordinalAr(p[1]+1) + " من التسعة والتسعين (اسمان مقترنان)";
   } else {
     $("nameIndex").textContent = toAr(i+1);
     $("nameAr").textContent = NAMES[i];
-    $("nameOrder").textContent = "الاسم السابع والسبعون من التسعة والتسعين".replace("السابع والسبعون", ordinalAr(i+1));
+    $("nameOrder").textContent = "الاسم " + ordinalAr(i+1) + " من التسعة والتسعين";
   }
   const pSub = $("pairedSubcards");
   if(pSub){
-    pSub.style.display = isP ? "flex" : "none";
-    if(isP){
-      $("subVal59").textContent = fmtAr(state.counts[59]||0);
-      $("subVal60").textContent = fmtAr(state.counts[60]||0);
+    pSub.style.display = p ? "flex" : "none";
+    if(p){
+      pSub.innerHTML = '<div class="paired-pill"><span class="dot"></span> ' + NAMES[p[0]] + ': <b>' + fmtAr(state.counts[p[0]]||0) + '</b></div>' +
+                       '<div class="paired-pill"><span class="dot"></span> ' + NAMES[p[1]] + ': <b>' + fmtAr(state.counts[p[1]]||0) + '</b></div>';
     }
   }
   const t = curTotal();
@@ -2664,7 +2702,8 @@ function renderNames(){
     const cell = document.createElement("button");
     cell.className = "name-cell";
     if(c >= GOAL) cell.classList.add("done");
-    const isCur = (i === state.currentIndex) || (isPaired(state.currentIndex) && isPaired(i));
+    const curP = getPair(state.currentIndex);
+    const isCur = (i === state.currentIndex) || (curP && (i === curP[0] || i === curP[1]));
     if(isCur) cell.classList.add("current");
     let inner = '<div class="n">' + toAr(i+1) + '</div><div class="w">' + nm + '</div>';
     if(c >= GOAL){
@@ -3101,11 +3140,12 @@ function qiblaStop(){
   renderQibla();
 }
 function openName(i){
-  const isP = isPaired(i);
+  const p = getPair(i);
   const info = NAME_INFO[i];
   if(!info){ toast("«" + NAMES[i] + "»"); return; }
-  $("sheetName").textContent = isP ? (NAMES[i] + " (مقترن مع «" + (i===59 ? "المميت" : "المحيي") + "»)") : NAMES[i];
-  $("sheetIdx").textContent = isP ? ("الاسم " + (i+1) + " من 99 — اسمان مقترنان يُعدّان معاً") : ("الاسم " + (i+1) + " من 99");
+  const partner = p ? (p[0] === i ? p[1] : p[0]) : null;
+  $("sheetName").textContent = p ? (NAMES[i] + " (مقترن مع «" + NAMES[partner] + "»)") : NAMES[i];
+  $("sheetIdx").textContent = p ? ("الاسم " + toAr(i+1) + " من 99 — اسمان مقترنان يُعدّان معاً") : ("الاسم " + toAr(i+1) + " من 99");
   const answers = window.SHEIKH_ANSWERS && window.SHEIKH_ANSWERS[NAMES[i]];
   const qTitles = ["معنى الاسم", "كيفية التخلق بهذا الاسم", "كيفية التعلق بهذا الاسم", "كيفية التحقق بهذا الاسم", "خاصية هذا الاسم", "هل هو من الأسماء الجامعة؟", "هل هو من أسماء الذات أم التنزيهات أم الصفات أم الأفعال؟", "هل هو من أسماء الجمال أم الجلال أم الكمال؟", "هل هو من الأسماء المقترنة أم لا؟"];
   let qHtml = '';
@@ -3114,10 +3154,10 @@ function openName(i){
     qHtml += '<div class="qa-actions"><button class="btn btn-emerald" onclick="exportSheikhPDF(' + i + ')">📄 تصدير PDF — إجابة لشيخنا</button></div>';
   }
   let pairSwitch = '';
-  if(isP){
+  if(p){
     pairSwitch = '<div style="display:flex;gap:8px;margin-bottom:12px;background:rgba(212,175,55,.12);padding:6px;border-radius:12px">' +
-      '<button class="btn btn-ghost" style="flex:1;font-weight:700;' + (i===59?'background:var(--gold);color:#241b05;':'') + '" onclick="openName(59)">المحيي (٦٠)</button>' +
-      '<button class="btn btn-ghost" style="flex:1;font-weight:700;' + (i===60?'background:var(--gold);color:#241b05;':'') + '" onclick="openName(60)">المميت (٦١)</button>' +
+      '<button class="btn btn-ghost" style="flex:1;font-weight:700;' + (i===p[0]?'background:var(--gold);color:#241b05;':'') + '" onclick="openName(' + p[0] + ')">' + NAMES[p[0]] + ' (' + toAr(p[0]+1) + ')</button>' +
+      '<button class="btn btn-ghost" style="flex:1;font-weight:700;' + (i===p[1]?'background:var(--gold);color:#241b05;':'') + '" onclick="openName(' + p[1] + ')">' + NAMES[p[1]] + ' (' + toAr(p[1]+1) + ')</button>' +
       '</div>';
   }
   $("sheetBody").innerHTML =
@@ -3261,10 +3301,11 @@ function renderSettings(){
     NAMES.forEach((nm,i)=>{
       const o = document.createElement("option");
       o.value = i;
-      if(i === 59){
-        o.textContent = toAr(60) + " و " + toAr(61) + " — المحيي المميت (اسمان مقترنان)";
-      } else if(i === 60){
-        o.textContent = toAr(61) + " — المميت (مقترن مع المحيي)";
+      const p = getPair(i);
+      if(p && i === p[0]){
+        o.textContent = toAr(p[0]+1) + " و " + toAr(p[1]+1) + " — " + NAMES[p[0]] + " " + NAMES[p[1]] + " (اسمان مقترنان)";
+      } else if(p && i === p[1]){
+        o.textContent = toAr(p[1]+1) + " — " + NAMES[p[1]] + " (مقترن مع «" + NAMES[p[0]] + "»)";
       } else {
         o.textContent = toAr(i+1) + " — " + nm;
       }
@@ -3283,16 +3324,17 @@ function addCount(n){
   const nameRem = GOAL - curTotal();
   const added = Math.min(n, dayRem, nameRem);
   if(added <= 0) return 0;
-  if(isPaired(state.currentIndex)){
-    if(!state.counts[59] && added > 0 && !state.nameStartDates["59"]){
-      state.nameStartDates["59"] = todayStr();
-      state.nameStartDates["60"] = todayStr();
+  const pair = getPair(state.currentIndex);
+  if(pair){
+    if(!state.counts[pair[0]] && added > 0 && !state.nameStartDates[String(pair[0])]){
+      state.nameStartDates[String(pair[0])] = todayStr();
+      state.nameStartDates[String(pair[1])] = todayStr();
     }
-    state.counts[59] = (state.counts[59] || 0) + added;
-    state.counts[60] = state.counts[59]; // les deux avancent ensemble
+    state.counts[pair[0]] = (state.counts[pair[0]] || 0) + added;
+    state.counts[pair[1]] = state.counts[pair[0]]; // les deux avancent ensemble
   } else {
-    if(!state.counts[state.currentIndex] && added > 0 && !state.nameStartDates[state.currentIndex]){
-      state.nameStartDates[state.currentIndex] = todayStr();
+    if(!state.counts[state.currentIndex] && added > 0 && !state.nameStartDates[String(state.currentIndex)]){
+      state.nameStartDates[String(state.currentIndex)] = todayStr();
     }
     state.counts[state.currentIndex] += added;
   }
@@ -3382,9 +3424,10 @@ function catchUpNight(n, target){
     const added = Math.min(DAILY - cur, rem);
     if(added <= 0) continue;
     state.nights[d] = cur + added;
-    if(isPaired(state.currentIndex)){
-      state.counts[59] = (state.counts[59] || 0) + added;
-      state.counts[60] = state.counts[59];
+    const pair = getPair(state.currentIndex);
+    if(pair){
+      state.counts[pair[0]] = (state.counts[pair[0]] || 0) + added;
+      state.counts[pair[1]] = state.counts[pair[0]];
     } else {
       state.counts[state.currentIndex] = (state.counts[state.currentIndex] || 0) + added;
     }
@@ -3453,9 +3496,10 @@ function checkMilestones(){
   /* 95 000 — cheikh */
   if(t >= SHEIKH_THRESHOLD && t < GOAL && !state.sheikhAck[state.currentIndex] && !state.completedNotified[state.currentIndex+"_sheikh"]){
     state.completedNotified[state.currentIndex+"_sheikh"] = true;
-    if(isPaired(state.currentIndex)){
-      state.completedNotified["59_sheikh"] = true;
-      state.completedNotified["60_sheikh"] = true;
+    const p = getPair(state.currentIndex);
+    if(p){
+      state.completedNotified[p[0]+"_sheikh"] = true;
+      state.completedNotified[p[1]+"_sheikh"] = true;
     }
     save(state);
     fireNotification("تنبيه مهم", "وصلتَ إلى " + fmtAr(SHEIKH_THRESHOLD) + " من اسم «" + curName() + "». لا تنسَ واجبك تجاه شيخك قبل إتمامه.", "adhkar-sheikh");
@@ -3469,7 +3513,14 @@ function checkMilestones(){
 
 function nextPendingIndex(from){
   for(let i=from;i<NAMES.length;i++){
-    if((state.counts[i]||0) < GOAL) return i;
+    if(i === 66) continue; // الأحد exclu
+    const p = getPair(i);
+    if(p){
+      if((state.counts[p[0]]||0) < GOAL || (state.counts[p[1]]||0) < GOAL) return p[0];
+      i = p[1];
+    } else {
+      if((state.counts[i]||0) < GOAL) return i;
+    }
   }
   return -1;
 }
@@ -3477,20 +3528,22 @@ function nextPendingIndex(from){
 function completeNameFlow(){
   if(state.currentIndex >= NAMES.length){ allDone(); return; }
   const finished = curName();
-  if(isPaired(state.currentIndex)){
-    state.counts[59] = GOAL;
-    state.counts[60] = GOAL;
+  const pair = getPair(state.currentIndex);
+  if(pair){
+    state.counts[pair[0]] = GOAL;
+    state.counts[pair[1]] = GOAL;
   }
-  const ni = nextPendingIndex(state.currentIndex+1);
-  const next = ni >= 0 ? NAMES[ni] : null;
-  $("ovSub").textContent = isPaired(state.currentIndex)
+  const nextFrom = pair ? pair[1] + 1 : state.currentIndex + 1;
+  const ni = nextPendingIndex(nextFrom);
+  const next = ni >= 0 ? (isPaired(ni) ? pairName(ni) : NAMES[ni]) : null;
+  $("ovSub").textContent = pair
     ? "أكملتَ الاسمين الجليلين «" + finished + "» — " + fmtAr(GOAL)
     : "أكملتَ اسم «" + finished + "» — " + fmtAr(GOAL);
   $("ovNext").textContent = next ? next : "أتممتَ الأسماء كلها";
   $("ovMeta").textContent = next
-    ? "اليوم: " + fmtAr(Math.min(state.todayCount, DAILY)) + " / " + fmtAr(DAILY) + " — تبدأ الآن اسم «" + next + "» من الصفر"
+    ? "اليوم: " + fmtAr(Math.min(state.todayCount, DAILY)) + " / " + fmtAr(DAILY) + " — تبدأ الآن «" + next + "» من الصفر"
     : "بحمد الله أتممت الأسماء الحسنى كلها";
-  $("ovBtn").textContent = next ? "ابدأ اسم «" + next + "»" : "الحمد لله";
+  $("ovBtn").textContent = next ? "ابدأ «" + next + "»" : "الحمد لله";
   $("overlay").classList.add("show");
   fanfareSound(); vib([40,80,40,80,40]);
   save(state);
@@ -3498,7 +3551,9 @@ function completeNameFlow(){
 
 function advanceName(){
   $("overlay").classList.remove("show");
-  const ni = nextPendingIndex(state.currentIndex+1);
+  const pair = getPair(state.currentIndex);
+  const nextFrom = pair ? pair[1] + 1 : state.currentIndex + 1;
+  const ni = nextPendingIndex(nextFrom);
   if(ni >= 0) state.currentIndex = ni;
   save(state);
   renderAll();
@@ -3912,8 +3967,9 @@ function closeFullscreen(){
 }
 function renderFS(){
   const i = state.currentIndex;
-  if(isPaired(i)){
-    $("fsName").textContent = "المحيي المميت — " + toAr(60) + " و " + toAr(61) + " / 99";
+  const p = getPair(i);
+  if(p){
+    $("fsName").textContent = NAMES[p[0]] + " " + NAMES[p[1]] + " — " + toAr(p[0]+1) + " و " + toAr(p[1]+1) + " / 99";
   } else {
     $("fsName").textContent = NAMES[i] + " — " + toAr(i+1) + " / 99";
   }
@@ -3934,9 +3990,10 @@ function fsCount(n){
     if(state.todayCount <= 0) return;
     state.todayCount = Math.max(0, state.todayCount + n);
     state.nights[todayStr()] = state.todayCount;
-    if(isPaired(state.currentIndex)){
-      state.counts[59] = Math.max(0, (state.counts[59]||0) + n);
-      state.counts[60] = state.counts[59];
+    const pair = getPair(state.currentIndex);
+    if(pair){
+      state.counts[pair[0]] = Math.max(0, (state.counts[pair[0]]||0) + n);
+      state.counts[pair[1]] = state.counts[pair[0]];
     } else {
       state.counts[state.currentIndex] = Math.max(0, state.counts[state.currentIndex] + n);
     }
@@ -4106,6 +4163,11 @@ $("notifBtn").addEventListener("click", requestNotifPermission);
 
 $("sheikhAck").addEventListener("click", ()=>{
   state.sheikhAck[state.currentIndex] = true;
+  const p = getPair(state.currentIndex);
+  if(p){
+    state.sheikhAck[p[0]] = true;
+    state.sheikhAck[p[1]] = true;
+  }
   save(state);
   renderCounter();
   toast("جزاك الله خيراً — شكراً لوفائك بواجبك");
@@ -4520,12 +4582,13 @@ $("btnApplyCount").addEventListener("click", ()=>{
   const v = parseInt($("setCount").value, 10);
   if(isNaN(i) || i<0 || i>NAMES.length-1){ toast("اسم غير صالح"); return; }
   if(!isNaN(v) && v>=0 && v<=GOAL){
-    if(isPaired(i)){
-      state.currentIndex = 59;
-      state.counts[59] = v;
-      state.counts[60] = v;
-      delete state.completedNotified["59_sheikh"];
-      delete state.completedNotified["60_sheikh"];
+    const p = getPair(i);
+    if(p){
+      state.currentIndex = p[0];
+      state.counts[p[0]] = v;
+      state.counts[p[1]] = v;
+      delete state.completedNotified[p[0]+"_sheikh"];
+      delete state.completedNotified[p[1]+"_sheikh"];
     } else {
       state.currentIndex = i;
       state.counts[i] = v;
@@ -4540,8 +4603,9 @@ $("btnApplyCount").addEventListener("click", ()=>{
 });
 $("setName").addEventListener("change", ()=>{
   const v = +$("setName").value;
-  const nm = isPaired(v) ? "المحيي المميت" : NAMES[v];
-  const cnt = isPaired(v) ? Math.max(state.counts[59]||0, state.counts[60]||0) : state.counts[v];
+  const p = getPair(v);
+  const nm = p ? (NAMES[p[0]] + " " + NAMES[p[1]]) : NAMES[v];
+  const cnt = p ? Math.max(state.counts[p[0]]||0, state.counts[p[1]]||0) : state.counts[v];
   $("setNameInfo").textContent = "الاسم المحدد: «" + nm + "» — العدد الحالي: " + fmtAr(cnt);
 });
 
