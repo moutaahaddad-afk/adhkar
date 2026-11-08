@@ -694,6 +694,11 @@ body.mu-fullscreen .mu-hint{color:rgba(40,50,45,.55);background:rgba(255,255,255
 body.mu-fullscreen .mu-topbar,body.mu-fullscreen .mu-botbar,body.mu-fullscreen #muFsExit{transition:opacity .35s ease}
 body.mu-fullscreen.idle .mu-topbar,body.mu-fullscreen.idle .mu-botbar,body.mu-fullscreen.idle #muFsExit{opacity:0!important;pointer-events:none}
 #muFsExit{position:absolute;top:10px;left:10px;z-index:6;width:38px;height:38px;border-radius:12px;background:rgba(5,10,7,.55);border:1px solid rgba(212,175,55,.4);color:var(--gold-light);font-size:17px;cursor:pointer;display:none;backdrop-filter:blur(4px)}
+.mu-global-fs-exit{display:none;position:fixed;top:max(14px,calc(env(safe-area-inset-top) + 8px));left:14px;z-index:99999;width:42px;height:42px;border-radius:50%;background:rgba(8,20,14,.9);border:1.5px solid rgba(212,175,55,.65);color:#f3ead0;font-size:18px;font-weight:700;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.5),0 0 10px rgba(212,175,55,.25);transition:opacity .3s ease,transform .15s ease;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);user-select:none;-webkit-tap-highlight-color:transparent}
+.mu-global-fs-exit:active{transform:scale(.92)}
+body.mu-fullscreen .mu-global-fs-exit{display:flex!important}
+body.mu-fullscreen.idle .mu-global-fs-exit{opacity:.4}
+body.mu-fullscreen.idle .mu-global-fs-exit:hover,body.mu-fullscreen.idle .mu-global-fs-exit:focus{opacity:1}
 /* flèches de feuilletage — fonctionnent même page zoomée */
 .mu-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:52px;height:86px;border-radius:16px;background:rgba(5,10,7,.45);border:1px solid rgba(212,175,55,.38);color:var(--gold-light);font-size:30px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(3px);transition:opacity .35s ease,transform .15s ease}
 /* réglage taille d'affichage du mushaf */
@@ -1191,6 +1196,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
 
   <!-- ============ SCREEN 4 : الإعدادات ============ -->
   <section class="screen" id="scr-mushaf">
+    <button id="muGlobalFsExit" class="mu-global-fs-exit" aria-label="الخروج من ملء الشاشة" title="الخروج من ملء الشاشة">✕</button>
     <div class="card mu-head">
       <div style="width:100%">
         <div class="mu-modes">
@@ -3677,6 +3683,12 @@ function openMushaf(){
 function muEnterFS(){
   document.body.classList.add("mu-fullscreen");
   if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  try{
+    if(!history.state || !history.state.mushafFs){
+      history.pushState({ mushafFs: true }, "");
+    }
+  }catch(e){}
+  if($("tvFsBtn")) $("tvFsBtn").textContent = "✕";
   muApplyFit(); muWake();
   /* entrée en plein écran : page ENTIÈRE ancrée en haut, marges blanches qui coulent vers le bas */
   setTimeout(()=>{
@@ -3685,19 +3697,36 @@ function muEnterFS(){
     muApplyTransform();
   }, 120);
 }
-function muExitFS(){
+function muExitFS(fromHistory){
   document.body.classList.remove("mu-fullscreen");
   document.body.classList.remove("idle");
   clearTimeout(muIdleT);
+  if($("tvFsBtn")) $("tvFsBtn").textContent = "⛶";
+  if(!fromHistory && history.state && history.state.mushafFs){
+    try{ history.back(); }catch(e){}
+  }
   if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
   setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 90);
 }
+window.muEnterFS = muEnterFS;
+window.muExitFS = muExitFS;
 window.addEventListener("fullscreenchange", ()=>{
   if(!document.fullscreenElement){
     document.body.classList.remove("mu-fullscreen");
     document.body.classList.remove("idle");
     clearTimeout(muIdleT);
+    if($("tvFsBtn")) $("tvFsBtn").textContent = "⛶";
     setTimeout(()=>{ muClampPan(); muApplyTransform(); }, 60);
+  }
+});
+window.addEventListener("popstate", e=>{
+  if(document.body.classList.contains("mu-fullscreen")){
+    muExitFS(true);
+  }
+});
+window.addEventListener("keydown", e=>{
+  if(e.key === "Escape"){
+    if(document.body.classList.contains("mu-fullscreen")) muExitFS();
   }
 });
 window.addEventListener("resize", ()=>{
@@ -4175,7 +4204,9 @@ $("muGridBtn").addEventListener("click", ()=>{ renderMuGrid(); $("muGridOverlay"
 $("muGridOverlay").addEventListener("click", e=>{ if(e.target.id==="muGridOverlay") e.target.classList.remove("show"); });
 $("muGridClose").addEventListener("click", ()=>$("muGridOverlay").classList.remove("show"));
 $("muFsBtn").addEventListener("click", muEnterFS);
-$("muFsExit").addEventListener("click", muExitFS);
+$("muFsExit").addEventListener("click", ()=>muExitFS());
+if($("muGlobalFsExit")) $("muGlobalFsExit").addEventListener("click", e=>{ e.stopPropagation(); muExitFS(); });
+if($("tvBody")) $("tvBody").addEventListener("click", ()=>{ if(document.body.classList.contains("mu-fullscreen")) muWake(); });
 $("muFitBtn").addEventListener("click", ()=>{
   muSetSize((muSizeIdx+1) % MU_SIZES.length);
 });

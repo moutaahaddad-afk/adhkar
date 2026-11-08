@@ -188,6 +188,50 @@
           refreshPermission().then(function (p) { if (p === "granted") syncReminders(); });
         }
       });
+
+      /* Gestion intelligente du bouton retour Android (geste ou touche physique) */
+      App.addListener("backButton", function (data) {
+        // 1. Quitter le plein écran du Mushaf
+        if (document.body.classList.contains("mu-fullscreen")) {
+          if (typeof window.muExitFS === "function") {
+            window.muExitFS();
+            return;
+          }
+        }
+        // 2. Quitter le plein écran de la Burdah
+        if (document.body.classList.contains("bd-fullscreen")) {
+          if (typeof window.bdExitFS === "function") {
+            window.bdExitFS();
+            return;
+          }
+        }
+        // 3. Quitter le plein écran du Tasbih
+        var fsTasbih = document.getElementById("fsTasbih");
+        if (fsTasbih && fsTasbih.classList.contains("open")) {
+          if (typeof window.closeFullscreen === "function") {
+            window.closeFullscreen();
+            return;
+          }
+        }
+        // 4. Fermer la modale de sélection de ville si ouverte
+        var citySheet = document.getElementById("citySheetOverlay");
+        if (citySheet && citySheet.classList.contains("show")) {
+          citySheet.classList.remove("show");
+          return;
+        }
+        // 5. Fermer la modale des parties du Mushaf si ouverte
+        var gridOverlay = document.getElementById("muGridOverlay");
+        if (gridOverlay && gridOverlay.classList.contains("show")) {
+          gridOverlay.classList.remove("show");
+          return;
+        }
+        // 6. Navigation arrière standard ou fermer l'application
+        if (data && data.canGoBack) {
+          window.history.back();
+        } else {
+          App.exitApp();
+        }
+      });
     }
   }
 
