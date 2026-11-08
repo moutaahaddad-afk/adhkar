@@ -1,5 +1,5 @@
 /* 📿 Adhkar — Service Worker (hors-ligne) */
-const VERSION = "adhkar-v3.0.3";
+const VERSION = "adhkar-v3.0.4";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
@@ -8,6 +8,8 @@ const APP_SHELL = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",
+  "./fonts/qaloon.10.woff2",
+  "./fonts/qaloon.10.ttf",
   "./fonts/amiri-400.woff2",
   "./fonts/amiri-700.woff2",
   "./fonts/scheherazade-400.ttf",
