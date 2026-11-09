@@ -721,7 +721,9 @@ body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:100vh;height:100d
 .tv-nav,.tv-size button{width:36px;height:36px;border-radius:10px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.12);color:var(--gold-light);font-size:17px;font-weight:700;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .12s,background .15s}
 .tv-nav:active,.tv-size button:active{transform:scale(.92)}
 #tvVal{min-width:26px;text-align:center;font-size:13px;font-weight:700;color:#f3ead0;font-family:Tajawal,system-ui,sans-serif}
-#tvBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;overflow-anchor:none;padding:26px 22px 64px;direction:rtl;text-align:justify;text-align-last:center;font-family:"Qaloon","Amiri Quran","Amiri","Scheherazade New",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--tv-size,30px);line-height:2.55;letter-spacing:0;word-spacing:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;position:relative}
+#tvBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;overscroll-behavior-x:none;touch-action:pan-y;overflow-anchor:none;padding:26px 22px 64px;direction:rtl;text-align:justify;text-align-last:center;font-family:"Qaloon","Amiri Quran","Amiri","Scheherazade New",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--tv-size,30px);line-height:2.55;letter-spacing:0;word-spacing:normal;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;position:relative}
+#tvBody.tv-slide-next{animation:muNext .22s cubic-bezier(.22,1,.36,1)}
+#tvBody.tv-slide-prev{animation:muPrev .22s cubic-bezier(.22,1,.36,1)}
 .tv-surah-title{text-align:center;font-family:'Scheherazade New','Amiri',serif;font-weight:700;font-size:1.25em;letter-spacing:.5px;color:#7a5b13;background:linear-gradient(90deg,transparent,rgba(212,175,55,.16) 20%,rgba(212,175,55,.25) 50%,rgba(212,175,55,.16) 80%,transparent);border-top:1.5px solid rgba(212,175,55,.4);border-bottom:1.5px solid rgba(212,175,55,.4);padding:12px 0;margin:12px 0 20px;border-radius:10px}
 .tv-basmala{text-align:center;color:#0d1f16;font-family:'Amiri Quran','Amiri',serif;font-weight:700;font-size:1.15em;line-height:2.2;margin-bottom:22px}
 .tv-n{display:inline-flex;align-items:center;justify-content:center;color:#a8811e;font-family:'Scheherazade New','Amiri',serif;font-size:.60em;font-weight:700;min-width:1.85em;height:1.85em;padding:0 4px;margin:0 5px;vertical-align:middle;line-height:1;border:1.5px solid rgba(181,138,31,.65);border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.14) 0%,rgba(212,175,55,.04) 70%,transparent 100%);box-shadow:0 0 0 1px rgba(212,175,55,.18),inset 0 0 3px rgba(212,175,55,.18);white-space:nowrap;user-select:none}
@@ -894,7 +896,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
 </head>
 <div id="nl-badge-frame" style="display:none!important;width:0;height:0;opacity:0;pointer-events:none;"></div><div id="nl-hud-frame" style="display:none!important;width:0;height:0;opacity:0;pointer-events:none;"></div>
 <body>
-<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v1.0.4</div>
+<div id="appVer" style="position:fixed;top:2px;right:5px;font-size:9px;font-weight:700;color:#888;z-index:9999;pointer-events:none;font-family:sans-serif">v1.0.5</div>
 <div id="app">
 
   <header>
@@ -1429,7 +1431,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
       <button class="btn btn-ghost" id="btnSyncNow" style="width:100%;margin-top:10px">مزامنة الآن</button>
     </div>
 
-    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v1.0.4</p>
+    <p style="text-align:center;color:var(--muted2);font-size:12px;margin-top:18px;line-height:2">أذكار الأسماء الحسنى — يعمل بدون إنترنت<br>بياناتك محفوظة محلياً وتُزامن تلقائياً مع السحابة<br>الإصدار v1.0.5</p>
   </section>
 
   <section class="screen" id="scr-burdah">
@@ -4496,35 +4498,95 @@ $("tvSurah").addEventListener("change",()=>{ tvRender(); state.mushafAt=Date.now
 function tvGo(delta){
   const cur=parseInt($("tvSurah").value||"1",10);
   const nxt=Math.min(114,Math.max(1,cur+delta));
-  if(nxt!==cur){ $("tvSurah").value=String(nxt); tvRender(); state.mushafAt=Date.now(); save(state); }
+  if(nxt!==cur){
+    $("tvSurah").value=String(nxt);
+    tvRender();
+    state.mushafAt=Date.now();
+    save(state);
+    const body=$("tvBody");
+    if(body){
+      const cls = delta > 0 ? "tv-slide-next" : "tv-slide-prev";
+      body.classList.remove("tv-slide-next","tv-slide-prev");
+      void body.offsetWidth;
+      body.classList.add(cls);
+      setTimeout(()=>body.classList.remove(cls), 240);
+    }
+    if(navigator.vibrate) try{ navigator.vibrate(14); }catch(e){}
+  }
 }
 $("tvNext").addEventListener("click",()=>tvGo(1));
 $("tvPrev").addEventListener("click",()=>tvGo(-1));
-/* balayage horizontal = changer de sourate (sécurisé pour ne jamais interférer avec le défilement vertical) */
-let tvTx0=null,tvTy0=null,tvTStart=0,tvIsVertical=false;
-$("tvBody").addEventListener("touchstart",e=>{
-  if(e.touches.length===1){
-    tvTx0=e.touches[0].clientX;
-    tvTy0=e.touches[0].clientY;
-    tvTStart=Date.now();
-    tvIsVertical=false;
-  }
-},{passive:true});
-$("tvBody").addEventListener("touchmove",e=>{
-  if(tvTx0===null || e.touches.length!==1) return;
-  const dy = Math.abs(e.touches[0].clientY - tvTy0);
-  if(dy > 18){ tvIsVertical = true; }
-},{passive:true});
-$("tvBody").addEventListener("touchend",e=>{
-  if(tvTx0===null) return;
-  const dx=e.changedTouches[0].clientX-tvTx0;
-  const dy=e.changedTouches[0].clientY-tvTy0;
-  const duration=Date.now()-tvTStart;
-  tvTx0=null;
-  if(!tvIsVertical && duration < 350 && Math.abs(dx) > 85 && Math.abs(dx) > Math.abs(dy) * 2.5){
-    tvGo(dx<0?1:-1);
-  }
-},{passive:true});
+
+/* Balayage horizontal fluide et naturel = changer de sourate */
+/* Conçu pour une détection immédiate et sans effort, tout en protégeant le défilement vertical */
+let tvTx0 = null, tvTy0 = null, tvTStart = 0;
+let tvGesture = null; // null | 'vertical' | 'horizontal'
+
+const tvTarget = $("tvBody");
+if(tvTarget){
+  tvTarget.addEventListener("touchstart", e => {
+    if(e.touches.length === 1){
+      if(e.target.closest && e.target.closest("button, select, input, .tv-sheet")) return;
+      tvTx0 = e.touches[0].clientX;
+      tvTy0 = e.touches[0].clientY;
+      tvTStart = Date.now();
+      tvGesture = null;
+    }
+  }, {passive:true});
+
+  tvTarget.addEventListener("touchmove", e => {
+    if(tvTx0 === null || e.touches.length !== 1) return;
+    const curDx = e.touches[0].clientX - tvTx0;
+    const curDy = e.touches[0].clientY - tvTy0;
+    const absX = Math.abs(curDx);
+    const absY = Math.abs(curDy);
+
+    // Détermination de l'intention dès un mouvement initial (> 10px)
+    if(tvGesture === null && (absX > 10 || absY > 10)){
+      if(absY > absX * 1.25){
+        tvGesture = 'vertical';   // Défilement vertical pour lire les versets
+      } else if(absX > absY * 1.25){
+        tvGesture = 'horizontal'; // Balayage horizontal pour changer de sourate
+      }
+    }
+  }, {passive:true});
+
+  const handleTvEnd = e => {
+    if(tvTx0 === null) return;
+    const touch = e.changedTouches && e.changedTouches[0];
+    if(!touch){ tvTx0 = null; tvTy0 = null; tvGesture = null; return; }
+
+    const dx = touch.clientX - tvTx0;
+    const dy = touch.clientY - tvTy0;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    const duration = Date.now() - tvTStart;
+    const wasVertical = (tvGesture === 'vertical');
+
+    tvTx0 = null;
+    tvTy0 = null;
+    tvGesture = null;
+
+    // Si le geste était un défilement vertical de lecture, ne jamais changer de sourate
+    if(wasVertical) return;
+
+    // Seuil de balayage horizontal naturel et fluide :
+    // - Amplitude horizontale >= 40px
+    // - Trajectoire horizontale dominante (absX > absY * 1.1)
+    // - Durée raisonnable (< 750ms) OU grand geste (>= 70px)
+    if(absX >= 40 && absX > absY * 1.1 && (duration < 750 || absX >= 70)){
+      /* RTL : gauche (dx < 0) = sourate suivante (+1), droite (dx > 0) = sourate précédente (-1) */
+      tvGo(dx < 0 ? 1 : -1);
+    }
+  };
+
+  tvTarget.addEventListener("touchend", handleTvEnd, {passive:true});
+  tvTarget.addEventListener("touchcancel", () => {
+    tvTx0 = null;
+    tvTy0 = null;
+    tvGesture = null;
+  }, {passive:true});
+}
 $("tvPlus").addEventListener("click",()=>{ tvSize=Math.min(64,tvSize+2); localStorage.setItem("mushaf_tv_size",String(tvSize)); tvApplySize(); });
 $("tvMinus").addEventListener("click",()=>{ tvSize=Math.max(14,tvSize-2); localStorage.setItem("mushaf_tv_size",String(tvSize)); tvApplySize(); });
 if($("tvFsBtn")){
