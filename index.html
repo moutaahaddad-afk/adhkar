@@ -680,7 +680,22 @@ body[data-theme="light"] .gchk.partial{background:rgba(212,175,55,.25)}
 #muFsBtn{font-size:14px}
 #muFitBtn.active{background:rgba(212,175,55,.3);box-shadow:inset 0 0 0 1px rgba(212,175,55,.5)}
 .mu-viewport.fitw #muPage{max-width:none;max-height:none;width:100%;height:auto}
-body.mu-fullscreen header,body.mu-fullscreen nav,body.mu-fullscreen #scr-mushaf .mu-head{display:none!important}
+body.mu-fullscreen header,body.mu-fullscreen nav,body.mu-fullscreen #scr-mushaf .mu-head,body.mu-fullscreen #scr-mushaf .mu-dua-card{display:none!important}
+.mu-dua-card{background:linear-gradient(180deg,rgba(16,185,129,.09),rgba(212,175,55,.07));border:1px solid rgba(212,175,55,.32);border-radius:18px;padding:14px 16px;margin-bottom:12px;position:relative;backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(0,0,0,.25);transition:all .2s ease}
+.mu-dua-head{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.mu-dua-title-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mu-dua-icon{font-size:18px;line-height:1}
+.mu-dua-title{font-family:'Scheherazade New',serif;font-size:18px;font-weight:700;color:var(--gold-light)}
+.mu-dua-pill{font-size:11px;padding:2px 8px;border-radius:12px;background:rgba(212,175,55,.14);color:var(--gold);border:1px solid rgba(212,175,55,.28);font-family:Tajawal,system-ui,sans-serif}
+.mu-dua-actions{display:flex;align-items:center;gap:6px}
+.mu-dua-btn{padding:4px 9px;border-radius:8px;border:1px solid rgba(212,175,55,.3);background:rgba(212,175,55,.1);color:var(--gold-light);font-family:inherit;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s}
+.mu-dua-btn:active{transform:scale(.94)}
+.mu-dua-toggle{width:28px;height:28px;border-radius:8px;border:1px solid var(--line-soft);background:var(--card2);color:var(--gold-light);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s ease}
+.mu-dua-body{margin-top:10px;transition:max-height .3s ease,opacity .3s ease}
+.mu-dua-body.collapsed{display:none}
+.mu-dua-text{font-family:'Amiri Quran','Scheherazade New','Amiri',serif;font-size:19.5px;line-height:2.2;color:#f7f4eb;text-align:justify;text-align-last:center;direction:rtl;padding:12px 14px;background:rgba(5,15,10,.45);border-radius:14px;border:1px dashed rgba(212,175,55,.25);box-shadow:inset 0 2px 8px rgba(0,0,0,.25);word-spacing:1px}
+body[data-theme="light"] .mu-dua-card{background:linear-gradient(180deg,rgba(13,148,104,.08),rgba(169,132,28,.06));border-color:rgba(169,132,28,.35)}
+body[data-theme="light"] .mu-dua-text{background:rgba(255,255,255,.75);color:#1c2d22;border-color:rgba(169,132,28,.3)}
 body.mu-fullscreen #scr-mushaf{padding:0}
 body.mu-fullscreen #app{max-width:none;padding:0!important}
 body.mu-fullscreen #scr-mushaf .mu-stage{max-width:none}
@@ -1219,6 +1234,23 @@ body.bd-fullscreen #bdText{padding-top:54px}
           <button class="mu-size-btn active" data-s="1.25">كبير</button>
           <button class="mu-size-btn" data-s="1.55">كبير جداً</button>
         </div>
+      </div>
+    </div>
+    <!-- دعاء قيام الليل والتهجد قبل تلاوة القرآن -->
+    <div class="card mu-dua-card" id="muDuaCard">
+      <div class="mu-dua-head" id="muDuaHead" title="انقر لطي أو إظهار الدعاء">
+        <div class="mu-dua-title-wrap">
+          <span class="mu-dua-icon">🌙</span>
+          <span class="mu-dua-title">دعاء قيام الليل وتلاوة القرآن</span>
+          <span class="mu-dua-pill">في جوف الليل</span>
+        </div>
+        <div class="mu-dua-actions">
+          <button class="mu-dua-btn" id="muDuaCopyBtn" title="نسخ الدعاء" aria-label="نسخ الدعاء">📋 نسخ</button>
+          <button class="mu-dua-toggle" id="muDuaToggle" aria-label="طي أو إظهار الدعاء" title="طي أو إظهار">−</button>
+        </div>
+      </div>
+      <div class="mu-dua-body" id="muDuaBody">
+        <div class="mu-dua-text" id="muDuaText">اللهم لا تؤمن مكرك ولا تنسيني ذكرك ولا تهتك علي سترك لا تجعلني من الغافلين اللهم ابعثني في احب الاوقات إليك واستعملني بأحب الطاعات اليك حتى اذكرك فتذكرني وأسألك فتعطيني وادعوك فتستجيب لي عز جارك وجل ثناؤك ولا إله غيرك اجعلني في عياذك وجوارك من شر كل ذي شر آمين يارب العالمين وصل الله على سيدنا محمد وعلى آله وصحبه أجمعين</div>
       </div>
     </div>
     <div class="mu-stage">
@@ -4281,6 +4313,49 @@ $("muDlJuz").addEventListener("click", muDownloadJuz);
 });
 $("muArrowNext").addEventListener("click", ()=>muGo(muPage+1,"slide-next"));
 $("muArrowPrev").addEventListener("click", ()=>muGo(muPage-1,"slide-prev"));
+/* Mushaf : دعاء قيام الليل وتلاوة القرآن */
+(function(){
+  const toggleBtn = $("muDuaToggle");
+  const head = $("muDuaHead");
+  const body = $("muDuaBody");
+  const copyBtn = $("muDuaCopyBtn");
+  const textEl = $("muDuaText");
+  if(!body) return;
+
+  function setCollapsed(c){
+    body.classList.toggle("collapsed", c);
+    if(toggleBtn){
+      toggleBtn.textContent = c ? "+" : "−";
+      toggleBtn.title = c ? "إظهار الدعاء" : "طي الدعاء";
+    }
+    try{ localStorage.setItem("mushaf_dua_collapsed", c ? "1" : "0"); }catch(e){}
+  }
+
+  let isCol = false;
+  try{ isCol = localStorage.getItem("mushaf_dua_collapsed") === "1"; }catch(e){}
+  setCollapsed(isCol);
+
+  if(toggleBtn) toggleBtn.addEventListener("click", (e)=>{
+    e.stopPropagation();
+    setCollapsed(!body.classList.contains("collapsed"));
+  });
+
+  if(head) head.addEventListener("click", ()=>{
+    setCollapsed(!body.classList.contains("collapsed"));
+  });
+
+  if(copyBtn && textEl){
+    copyBtn.addEventListener("click", async (e)=>{
+      e.stopPropagation();
+      try {
+        await navigator.clipboard.writeText(textEl.textContent.trim());
+        toast("تم نسخ الدعاء المبارك");
+      } catch(err) {
+        toast("تعذر نسخ الدعاء");
+      }
+    });
+  }
+})();
 /* mode d'affichage : texte numérique | pages scannées */
 let muMode = localStorage.getItem("mushaf_mode") || "text";
 function muApplyMode(){
