@@ -1,5 +1,5 @@
 /* 📿 Adhkar — Service Worker (hors-ligne) */
-const VERSION = "adhkar-v3.0.8";
+const VERSION = "adhkar-v3.0.9";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
