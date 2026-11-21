@@ -726,6 +726,9 @@ body.mu-fullscreen.idle .mu-global-fs-exit:hover,body.mu-fullscreen.idle .mu-glo
 #muText{display:none;flex-direction:column;width:100%;background:#fdfbf5;position:relative}
 #scr-mushaf.mode-text #muText{display:flex;height:calc(100vh - 270px);height:calc(100dvh - 270px);min-height:440px;max-height:none;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 32px rgba(0,0,0,.25)}
 body.mu-fullscreen #scr-mushaf.mode-text #muText{flex:1;height:100vh;height:100dvh;min-height:0;max-height:none;border-radius:0;border:none}
+/* garniture doree des pages du Coran en plein ecran */
+body.mu-fullscreen #scr-mushaf.mode-text #muText::before{content:"";position:fixed;top:max(6px,env(safe-area-inset-top,6px));bottom:max(6px,env(safe-area-inset-bottom,6px));left:max(6px,env(safe-area-inset-left,6px));right:max(6px,env(safe-area-inset-right,6px));border:1.5px solid rgba(212,175,55,.8);box-shadow:inset 0 0 0 2.5px #fdfbf5,inset 0 0 0 3.8px rgba(212,175,55,.55),inset 0 0 14px rgba(212,175,55,.12);border-radius:4px;pointer-events:none;z-index:10;transition:opacity .3s ease}
+body.mu-fullscreen #scr-mushaf.mu-dark.mode-text #muText::before{box-shadow:inset 0 0 0 2.5px #08140e,inset 0 0 0 3.8px rgba(212,175,55,.6),inset 0 0 16px rgba(212,175,55,.16)}
 #scr-mushaf.mode-text .mu-viewport{display:none!important}
 #scr-mushaf.mode-text .mu-arrow{display:none!important}
 #scr-mushaf.mode-text .mu-botbar{display:none!important}
@@ -782,7 +785,7 @@ body.mu-fullscreen #scr-mushaf.mu-dark .mu-viewport{background:#000000}
 .tv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .tv-grid button{padding:10px 2px;border-radius:10px;border:1px solid var(--line);background:#ffffff;font-weight:700;color:#1c1c1c;font-family:inherit;font-size:11px;cursor:pointer}
 .tv-close{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1px solid var(--line);background:#122a1e;color:var(--gold-light);font-family:inherit;font-weight:700;cursor:pointer}
-body.mu-fullscreen .tv-bar{position:absolute;top:0;left:0;right:0;z-index:2;opacity:0;transition:opacity .35s}
+body.mu-fullscreen .tv-bar{position:absolute;top:0;left:0;right:0;z-index:20;opacity:0;transition:opacity .35s}
 body.mu-fullscreen:not(.idle) .tv-bar{opacity:1}
 body.mu-fullscreen #tvBody{padding-top:54px}
 #muFrame{display:none;border:0;background:#ffffff;width:100%;transform-origin:center center}
