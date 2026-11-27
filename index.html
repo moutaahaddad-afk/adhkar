@@ -902,67 +902,64 @@ body.mu-fullscreen #muFsExit{display:flex;align-items:center;justify-content:cen
 .mu-dlrow .btn{width:100%}
 .mu-dl-status{font-size:12.5px;color:var(--emerald-soft);margin-top:8px;text-align:center;font-weight:600;min-height:18px}
 
-/* ---------- BURDAH / HAMZIYYAH READER ---------- */
-#scr-burdah .mu-head{margin-bottom:8px}
-#scr-burdah .mu-modes{display:flex;gap:6px;margin-bottom:10px}
-#scr-burdah .mu-size-btn{flex:1;padding:8px 4px;font-size:14px;font-weight:700;color:#ece5cd;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:8px;cursor:pointer}
-#scr-burdah .mu-size-btn.active{background:var(--gold);color:#0d1f16;border-color:var(--gold)}
-#scr-burdah .mu-size-row{display:flex;gap:6px;margin-top:10px}
-#scr-burdah .mu-size-row .mu-size-btn{flex:1}
-#bdTitle{font-family:"Scheherazade New",serif;font-size:22px;color:var(--gold-light);font-weight:700}
-#bdSub{font-size:13px;color:var(--muted2);margin-top:3px}
-#bdGridBtn{padding:6px 12px;font-size:13px}
-#bdText{display:none;flex-direction:column;width:100%}
-#scr-burdah.mode-text #bdText{display:flex;height:calc(100vh - 380px);height:calc(100dvh - 380px);min-height:360px;max-height:760px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-body.bd-fullscreen #scr-burdah.mode-text #bdText{flex:1;height:auto;min-height:0;max-height:none;border-radius:0;border:none}
-#scr-burdah.mode-text .mu-viewport{display:none!important}
-#bdBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 18px 40px;text-align:justify;font-family:"Scheherazade New","Traditional Arabic",serif;color:#1c1c1c;background:#fdfbf5;font-size:var(--bd-size,30px);line-height:2.15;position:relative}
-body.bd-fullscreen #bdBody{padding-top:54px}
-.bd-verse{display:block;margin-bottom:8px;padding:8px 0;border-bottom:1px solid rgba(212,175,55,.08)}
-.bd-verse:last-child{border-bottom:none}
-.bd-num{font-size:.65em;color:var(--gold);font-weight:700;margin-right:8px;vertical-align:super}
-.bd-num{font-family:Tajawal,system-ui,sans-serif}
-.bd-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:12px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:auto;transition:all .3s}
-#bdPosLabel{font-size:13px;color:var(--gold-light);font-weight:600}
-#bdBody::-webkit-scrollbar{width:6px}
-#bdBody::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
-#bdBody::-webkit-scrollbar-track{background:transparent}
-#bdBadge{font-family:Tajawal,system-ui,sans-serif}
-.bd-verse:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
-#scr-burdah .tv-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0d1f16;color:var(--gold-light);border-bottom:1px solid rgba(212,175,55,.25)}
-#scr-burdah .tv-nav{width:36px;height:36px;border-radius:8px;background:rgba(212,175,55,.15);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-#scr-burdah .tv-nav:active{transform:scale(.95)}
-#scr-burdah .tv-size{display:flex;align-items:center;gap:6px;margin-left:auto}
-#scr-burdah .tv-size button{width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,.15);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:16px;cursor:pointer}
-#scr-burdah .tv-size span{min-width:36px;text-align:center;font-weight:700;color:var(--gold-light)}
-#scr-burdah .tv-sheet{display:none;position:absolute;inset:0;z-index:5;background:rgba(6,20,14,.55);align-items:flex-end}
-#scr-burdah .tv-sheet.open{display:flex}
-#scr-burdah .tv-sheet-card{width:100%;max-height:72%;overflow-y:auto;background:#fdfbf5;border-radius:18px 18px 0 0;padding:16px}
-#scr-burdah .tv-sheet-card h4{margin:0 0 10px;text-align:center;color:#7a5b13}
-#scr-burdah .tv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-#scr-burdah .tv-grid button{padding:10px 2px;border-radius:10px;border:1px solid var(--line);background:#ffffff;font-weight:700;color:#1c1c1c;font-family:inherit;font-size:11px;cursor:pointer}
-#scr-burdah .tv-close{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1px solid var(--line);background:#122a1e;color:var(--gold-light);font-family:inherit;font-weight:700;cursor:pointer}
-#scr-burdah .mu-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(13,31,22,.9);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:4;box-shadow:0 4px 14px rgba(0,0,0,.35)}
-#scr-burdah .mu-arrow:active{transform:translateY(-50%) scale(.9)}
-#scr-burdah #bdArrowPrev{right:8px}
-#scr-burdah #bdArrowNext{left:8px}
-body.bd-fullscreen.idle .mu-arrow{opacity:0;pointer-events:none}
-body.bd-fullscreen #bdFsExit{display:flex;align-items:center;justify-content:center}
-#bdFsExit{position:fixed;top:16px;right:16px;z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(13,31,22,.95);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+/* ---------- BURDAH / SALAWAT READER (MOBILE-FIRST & RESPONSIVE) ---------- */
+#scr-burdah{padding-bottom:14px}
+.bd-head-card{padding:12px 14px 10px;margin-bottom:8px}
+.bd-modes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:10px}
+@media(min-width:440px){.bd-modes-grid{grid-template-columns:repeat(4,1fr)}}
+.bd-mode-tab{padding:8px 4px;font-size:13px;font-weight:700;color:#ece5cd;background:rgba(255,255,255,.06);border:1px solid var(--line-soft);border-radius:10px;cursor:pointer;transition:all .18s;text-align:center;font-family:inherit;white-space:nowrap}
+.bd-mode-tab:active{transform:scale(.97)}
+.bd-mode-tab.active{background:linear-gradient(135deg,var(--gold),#a8811f);color:#0a1c14;border-color:var(--gold);font-weight:800;box-shadow:0 2px 8px rgba(212,175,55,.28)}
+
+.bd-meta-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.bd-title-wrap{min-width:0;flex:1}
+#bdTitle{font-family:'Scheherazade New',serif;font-size:20px;color:var(--gold-light);font-weight:700;line-height:1.2;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bdSub{font-size:11.5px;color:var(--muted2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-top-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.bd-top-actions #bdGridBtn{padding:6px 10px;font-size:12px;border-radius:8px}
+.bd-icon-btn{width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);color:var(--gold-light);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.bd-icon-btn:active{transform:scale(.92)}
+
+/* Stage de lecture principal */
+.bd-stage{background:#0b120e;border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.35);display:flex;flex-direction:column;height:calc(100vh - 275px);height:calc(100dvh - 275px);min-height:430px;max-height:820px;position:relative}
+body.bd-fullscreen .bd-stage{position:fixed;inset:0;z-index:9999;height:100vh;height:100dvh;min-height:0;max-height:none;border-radius:0;border:none}
+body.bd-fullscreen #scr-burdah{padding:0}
+
+#scr-burdah .tv-bar{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 10px;background:linear-gradient(180deg,#111e16,#0c1711);color:var(--gold-light);border-bottom:1px solid rgba(212,175,55,.22);flex-shrink:0}
+#scr-burdah .tv-nav{width:34px;height:34px;flex-shrink:0;border-radius:8px;background:rgba(212,175,55,.12);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+#scr-burdah .tv-nav:active{transform:scale(.92)}
+#scr-burdah #bdChapter{flex:1 1 auto;min-width:0;max-width:calc(100% - 150px);height:34px;background:#08140e;color:var(--gold-light);border:1px solid rgba(212,175,55,.35);border-radius:8px;padding:0 6px;font-family:inherit;font-size:12.5px;font-weight:600;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-align:center;outline:none}
+#scr-burdah #bdChapter:focus{border-color:var(--gold)}
+
+#scr-burdah .tv-size{display:flex;align-items:center;gap:3px;flex-shrink:0}
+#scr-burdah .tv-size button{width:28px;height:28px;border-radius:7px;background:rgba(212,175,55,.12);color:var(--gold-light);border:1px solid rgba(212,175,55,.3);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+#scr-burdah .tv-size button:active{transform:scale(.92)}
+#scr-burdah .tv-size span{min-width:22px;text-align:center;font-size:11.5px;font-weight:700;color:var(--gold-light);font-family:Tajawal,system-ui,sans-serif}
+
+/* Corps du texte */
+#bdBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 48px;text-align:justify;font-family:"Scheherazade New","Traditional Arabic",serif;color:#1a1a1a;background:#fdfbf5;font-size:var(--bd-size,24px);line-height:2.15;position:relative;word-spacing:1px}
+#scr-burdah.mu-dark #bdBody{background:#0d1a12;color:#f2ede0}
+.tv-surah-title{font-family:"Scheherazade New",serif;font-size:20px;color:#7a5b13;text-align:center;padding:8px 10px;margin-bottom:12px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.18),transparent);font-weight:700;border-radius:8px}
+#scr-burdah.mu-dark .tv-surah-title{color:var(--gold-light);background:linear-gradient(90deg,transparent,rgba(212,175,55,.22),transparent)}
+
+.bd-verse{display:block;margin-bottom:10px;padding:8px 10px;border-radius:8px;background:rgba(212,175,55,.03);border-bottom:1px solid rgba(212,175,55,.1);text-align:justify;word-break:normal}
+#scr-burdah.mu-dark .bd-verse{background:rgba(255,255,255,.02);border-bottom-color:rgba(212,175,55,.14)}
+.bd-num{display:inline-block;font-size:.6em;color:var(--gold);background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);border-radius:6px;padding:1px 5px;margin:0 4px;vertical-align:middle;font-family:Tajawal,system-ui,sans-serif;font-weight:700}
+#scr-burdah.mu-dark .bd-num{color:#ffd875;background:rgba(212,175,55,.18)}
+
+.tv-badge{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#0d1f16;color:var(--gold-light);border:1px solid rgba(212,175,55,.45);padding:4px 16px;border-radius:999px;font-size:11.5px;z-index:3;cursor:pointer;font-family:Tajawal,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25);white-space:nowrap}
+#bdFsExit{position:absolute;top:10px;left:10px;z-index:10;width:38px;height:38px;border-radius:50%;background:rgba(13,31,22,.95);color:var(--gold-light);border:1px solid rgba(212,175,55,.4);font-size:18px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.35)}
 body.bd-fullscreen #bdFsExit{display:flex}
-body.bd-fullscreen .mu-stage{height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none;display:flex;flex-direction:column}
-body.bd-fullscreen .mu-viewport{flex:1;height:auto;min-height:0;max-height:none;background:#ffffff}
-body.bd-fullscreen #scr-burdah.mu-dark #bdText{background:#0d1a12}
-body.bd-fullscreen #scr-burdah.mu-dark #bdBody{background:#0d1a12;color:#ece5cd}
-body.bd-fullscreen #bdText{padding-top:54px}
-#scr-burdah .tv-hint{text-align:center;padding:10px;color:var(--muted2);font-size:12.5px;background:rgba(6,20,14,.3);border-radius:8px;margin-top:8px}
-#scr-burdah.mu-dark #bdText{background:#0d1a12}
-#scr-burdah.mu-dark #bdBody{background:#0d1a12;color:#ece5cd}
-#scr-burdah.mu-dark .tv-surah-title{color:var(--gold-light);background:linear-gradient(90deg,transparent,rgba(212,175,55,.25),transparent)}
-#scr-burdah.mu-dark .bd-verse{color:#ece5cd}
-#scr-burdah.mu-dark .bd-num{color:#d4af37}
-#scr-burdah.mu-dark #bdBody::-webkit-scrollbar-thumb{background:var(--gold)}
-#scr-burdah.mu-dark #bdBody::-webkit-scrollbar-track{background:#132419}
+
+#scr-burdah .tv-sheet{display:none;position:absolute;inset:0;z-index:15;background:rgba(6,20,14,.65);align-items:flex-end}
+#scr-burdah .tv-sheet.open{display:flex}
+#scr-burdah .tv-sheet-card{width:100%;max-height:75%;overflow-y:auto;background:var(--card,#122a1e);border-radius:18px 18px 0 0;padding:16px;border-top:1px solid var(--line)}
+#scr-burdah .tv-sheet-card h4{margin:0 0 10px;text-align:center;color:var(--gold-light);font-size:15px}
+#scr-burdah .tv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+@media(min-width:380px){#scr-burdah .tv-grid{grid-template-columns:repeat(3,1fr)}}
+#scr-burdah .tv-grid button{padding:10px 4px;border-radius:10px;border:1px solid var(--line-soft);background:rgba(255,255,255,.05);font-weight:700;color:#ece5cd;font-family:inherit;font-size:11.5px;cursor:pointer}
+#scr-burdah .tv-grid button:active{background:var(--gold);color:#0d1f16}
+#scr-burdah .tv-close{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1px solid var(--line);background:rgba(212,175,55,.15);color:var(--gold-light);font-family:inherit;font-weight:700;cursor:pointer}
 
 /* ---------- Export PDF cheikh (impression) ---------- */
 #printView{display:none}
@@ -1611,65 +1608,47 @@ body.bd-fullscreen #bdText{padding-top:54px}
   </section>
 
   <section class="screen" id="scr-burdah">
-    <div class="card">
-      <div class="mu-head">
-        <div style="width:100%">
-          <div class="mu-modes" style="flex-wrap:wrap;gap:4px">
-            <button class="mu-size-btn active" id="bdModeDalail">دلائل الخيرات (الجزولي)</button>
-            <button class="mu-size-btn" id="bdModeKunuz">كنوز الأسرار (الهاروشي)</button>
-            <button class="mu-size-btn" id="bdModeBurdah">البردة</button>
-            <button class="mu-size-btn" id="bdModeHamziyyah">الهمزية</button>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px">
-            <div>
-              <h2 id="bdTitle">البردة</h2>
-              <div class="sub" id="bdSub">الكواكب الدرية في مدح خير البرية</div>
-            </div>
-            <button class="btn btn-gold" id="bdGridBtn">الفصل / القسم</button>
-          </div>
-          <div class="mu-size-row">
-            <button class="mu-size-btn" data-s="1">عادي</button>
-            <button class="mu-size-btn active" data-s="1.25">كبير</button>
-            <button class="mu-size-btn" data-s="1.55">كبير جداً</button>
-          </div>
+    <!-- En-tête Salawat compact et responsive -->
+    <div class="card bd-head-card">
+      <div class="bd-modes-grid">
+        <button class="bd-mode-tab active" id="bdModeDalail">دلائل الخيرات</button>
+        <button class="bd-mode-tab" id="bdModeKunuz">كنوز الأسرار</button>
+        <button class="bd-mode-tab" id="bdModeBurdah">البردة</button>
+        <button class="bd-mode-tab" id="bdModeHamziyyah">الهمزية</button>
+      </div>
+      <div class="bd-meta-row">
+        <div class="bd-title-wrap">
+          <h2 id="bdTitle">دلائل الخيرات</h2>
+          <div class="sub" id="bdSub">للإمام الجزولي</div>
+        </div>
+        <div class="bd-top-actions">
+          <button class="btn btn-gold" id="bdGridBtn">الفهرس</button>
+          <button class="bd-icon-btn" id="bdDarkToggle" title="الوضع الليلي">🌙</button>
+          <button class="bd-icon-btn" id="bdFsBtn" title="ملء الشاشة">⛶</button>
         </div>
       </div>
-      <div class="mu-stage">
-        <div class="mu-topbar">
-          <span class="mu-juz" id="bdPosLabel"></span>
-          <div class="mu-zctl">
-            <button id="bdFsBtn" aria-label="ملء الشاشة">⛶</button>
-            <button id="bdFitBtn" aria-label="ملء عرض الشاشة" class="active">⤢</button>
-            <button id="bdZOut" aria-label="تصغير">−</button>
-            <span class="mu-zoomval" id="bdZoomVal"></span>
-            <button id="bdZIn" aria-label="تكبير">+</button>
-          </div>
+    </div>
+
+    <!-- Scène de lecture principale -->
+    <div class="bd-stage" id="bdStage">
+      <button id="bdFsExit" aria-label="خروج من ملء الشاشة">✕</button>
+      <div class="tv-bar">
+        <button class="tv-nav" id="bdPrev" title="السابق" aria-label="السابق">›</button>
+        <select id="bdChapter" aria-label="اختر الفصل"></select>
+        <button class="tv-nav" id="bdNext" title="التالي" aria-label="التالي">‹</button>
+        <div class="tv-size">
+          <button id="bdMinus" aria-label="تصغير" title="تصغير الخط">−</button>
+          <span id="bdVal">24</span>
+          <button id="bdPlus" aria-label="تكبير" title="تكبير الخط">+</button>
         </div>
-        <div class="mu-viewport" id="bdViewport">
-          <div class="mu-hint" id="bdHint" style="display:none">اسحب لتقليب الفصول · اضغط مرتين للتكبير</div>
-          <button id="bdFsExit" aria-label="خروج من ملء الشاشة">✕</button>
-          <button class="mu-arrow" id="bdArrowPrev" aria-label="السابق">›</button>
-          <button class="mu-arrow" id="bdArrowNext" aria-label="التالي">‹</button>
-        </div>
-        <div id="bdText">
-          <div class="tv-bar">
-            <button class="tv-nav" id="bdPrev" title="السابق">›</button>
-            <select id="bdChapter"></select>
-            <button class="tv-nav" id="bdNext" title="التالي">‹</button>
-            <div class="tv-size">
-              <button id="bdPlus" aria-label="تكبير">+</button>
-              <span id="bdVal">30</span>
-              <button id="bdMinus" aria-label="تصغير">−</button>
-            </div>
-          </div>
-          <div id="bdBody"></div>
-          <div class="tv-badge" id="bdBadge">الفصل / البيت</div>
-          <div class="tv-sheet" id="bdSheet">
-            <div class="tv-sheet-card">
-              <h4>الانتقال إلى فصل / قسم</h4>
-              <div class="tv-grid" id="bdGrid"></div>
-            </div>
-          </div>
+      </div>
+      <div id="bdBody"></div>
+      <div class="tv-badge" id="bdBadge">الفصل / البيت</div>
+      <div class="tv-sheet" id="bdSheet">
+        <div class="tv-sheet-card">
+          <h4>الانتقال إلى فصل / قسم</h4>
+          <div class="tv-grid" id="bdGrid"></div>
+          <button class="tv-close" id="bdSheetClose">إغلاق</button>
         </div>
       </div>
     </div>
@@ -5098,7 +5077,7 @@ if(state.todayCount < DAILY && state.nights[todayStr()] !== state.todayCount){
 
 /* ===================== DIWAN DES SALAWAT ET MADAIH ===================== */
 /* دلائل الخيرات (الجزولي) · كنوز الأسرار (الهاروشي) · البردة والهمزية (البوصيري) */
-let bdData=null, bdMode="dalail", bdPoem=null, bdCurrentChapter=0, bdSize=30;
+let bdData=null, bdMode="dalail", bdPoem=null, bdCurrentChapter=0, bdSize=24;
 const BD_SIZE_KEY="burdah_size", BD_CH_KEY="burdah_chapter", BD_MODE_KEY="burdah_mode", BD_POS_KEY="burdah_pos";
 
 const DALAIL_DAY_MAP = {
@@ -5114,10 +5093,10 @@ const DALAIL_DAY_MAP = {
 async function bdLoadData(){
   if(bdData) return bdData;
   const [r,h,d,k]=await Promise.all([
-    fetch("burdah.json?v=293"),
-    fetch("hamziyyah.json?v=293"),
-    fetch("dalail.json?v=293"),
-    fetch("kunuz.json?v=293")
+    fetch("burdah.json?v=294"),
+    fetch("hamziyyah.json?v=294"),
+    fetch("dalail.json?v=294"),
+    fetch("kunuz.json?v=294")
   ]);
   bdData=await r.json();
   bdData.hamziyyah=await h.json();
@@ -5141,7 +5120,7 @@ async function bdEnsure(){
     else bdMode="dalail";
 
     const ss=parseFloat(localStorage.getItem(BD_SIZE_KEY));
-    if(!isNaN(ss)) bdSize=Math.max(14,Math.min(64,ss));
+    if(!isNaN(ss)) bdSize=Math.max(16,Math.min(50,ss));
 
     const sc=parseInt(localStorage.getItem(BD_CH_KEY), 10);
     if(!isNaN(sc)) bdCurrentChapter=sc;
@@ -5156,7 +5135,7 @@ async function bdEnsure(){
   }catch(e){
     console.error("bdEnsure:",e);
     say("✗ خطأ التحميل: "+((e&&e.message)||e));
-    $("bdBody").innerHTML='<div style="padding:24px;text-align:center;color:#b00020;font-family:Tajawal,sans-serif">تعذّر تحميل النصوص — تحقق من الاتصال</div>';
+    if($("bdBody")) $("bdBody").innerHTML='<div style="padding:24px;text-align:center;color:#b00020;font-family:Tajawal,sans-serif">تعذّر تحميل النصوص — تحقق من الاتصال</div>';
   }
 }
 function bdApplyMode(){
@@ -5167,16 +5146,16 @@ function bdApplyMode(){
   if($("bdModeHamziyyah")) $("bdModeHamziyyah").classList.toggle("active",bdMode==="hamziyyah");
 
   if(bdMode==="dalail"){
-    $("bdTitle").textContent="دلائل الخيرات (الجزولي)";
-    $("bdSub").textContent="دلائل الخيرات وشوارق الأنوار في ذكر الصلاة على النبي المختار";
+    $("bdTitle").textContent="دلائل الخيرات";
+    $("bdSub").textContent="للإمام محمد بن سليمان الجزولي";
   } else if(bdMode==="kunuz"){
-    $("bdTitle").textContent="كنوز الأسرار (الهاروشي)";
-    $("bdSub").textContent="كنوز الأسرار في الصلاة والسلام على النبي المختار";
+    $("bdTitle").textContent="كنوز الأسرار";
+    $("bdSub").textContent="للإمام عبد الله الهاروشي الفاسي";
   } else if(bdMode==="hamziyyah"){
-    $("bdTitle").textContent="الهمزية (البوصيري)";
-    $("bdSub").textContent="أم القرى في مدح خير الورى";
+    $("bdTitle").textContent="الهمزية";
+    $("bdSub").textContent="للإمام شرف الدين البوصيري";
   } else {
-    $("bdTitle").textContent="البردة (البوصيري)";
+    $("bdTitle").textContent="البردة الشريفة";
     $("bdSub").textContent="الكواكب الدرية في مدح خير البرية";
   }
 
@@ -5189,16 +5168,18 @@ function bdApplyMode(){
     }
   }
 
-  const sel=$("bdChapter"); sel.innerHTML="";
-  bdPoem.forEach((c,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=c.titleAr; sel.appendChild(o); });
-  sel.value=bdCurrentChapter;
-  $("bdGrid").innerHTML="";
+  const sel=$("bdChapter");
+  if(sel){
+    sel.innerHTML="";
+    bdPoem.forEach((c,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=c.titleAr; sel.appendChild(o); });
+    sel.value=bdCurrentChapter;
+  }
+  if($("bdGrid")) $("bdGrid").innerHTML="";
   bdRender();
 }
 function bdApplySize(){
-  $("bdBody").style.setProperty("--bd-size",bdSize+"px");
-  $("bdVal").textContent=bdSize;
-  $("bdZoomVal").textContent=Math.round(bdSize/30*100)+"%";
+  if($("bdBody")) $("bdBody").style.setProperty("--bd-size",bdSize+"px");
+  if($("bdVal")) $("bdVal").textContent=bdSize;
 }
 function bdRender(){
   const c=bdPoem&&bdPoem[bdCurrentChapter]; if(!c) return;
@@ -5207,33 +5188,33 @@ function bdRender(){
   $("bdBody").innerHTML=h;
   let p=null; try{ p=JSON.parse(localStorage.getItem(BD_POS_KEY)); }catch(e){}
   if(p && p.m===bdMode && p.c===bdCurrentChapter && p.y>40){
-    setTimeout(()=>{ $("bdBody").scrollTop=p.y; bdUpdateBadge(); },60);
-  } else { $("bdBody").scrollTop=0; }
+    setTimeout(()=>{ if($("bdBody")) $("bdBody").scrollTop=p.y; bdUpdateBadge(); },60);
+  } else { if($("bdBody")) $("bdBody").scrollTop=0; }
   bdUpdateBadge();
   localStorage.setItem(BD_CH_KEY,bdCurrentChapter);
 }
 function bdUpdateBadge(){
   const c=bdPoem&&bdPoem[bdCurrentChapter]; if(!c) return;
-  const el=$("bdBody"), total=(c.verses||[]).length;
+  const el=$("bdBody"); if(!el) return;
+  const total=(c.verses||[]).length;
   const denom=el.scrollHeight-el.clientHeight;
   const pos=denom>0 ? Math.min(el.scrollTop/denom,1) : 0;
   const idx=Math.max(0,Math.min(Math.floor(pos*total),total-1));
-  const prefix = bdMode==="dalail" ? "الحزب " : (bdMode==="kunuz" ? "القسم " : (bdMode==="burdah" ? "الفصل " : "القسم "));
-  $("bdBadge").textContent=c.titleAr.split(":")[0]+" · "+bdAr(idx+1)+"/"+bdAr(total);
-  $("bdPosLabel").textContent=prefix + bdAr(c.num);
+  if($("bdBadge")) $("bdBadge").textContent=c.titleAr.split(":")[0]+" · "+bdAr(idx+1)+"/"+bdAr(total);
 }
-function bdSaveScroll(){ localStorage.setItem(BD_POS_KEY,JSON.stringify({m:bdMode,c:bdCurrentChapter,y:$("bdBody").scrollTop})); }
+function bdSaveScroll(){ if($("bdBody")) localStorage.setItem(BD_POS_KEY,JSON.stringify({m:bdMode,c:bdCurrentChapter,y:$("bdBody").scrollTop})); }
 function bdGoChapter(i){
   if(i<0||i>=bdPoem.length) return;
-  bdCurrentChapter=i; $("bdChapter").value=i;
-  $("bdSheet").classList.remove("open");
+  bdCurrentChapter=i;
+  if($("bdChapter")) $("bdChapter").value=i;
+  if($("bdSheet")) $("bdSheet").classList.remove("open");
   bdRender();
 }
 function bdNext(){ bdGoChapter(bdCurrentChapter+1); }
 function bdPrev(){ bdGoChapter(bdCurrentChapter-1); }
 function bdOpenSheet(){
   const g=$("bdGrid");
-  if(!g.children.length){
+  if(g && !g.children.length){
     bdPoem.forEach((c,i)=>{
       const b=document.createElement("button");
       b.textContent=c.titleAr;
@@ -5241,15 +5222,12 @@ function bdOpenSheet(){
       g.appendChild(b);
     });
   }
-  $("bdSheet").classList.add("open");
+  if($("bdSheet")) $("bdSheet").classList.add("open");
 }
 function bdSetSize(v){
-  bdSize=Math.max(14,Math.min(64,v));
+  bdSize=Math.max(16,Math.min(50,v));
   bdApplySize();
   localStorage.setItem(BD_SIZE_KEY,bdSize);
-  document.querySelectorAll("#scr-burdah .mu-size-row .mu-size-btn").forEach(b=>{
-    b.classList.toggle("active",Math.round(30*parseFloat(b.dataset.s))===bdSize);
-  });
 }
 function bdEnterFS(){
   document.body.classList.add("bd-fullscreen");
@@ -5266,25 +5244,20 @@ if($("bdModeDalail")) $("bdModeDalail").addEventListener("click",()=>{ if(bdMode
 if($("bdModeKunuz")) $("bdModeKunuz").addEventListener("click",()=>{ if(bdMode!=="kunuz"){ bdMode="kunuz"; localStorage.setItem(BD_MODE_KEY,"kunuz"); bdApplyMode(); } });
 if($("bdModeBurdah")) $("bdModeBurdah").addEventListener("click",()=>{ if(bdMode!=="burdah"){ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); } });
 if($("bdModeHamziyyah")) $("bdModeHamziyyah").addEventListener("click",()=>{ if(bdMode!=="hamziyyah"){ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); } });
-$("bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("bdChapter").value,10)));
-$("bdPrev").addEventListener("click",bdPrev);
-$("bdNext").addEventListener("click",bdNext);
-$("bdArrowPrev").addEventListener("click",bdPrev);
-$("bdArrowNext").addEventListener("click",bdNext);
-$("bdGridBtn").addEventListener("click",bdOpenSheet);
-$("bdSheet").addEventListener("click",e=>{ if(e.target===$("bdSheet")) $("bdSheet").classList.remove("open"); });
-$("bdPlus").addEventListener("click",()=>bdSetSize(bdSize+2));
-$("bdMinus").addEventListener("click",()=>bdSetSize(bdSize-2));
-$("bdZIn").addEventListener("click",()=>bdSetSize(bdSize+4));
-$("bdZOut").addEventListener("click",()=>bdSetSize(bdSize-4));
-$("bdFitBtn").addEventListener("click",()=>bdSetSize(30));
-document.querySelectorAll("#scr-burdah .mu-size-row .mu-size-btn").forEach(b=>{
-  b.addEventListener("click",()=>bdSetSize(Math.round(30*parseFloat(b.dataset.s))));
-});
-$("bdFsBtn").addEventListener("click",bdEnterFS);
-$("bdFsExit").addEventListener("click",bdExitFS);
-$("bdBody").addEventListener("scroll",()=>{ bdUpdateBadge(); bdSaveScroll(); });
-}catch(e){ try{ $("bdHint").textContent="✗ listeners: "+((e&&e.message)||e); }catch(_){ } }
+if($("bdChapter")) $("bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("bdChapter").value,10)));
+if($("bdPrev")) $("bdPrev").addEventListener("click",bdPrev);
+if($("bdNext")) $("bdNext").addEventListener("click",bdNext);
+if($("bdGridBtn")) $("bdGridBtn").addEventListener("click",bdOpenSheet);
+if($("bdBadge")) $("bdBadge").addEventListener("click",bdOpenSheet);
+if($("bdSheetClose")) $("bdSheetClose").addEventListener("click",()=>{ if($("bdSheet")) $("bdSheet").classList.remove("open"); });
+if($("bdSheet")) $("bdSheet").addEventListener("click",e=>{ if(e.target===$("bdSheet")) $("bdSheet").classList.remove("open"); });
+if($("bdPlus")) $("bdPlus").addEventListener("click",()=>bdSetSize(bdSize+2));
+if($("bdMinus")) $("bdMinus").addEventListener("click",()=>bdSetSize(bdSize-2));
+if($("bdDarkToggle")) $("bdDarkToggle").addEventListener("click",()=>muSetDark(!muDark));
+if($("bdFsBtn")) $("bdFsBtn").addEventListener("click",bdEnterFS);
+if($("bdFsExit")) $("bdFsExit").addEventListener("click",bdExitFS);
+if($("bdBody")) $("bdBody").addEventListener("scroll",()=>{ bdUpdateBadge(); bdSaveScroll(); });
+}catch(e){ console.error("Salawat listeners:", e); }
 setTimeout(()=>{ bdEnsure(); },300);
 </script>
 </body>
