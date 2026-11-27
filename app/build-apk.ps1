@@ -22,7 +22,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $AppDir    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $AndroidDir = Join-Path $AppDir 'android'
-$Version   = '1.0.9'
+$Version   = '1.0.10'
 $Alias     = 'adhkar'
 $Keystore  = Join-Path $KeystoreDir 'adhkar-release.p12'
 $PassFile  = Join-Path $KeystoreDir 'adhkar-keystore-password.txt'
@@ -121,6 +121,16 @@ $final = Join-Path $relDir "adhkar-$Version.apk"
 Copy-Item $built $final -Force
 $size = [math]::Round((Get-Item $final).Length / 1MB, 2)
 Ok "copie : $final ($size Mo)"
+
+# Copie automatique vers Google Drive
+$gdriveDir = "G:\Mon Drive\Applications & Outils"
+if (Test-Path $gdriveDir) {
+    Copy-Item $final (Join-Path $gdriveDir "adhkar-$Version.apk") -Force
+    Copy-Item $final (Join-Path $gdriveDir "Adhkar.apk") -Force
+    Ok "copie Google Drive : $gdriveDir\adhkar-$Version.apk et Adhkar.apk"
+} else {
+    Write-Warning "Google Drive (G:\) non accessible pour copie automatique"
+}
 
 # apksigner ecrit beaucoup de WARNING benins sur stderr : on capture et on filtre.
 $ErrorActionPreference = 'Continue'

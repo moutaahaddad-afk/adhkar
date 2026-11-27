@@ -330,6 +330,104 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .ev-item.today{border-color:var(--emerald);box-shadow:0 0 0 2px rgba(16,185,129,.25)}
 .ev-item.today .ev-count{color:var(--gold)}
 
+/* ---------- Carte Khatma du Coran ---------- */
+.khatma-card{
+  margin:14px 0;padding:16px;border-radius:var(--radius);
+  background:linear-gradient(160deg, rgba(212,175,55,.12), rgba(16,185,129,.05));
+  border:1px solid rgba(212,175,55,.35);
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+.kc-head{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;
+}
+.kc-title-wrap{
+  display:flex;align-items:center;gap:8px;
+}
+.kc-icon{font-size:20px}
+.kc-title{
+  font-family:'Scheherazade New',serif;font-size:18px;font-weight:700;color:var(--gold-light);
+}
+.kc-rate-badge{
+  font-size:11.5px;padding:3px 8px;border-radius:12px;
+  background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);color:var(--gold);
+}
+.kc-hero{
+  display:grid;grid-template-columns:1fr 1.3fr;gap:12px;margin-bottom:14px;
+}
+@media(max-width:380px){
+  .kc-hero{grid-template-columns:1fr;}
+}
+.kc-total-box{
+  background:var(--card2);border:1px solid rgba(212,175,55,.3);border-radius:14px;
+  padding:12px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center;
+}
+.kc-total-num{
+  font-family:'Scheherazade New',serif;font-size:38px;font-weight:800;color:var(--gold-light);line-height:1;
+  text-shadow:0 2px 10px rgba(212,175,55,.3);
+}
+.kc-total-label{
+  font-size:12.5px;font-weight:700;color:var(--text);margin-top:4px;
+}
+.kc-since{
+  font-size:10.5px;color:var(--muted);margin-top:2px;
+}
+.kc-cycle-box{
+  background:var(--card2);border:1px solid var(--line-soft);border-radius:14px;
+  padding:12px;display:flex;flex-direction:column;justify-content:center;gap:6px;
+}
+.kc-cycle-title{
+  font-size:12px;color:var(--muted);
+}
+.kc-cycle-title .gold-text{
+  font-size:15px;font-weight:700;color:var(--gold-light);
+}
+.kc-curr-juz{
+  font-family:'Scheherazade New',serif;font-size:15px;font-weight:700;color:var(--emerald-soft);line-height:1.4;
+}
+.kc-pbar{
+  height:7px;background:var(--pbar-bg,rgba(255,255,255,.08));border-radius:6px;overflow:hidden;margin:3px 0;
+}
+.kc-pbar span{
+  display:block;height:100%;border-radius:6px;
+  background:linear-gradient(90deg,var(--emerald),var(--gold));
+  transition:width .4s ease;
+}
+.kc-pbar-lbl{
+  font-size:11px;color:var(--muted2);text-align:left;
+}
+.kc-actions{
+  display:flex;gap:8px;margin-bottom:10px;
+}
+.kc-done-btn{
+  flex:1.4;padding:10px 8px;font-size:13.5px;font-weight:700;
+}
+.kc-done-btn.is-done{
+  background:rgba(16,185,129,.2);border-color:var(--emerald);color:var(--emerald-soft);
+}
+.kc-read-btn{
+  flex:1;padding:10px 8px;font-size:13px;
+}
+.kc-footer{
+  display:flex;align-items:center;justify-content:space-between;padding-top:8px;
+  border-top:1px dashed var(--line-soft);
+}
+.kc-adjust-row{
+  display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);flex-wrap:wrap;
+}
+.kc-adj-lbl{font-size:11px;color:var(--muted)}
+.kc-adj-btn{
+  width:24px;height:24px;border-radius:6px;border:1px solid var(--line-soft);
+  background:var(--card2);color:var(--gold-light);font-size:14px;font-weight:700;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;line-height:1;
+  transition:all .15s;
+}
+.kc-adj-btn:active{transform:scale(.9)}
+.kc-mushaf-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:12px;
+  background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);color:var(--gold-light);
+  font-size:12px;cursor:pointer;margin-top:4px;
+}
+
 .prayer-card{margin-top:6px}
 .prayer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
 .prayer-title{font-family:'Scheherazade New',serif;font-size:21px;color:var(--gold-light);font-weight:700}
@@ -1041,6 +1139,47 @@ body.bd-fullscreen #bdText{padding-top:54px}
       </div>
     </div>
 
+    <!-- ============ CARTE KHATMA DU CORAN ============ -->
+    <div class="card khatma-card" id="khatmaCard">
+      <div class="kc-head">
+        <div class="kc-title-wrap">
+          <span class="kc-icon">📖</span>
+          <span class="kc-title">خَتَمَاتُ القُرآنِ الكَرِيم</span>
+        </div>
+        <span class="kc-rate-badge">٢ حزب / يوم</span>
+      </div>
+
+      <div class="kc-hero">
+        <div class="kc-total-box">
+          <div class="kc-total-num" id="kcTotal">103</div>
+          <div class="kc-total-label">ختمة مكتملة بحمد الله</div>
+          <div class="kc-since">منذ جوان 2018 (3101+ يوماً)</div>
+        </div>
+        <div class="kc-cycle-box">
+          <div class="kc-cycle-title">الختمة الحالية: <span id="kcCycleNum" class="gold-text">104</span></div>
+          <div class="kc-curr-juz" id="kcCurrJuzText">الجزء 12 من 30 · الحزبان 23 و 24</div>
+          <div class="kc-pbar"><span id="kcBar" style="width:40%"></span></div>
+          <div class="kc-pbar-lbl"><span id="kcPct">40%</span> من الختمة</div>
+        </div>
+      </div>
+
+      <div class="kc-actions">
+        <button class="btn btn-gold kc-done-btn" id="kcDoneBtn">✓ أتممتُ حِزبَيْ اليوم</button>
+        <button class="btn btn-ghost kc-read-btn" id="kcReadBtn">📖 قراءة في المصحف</button>
+      </div>
+
+      <div class="kc-footer">
+        <div class="kc-adjust-row">
+          <span class="kc-adj-lbl">تعديل الختمات:</span>
+          <button class="kc-adj-btn" id="kcMinus" title="إنقاص ختمة">−</button>
+          <button class="kc-adj-btn" id="kcPlus" title="زيادة ختمة">+</button>
+          <span class="kc-adj-lbl" style="margin-right:8px">الجزء:</span>
+          <button class="kc-adj-btn" id="kcJuzMinus" title="الجزء السابق">−</button>
+          <button class="kc-adj-btn" id="kcJuzPlus" title="الجزء التالي">+</button>
+        </div>
+      </div>
+    </div>
+
     <div class="events-card" id="eventsCard">
       <div class="ec-title">۞ المناسبات القادمة</div>
       <div class="ec-today" id="todayHijri"></div>
@@ -1230,6 +1369,7 @@ body.bd-fullscreen #bdText{padding-top:54px}
           <div>
             <h2>المصحف الشريف</h2>
             <div class="sub">مصحف قالون — الطبعة التونسية · <span id="muTotalPages"></span> صفحة</div>
+            <div class="kc-mushaf-pill" id="muKhatmaPill" title="الختمة الحالية والورد اليومي">۞ الختمة <b id="muKhatmaTotal">104</b> · الجزء <b id="muKhatmaJuz">12</b></div>
           </div>
           <button class="btn btn-gold" id="muGridBtn">الجزء الحالي</button>
         </div>
@@ -1945,7 +2085,8 @@ function defaultState(){
     oradGroupCollapsed: { m: {}, e: {} }, // groupes repliés
     nameStartDates: { "58": "2026-10-31", "59": todayStr(), "60": todayStr() },           // {index: "YYYY-MM-DD"}
     mushaf: { page:1, juz:1, mode:"text", tvSurah:1, tvScrollY:0, lastRead:"" },
-    mushafAt: 0            // horodatage propre du mushaf pour le sync entre devices
+    mushafAt: 0,           // horodatage propre du mushaf pour le sync entre devices
+    khatma: { total: 103, currentJuz: 12, startDate: "2018-06-01", dailyHizb: 2, lastDoneDate: "" }
   };
 }
 
@@ -1985,6 +2126,9 @@ function load(){
           d.mushaf = { page:parseInt(localStorage.getItem("mushaf_current_page")||"1",10)||1, juz:parseInt(localStorage.getItem("mushaf_current_juz")||"1",10)||1, mode:localStorage.getItem("mushaf_mode")||"text", tvSurah:parseInt(localStorage.getItem("mushaf_tv_cur")||"1",10)||1, tvScrollY:0, lastRead:localStorage.getItem("mushaf_last_read")||"" };
         }
         if(typeof d.mushafAt !== "number") d.mushafAt = 0;
+        if(!d.khatma){
+          d.khatma = { total: 103, currentJuz: 12, startDate: "2018-06-01", dailyHizb: 2, lastDoneDate: "" };
+        }
         return d;
       }
     }
@@ -2354,6 +2498,18 @@ function applyRemote(r, isInit){
     }
   }
 
+  if(d.khatma){
+    if(!local.khatma){
+      local.khatma = JSON.parse(JSON.stringify(d.khatma));
+    } else {
+      const dt = d.khatma.total||0, lt = local.khatma.total||0;
+      const dj = d.khatma.currentJuz||0, lj = local.khatma.currentJuz||0;
+      if((d._at||0) >= (local._at||0) || dt > lt || (dt === lt && dj > lj)){
+        local.khatma = Object.assign({}, local.khatma, d.khatma);
+      }
+    }
+  }
+
   local._at = Math.max(local._at||0, d._at||0);
   const changed = JSON.stringify(state, snapKey) !== before;
   save(local);
@@ -2618,7 +2774,7 @@ const AR_WEEK = ["الأحد","الاثنين","الثلاثاء","الأربع�
 
 function renderAll(){
   applyTheme();
-  renderCounter(); renderNames(); renderOrad(); renderJournal(); renderSettings(); updateNotifUI();
+  renderCounter(); renderNames(); renderOrad(); renderJournal(); renderSettings(); updateNotifUI(); renderKhatma();
 }
 
 function applyTheme(){
@@ -2827,6 +2983,135 @@ function renderEvents(){
     '<div class="ev-date">' + (it.today ? 'اليوم!' : it.label) + '</div>' +
     '<div class="ev-count">' + (it.today ? '🎉' : toAr(it.diff) + ' <small>يوماً</small>') + '</div></div>'
   ).join('');
+}
+
+/* ===================== KHATMA DU CORAN (الختمات) ===================== */
+function getKhatmaState(){
+  if(!state.khatma){
+    state.khatma = {
+      total: 103,
+      currentJuz: 12,
+      startDate: "2018-06-01",
+      dailyHizb: 2,
+      lastDoneDate: ""
+    };
+  }
+  if(typeof state.khatma.total !== "number" || isNaN(state.khatma.total)) state.khatma.total = 103;
+  if(typeof state.khatma.currentJuz !== "number" || isNaN(state.khatma.currentJuz)) state.khatma.currentJuz = 12;
+  return state.khatma;
+}
+
+function renderKhatma(){
+  const k = getKhatmaState();
+  const kcTotal = $("kcTotal");
+  if(!kcTotal) return;
+  kcTotal.textContent = toAr(k.total);
+
+  const cycleNum = k.total + 1;
+  if($("kcCycleNum")) $("kcCycleNum").textContent = toAr(cycleNum);
+
+  const juz = Math.min(30, Math.max(1, k.currentJuz));
+  const h1 = (juz - 1) * 2 + 1;
+  const h2 = juz * 2;
+  const juzName = (window.MU_JUZ_NAMES && MU_JUZ_NAMES[juz-1]) ? MU_JUZ_NAMES[juz-1] : toAr(juz);
+
+  if($("kcCurrJuzText")){
+    $("kcCurrJuzText").textContent = "الجزء " + juzName + " (" + toAr(juz) + " من ٣٠) · الحزبان " + toAr(h1) + " و " + toAr(h2) + " من ٦٠";
+  }
+
+  const pct = Math.round((juz / 30) * 100);
+  if($("kcBar")) $("kcBar").style.width = pct + "%";
+  if($("kcPct")) $("kcPct").textContent = toAr(pct) + "٪";
+
+  // Bouton d'action quotidien
+  const isDoneToday = k.lastDoneDate === todayStr();
+  const btn = $("kcDoneBtn");
+  if(btn){
+    if(isDoneToday){
+      btn.classList.add("is-done");
+      btn.innerHTML = '✓ تم إنجاز حزبَيْ اليوم بحمد الله';
+    } else {
+      btn.classList.remove("is-done");
+      btn.innerHTML = '✓ أتممتُ حِزبَيْ اليوم (الجزء ' + toAr(juz) + ')';
+    }
+  }
+
+  // Puce dans l'écran Mushaf
+  if($("muKhatmaTotal")) $("muKhatmaTotal").textContent = toAr(cycleNum);
+  if($("muKhatmaJuz")) $("muKhatmaJuz").textContent = toAr(juz);
+}
+
+function advanceKhatmaDaily(){
+  const k = getKhatmaState();
+  const isDoneToday = k.lastDoneDate === todayStr();
+  if(isDoneToday){
+    if(!confirm("لقد قمتَ بتسجيل وِرد اليوم مسبقاً. هل تريد المتابعة والانتقال إلى الجزء التالي؟")) return;
+  }
+
+  vib([25]); tickSound();
+  k.lastDoneDate = todayStr();
+
+  if(k.currentJuz >= 30){
+    // KHATMA COMPLÈTE !
+    k.total += 1;
+    k.currentJuz = 1;
+    save(state);
+    renderKhatma();
+    vib([100, 60, 100, 60, 200]);
+    alert("🎉 هنيئاً لك ومبارك! أتممتَ بحمد الله وفضله الختمة رقم (" + k.total + ") من القرآن الكريم! جعلها الله نوراً وبركة وشفيعاً لك يوم القيامة.");
+  } else {
+    k.currentJuz += 1;
+    save(state);
+    renderKhatma();
+    toast("تقبّل الله! تم تسجيل ورد اليوم والانتقال إلى الجزء " + k.currentJuz);
+  }
+}
+
+function adjustKhatmaTotal(delta){
+  const k = getKhatmaState();
+  const newVal = Math.max(0, k.total + delta);
+  if(delta < 0 && !confirm("هل تريد إنقاص عدد الختمات إلى " + newVal + "؟")) return;
+  k.total = newVal;
+  save(state);
+  renderKhatma();
+  toast("تم تحديث عدد الختمات: " + k.total);
+}
+
+function adjustKhatmaJuz(delta){
+  const k = getKhatmaState();
+  let nextJ = k.currentJuz + delta;
+  if(nextJ > 30){
+    if(confirm("بلغتَ نهاية المصحف (الجزء 30). هل تريد إتمام الختمة رقم " + (k.total+1) + " والبدء بختمة جديدة؟")){
+      k.total += 1;
+      k.currentJuz = 1;
+    } else {
+      return;
+    }
+  } else if(nextJ < 1){
+    if(k.total > 0 && confirm("هل تريد العودة إلى الجزء 30 من الختمة السابقة؟")){
+      k.total -= 1;
+      k.currentJuz = 30;
+    } else {
+      k.currentJuz = 1;
+    }
+  } else {
+    k.currentJuz = nextJ;
+  }
+  save(state);
+  renderKhatma();
+  toast("الجزء الحالي: " + k.currentJuz);
+}
+
+function goToKhatmaJuz(juzNum){
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.tab==="scr-mushaf"));
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id==="scr-mushaf"));
+  openMushaf();
+  if(muMode === "text"){
+    tvGoJuz(juzNum);
+  } else {
+    muPage = (window.MU_JUZ_STARTS && MU_JUZ_STARTS[juzNum-1]) || 1;
+    muRender();
+  }
 }
 
 /* ---------- أوقات الصلاة (حساب محلي بالجغرافيا) ---------- */
@@ -4788,13 +5073,23 @@ updateWake();
 renderAll();
 checkMilestones();
 renderEvents();
+renderKhatma();
 startPrayerTimer();
 scheduleReminder();
 initFirestore();
 checkWirdReminder();
 startQibla();
 setInterval(checkWirdReminder, 60000);
-document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible"){ checkWirdReminder(); renderEvents(); } });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible"){ checkWirdReminder(); renderEvents(); renderKhatma(); } });
+
+if($("kcDoneBtn")) $("kcDoneBtn").addEventListener("click", advanceKhatmaDaily);
+if($("kcReadBtn")) $("kcReadBtn").addEventListener("click", ()=>goToKhatmaJuz(getKhatmaState().currentJuz));
+if($("kcMinus")) $("kcMinus").addEventListener("click", ()=>adjustKhatmaTotal(-1));
+if($("kcPlus")) $("kcPlus").addEventListener("click", ()=>adjustKhatmaTotal(1));
+if($("kcJuzMinus")) $("kcJuzMinus").addEventListener("click", ()=>adjustKhatmaJuz(-1));
+if($("kcJuzPlus")) $("kcJuzPlus").addEventListener("click", ()=>adjustKhatmaJuz(1));
+if($("muKhatmaPill")) $("muKhatmaPill").addEventListener("click", ()=>goToKhatmaJuz(getKhatmaState().currentJuz));
+
 if(state.todayCount < DAILY && state.nights[todayStr()] !== state.todayCount){
   /* nothing special */
 }
