@@ -5045,7 +5045,13 @@ $("btnReset").addEventListener("click", ()=>{
    sont déjà embarqués dans l'application. */
 if("serviceWorker" in navigator && !NATIVE){
   window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("sw.js").catch(e=>console.warn("SW failed", e));
+    navigator.serviceWorker.register("sw.js?v=313").then(reg=>{
+      reg.update();
+    }).catch(e=>console.warn("SW failed", e));
+  });
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+    if(!refreshing){ refreshing = true; window.location.reload(); }
   });
 }
 
