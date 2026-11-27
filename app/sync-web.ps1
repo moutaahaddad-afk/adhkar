@@ -1,4 +1,4 @@
-# Assemble le dossier www/ de l'app Android à partir du site (dossier parent).
+﻿# Assemble le dossier www/ de l'app Android à partir du site (dossier parent).
 # Whitelist stricte : aucune sauvegarde, aucun fichier de build, aucun secret.
 $ErrorActionPreference = "Stop"
 
@@ -17,6 +17,8 @@ $files = @(
   "quran-data.json",
   "burdah.json",
   "hamziyyah.json",
+  "dalail.json",
+  "kunuz.json",
   "names-info-1.js",
   "names-info-2.js",
   "names-info-3.js",

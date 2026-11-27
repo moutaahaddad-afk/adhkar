@@ -1,5 +1,5 @@
 /* 📿 Adhkar — Service Worker (hors-ligne) */
-const VERSION = "adhkar-v3.1.1";
+const VERSION = "adhkar-v3.1.2";
 const MUSHAF_CACHE = "mushaf-pages-v2";
 const APP_SHELL = [
   "./",
@@ -24,7 +24,9 @@ const APP_SHELL = [
   "./sheikh-answers.js",
   "./orad-data.js",
   "./burdah.json",
-  "./hamziyyah.json"
+  "./hamziyyah.json",
+  "./dalail.json",
+  "./kunuz.json"
 ];
 
 self.addEventListener("install", (event) => {

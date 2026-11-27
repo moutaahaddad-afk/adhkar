@@ -22,7 +22,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $AppDir    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $AndroidDir = Join-Path $AppDir 'android'
-$Version   = '1.0.10'
+$Version   = '1.0.11'
 $Alias     = 'adhkar'
 $Keystore  = Join-Path $KeystoreDir 'adhkar-release.p12'
 $PassFile  = Join-Path $KeystoreDir 'adhkar-keystore-password.txt'

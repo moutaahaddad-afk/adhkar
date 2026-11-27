@@ -1614,9 +1614,11 @@ body.bd-fullscreen #bdText{padding-top:54px}
     <div class="card">
       <div class="mu-head">
         <div style="width:100%">
-          <div class="mu-modes">
-            <button class="mu-size-btn active" id="bdModeBurdah">البردة</button>
-            <button class="mu-size-btn" id="bdModeHamziyyah">الحمزية</button>
+          <div class="mu-modes" style="flex-wrap:wrap;gap:4px">
+            <button class="mu-size-btn active" id="bdModeDalail">دلائل الخيرات (الجزولي)</button>
+            <button class="mu-size-btn" id="bdModeKunuz">كنوز الأسرار (الهاروشي)</button>
+            <button class="mu-size-btn" id="bdModeBurdah">البردة</button>
+            <button class="mu-size-btn" id="bdModeHamziyyah">الهمزية</button>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px">
             <div>
@@ -1752,9 +1754,9 @@ body.bd-fullscreen #bdText{padding-top:54px}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
     اليوميات
   </button>
-<button data-tab="scr-burdah">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-    البردة
+  <button data-tab="scr-burdah">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    الصلوات
   </button>
   <button data-tab="scr-settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82-.33l-.06-.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -5094,28 +5096,63 @@ if(state.todayCount < DAILY && state.nights[todayStr()] !== state.todayCount){
   /* nothing special */
 }
 
-/* ===================== BURDAH / HAMZIYYAH ===================== */
-let bdData=null, bdMode="burdah", bdPoem=null, bdCurrentChapter=0, bdSize=30;
+/* ===================== DIWAN DES SALAWAT ET MADAIH ===================== */
+/* دلائل الخيرات (الجزولي) · كنوز الأسرار (الهاروشي) · البردة والهمزية (البوصيري) */
+let bdData=null, bdMode="dalail", bdPoem=null, bdCurrentChapter=0, bdSize=30;
 const BD_SIZE_KEY="burdah_size", BD_CH_KEY="burdah_chapter", BD_MODE_KEY="burdah_mode", BD_POS_KEY="burdah_pos";
+
+const DALAIL_DAY_MAP = {
+  1: 0, // الإثنين -> الحزب الأول
+  2: 1, // الثلاثاء -> الحزب الثاني
+  3: 2, // الأربعاء -> الحزب الثالث
+  4: 3, // الخميس -> الحزب الرابع
+  5: 4, // الجمعة -> الحزب الخامس
+  6: 5, // السبت -> الحزب السادس
+  0: 6  // الأحد -> الحزب السابع
+};
 
 async function bdLoadData(){
   if(bdData) return bdData;
-  const [r,h]=await Promise.all([fetch("burdah.json?v=292"),fetch("hamziyyah.json?v=292")]);
-  bdData=await r.json(); bdData.hamziyyah=await h.json();
+  const [r,h,d,k]=await Promise.all([
+    fetch("burdah.json?v=293"),
+    fetch("hamziyyah.json?v=293"),
+    fetch("dalail.json?v=293"),
+    fetch("kunuz.json?v=293")
+  ]);
+  bdData=await r.json();
+  bdData.hamziyyah=await h.json();
+  bdData.dalail=await d.json();
+  bdData.kunuz=await k.json();
   return bdData;
 }
-function bdGetPoem(){ return bdMode==="burdah" ? bdData.chapters : bdData.hamziyyah.sections; }
+function bdGetPoem(){
+  if(bdMode==="dalail") return (bdData && bdData.dalail && bdData.dalail.chapters) || [];
+  if(bdMode==="kunuz") return (bdData && bdData.kunuz && bdData.kunuz.chapters) || [];
+  if(bdMode==="hamziyyah") return (bdData && bdData.hamziyyah && bdData.hamziyyah.sections) || [];
+  return (bdData && bdData.chapters) || [];
+}
 function bdAr(n){ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]); }
 async function bdEnsure(){
-  const say=t=>{ console.log("[Burdah]", t); };
+  const say=t=>{ console.log("[Salawat]", t); };
   try{
     if(!bdData) await bdLoadData();
-    const sm=localStorage.getItem(BD_MODE_KEY); if(sm==="hamziyyah"||sm==="burdah") bdMode=sm;
-    const ss=parseFloat(localStorage.getItem(BD_SIZE_KEY)); if(!isNaN(ss)) bdSize=Math.max(14,Math.min(64,ss));
-    const sc=parseInt(localStorage.getItem(BD_CH_KEY)); if(!isNaN(sc)) bdCurrentChapter=sc;
-    bdApplyMode(); bdApplySize();
-    const totalV=bdPoem.reduce((a,c)=>a+(c.verses||[]).length,0);
-    say("✓ "+totalV+" بيت · "+bdPoem.length+" أقسام — جاهز للقراءة");
+    const sm=localStorage.getItem(BD_MODE_KEY);
+    if(sm==="dalail"||sm==="kunuz"||sm==="hamziyyah"||sm==="burdah") bdMode=sm;
+    else bdMode="dalail";
+
+    const ss=parseFloat(localStorage.getItem(BD_SIZE_KEY));
+    if(!isNaN(ss)) bdSize=Math.max(14,Math.min(64,ss));
+
+    const sc=parseInt(localStorage.getItem(BD_CH_KEY), 10);
+    if(!isNaN(sc)) bdCurrentChapter=sc;
+    else if(bdMode==="dalail"){
+      const day = new Date().getDay();
+      bdCurrentChapter = DALAIL_DAY_MAP[day] !== undefined ? DALAIL_DAY_MAP[day] : 0;
+    }
+
+    bdApplyMode();
+    bdApplySize();
+    say("✓ ديوان الصلوات جاهز للقراءة");
   }catch(e){
     console.error("bdEnsure:",e);
     say("✗ خطأ التحميل: "+((e&&e.message)||e));
@@ -5124,11 +5161,34 @@ async function bdEnsure(){
 }
 function bdApplyMode(){
   bdPoem=bdGetPoem();
-  $("bdModeBurdah").classList.toggle("active",bdMode==="burdah");
-  $("bdModeHamziyyah").classList.toggle("active",bdMode==="hamziyyah");
-  if(!(bdCurrentChapter>=0)||bdCurrentChapter>=bdPoem.length) bdCurrentChapter=0;
-  $("bdTitle").textContent=bdMode==="burdah"?"البردة":"الحمزية (أم القرى)";
-  $("bdSub").textContent=bdMode==="burdah"?"الكواكب الدرية في مدح خير البرية":"أم القرى في مدح خير الورى";
+  if($("bdModeDalail")) $("bdModeDalail").classList.toggle("active",bdMode==="dalail");
+  if($("bdModeKunuz")) $("bdModeKunuz").classList.toggle("active",bdMode==="kunuz");
+  if($("bdModeBurdah")) $("bdModeBurdah").classList.toggle("active",bdMode==="burdah");
+  if($("bdModeHamziyyah")) $("bdModeHamziyyah").classList.toggle("active",bdMode==="hamziyyah");
+
+  if(bdMode==="dalail"){
+    $("bdTitle").textContent="دلائل الخيرات (الجزولي)";
+    $("bdSub").textContent="دلائل الخيرات وشوارق الأنوار في ذكر الصلاة على النبي المختار";
+  } else if(bdMode==="kunuz"){
+    $("bdTitle").textContent="كنوز الأسرار (الهاروشي)";
+    $("bdSub").textContent="كنوز الأسرار في الصلاة والسلام على النبي المختار";
+  } else if(bdMode==="hamziyyah"){
+    $("bdTitle").textContent="الهمزية (البوصيري)";
+    $("bdSub").textContent="أم القرى في مدح خير الورى";
+  } else {
+    $("bdTitle").textContent="البردة (البوصيري)";
+    $("bdSub").textContent="الكواكب الدرية في مدح خير البرية";
+  }
+
+  if(!(bdCurrentChapter>=0)||bdCurrentChapter>=bdPoem.length){
+    if(bdMode==="dalail"){
+      const day = new Date().getDay();
+      bdCurrentChapter = DALAIL_DAY_MAP[day] !== undefined ? DALAIL_DAY_MAP[day] : 0;
+    } else {
+      bdCurrentChapter=0;
+    }
+  }
+
   const sel=$("bdChapter"); sel.innerHTML="";
   bdPoem.forEach((c,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=c.titleAr; sel.appendChild(o); });
   sel.value=bdCurrentChapter;
@@ -5154,12 +5214,13 @@ function bdRender(){
 }
 function bdUpdateBadge(){
   const c=bdPoem&&bdPoem[bdCurrentChapter]; if(!c) return;
-  const el=$("bdBody"), total=c.verses.length;
+  const el=$("bdBody"), total=(c.verses||[]).length;
   const denom=el.scrollHeight-el.clientHeight;
   const pos=denom>0 ? Math.min(el.scrollTop/denom,1) : 0;
   const idx=Math.max(0,Math.min(Math.floor(pos*total),total-1));
+  const prefix = bdMode==="dalail" ? "الحزب " : (bdMode==="kunuz" ? "القسم " : (bdMode==="burdah" ? "الفصل " : "القسم "));
   $("bdBadge").textContent=c.titleAr.split(":")[0]+" · "+bdAr(idx+1)+"/"+bdAr(total);
-  $("bdPosLabel").textContent=(bdMode==="burdah"?"الفصل ":"القسم ")+bdAr(c.num);
+  $("bdPosLabel").textContent=prefix + bdAr(c.num);
 }
 function bdSaveScroll(){ localStorage.setItem(BD_POS_KEY,JSON.stringify({m:bdMode,c:bdCurrentChapter,y:$("bdBody").scrollTop})); }
 function bdGoChapter(i){
@@ -5199,10 +5260,12 @@ function bdExitFS(){
   if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
 }
 
-/* Écouteurs Burdah */
+/* Écouteurs Salawat */
 try{
-$("bdModeBurdah").addEventListener("click",()=>{ if(bdMode!=="burdah"){ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); } });
-$("bdModeHamziyyah").addEventListener("click",()=>{ if(bdMode!=="hamziyyah"){ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); } });
+if($("bdModeDalail")) $("bdModeDalail").addEventListener("click",()=>{ if(bdMode!=="dalail"){ bdMode="dalail"; localStorage.setItem(BD_MODE_KEY,"dalail"); bdApplyMode(); } });
+if($("bdModeKunuz")) $("bdModeKunuz").addEventListener("click",()=>{ if(bdMode!=="kunuz"){ bdMode="kunuz"; localStorage.setItem(BD_MODE_KEY,"kunuz"); bdApplyMode(); } });
+if($("bdModeBurdah")) $("bdModeBurdah").addEventListener("click",()=>{ if(bdMode!=="burdah"){ bdMode="burdah"; localStorage.setItem(BD_MODE_KEY,"burdah"); bdApplyMode(); } });
+if($("bdModeHamziyyah")) $("bdModeHamziyyah").addEventListener("click",()=>{ if(bdMode!=="hamziyyah"){ bdMode="hamziyyah"; localStorage.setItem(BD_MODE_KEY,"hamziyyah"); bdApplyMode(); } });
 $("bdChapter").addEventListener("change",()=>bdGoChapter(parseInt($("bdChapter").value,10)));
 $("bdPrev").addEventListener("click",bdPrev);
 $("bdNext").addEventListener("click",bdNext);
